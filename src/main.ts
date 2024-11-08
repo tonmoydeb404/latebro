@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Logger, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
@@ -8,6 +8,14 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logger = new Logger('Bootstrap');
+
+  // Api Prefixing
+  app.setGlobalPrefix('api');
+
+  // Api Versioning
+  app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
+
+  // Response Structure
   app.useGlobalInterceptors(new ResponseInterceptor());
 
   // Swagger setup
