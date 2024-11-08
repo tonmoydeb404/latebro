@@ -1,7 +1,9 @@
-import { Logger, Module, OnModuleInit } from '@nestjs/common';
+import { User, UserSchema } from '@/modules/user/entities/user.entity';
+import { Global, Logger, Module, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
+@Global()
 @Module({
   imports: [
     MongooseModule.forRootAsync({
@@ -13,6 +15,7 @@ import { MongooseModule } from '@nestjs/mongoose';
       }),
       inject: [ConfigService],
     }),
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
   exports: [MongooseModule],
 })
