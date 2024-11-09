@@ -1,6 +1,7 @@
 import { Logger, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule } from '@nestjs/swagger';
+import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { createSwaggerConfig } from './common/config/swagger.config';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
@@ -8,6 +9,9 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logger = new Logger('Bootstrap');
+
+  // Cookies
+  app.use(cookieParser(process.env.COOKIE_SECRET));
 
   // Api Prefixing
   app.setGlobalPrefix('api');
