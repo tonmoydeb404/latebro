@@ -79,4 +79,17 @@ export class AuthService {
 
     return { payload, token, user };
   }
+
+  async refresh(userId: string): Promise<IAuthResponse> {
+    let entity = await this.userModel.findOne({ _id: userId });
+
+    if (!entity) throw new UnauthorizedException('User account not exists');
+
+    const { payload, token } = await this.generateAuthToken(entity);
+
+    const user = entity.toObject();
+    delete user.password;
+
+    return { payload, token, user };
+  }
 }
