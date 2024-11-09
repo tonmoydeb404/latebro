@@ -1,6 +1,8 @@
 import { Public } from '@/modules/auth/decorators/public.decorator';
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { AuthService } from './auth.service';
+import { cookieConfig } from './config/cookie.config';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 
@@ -10,13 +12,27 @@ export class AuthController {
 
   @Public()
   @Post('/login')
-  login(@Body() dto: LoginDto) {
-    return this.service.login(dto);
+  async login(
+    @Body() dto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const results = await this.service.login(dto);
+
+    res.cookie('token', results.token, cookieConfig);
+
+    return results;
   }
 
   @Public()
   @Post('/register')
-  register(@Body() dto: RegisterDto) {
-    return this.service.register(dto);
+  async register(
+    @Body() dto: RegisterDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const results = await this.service.register(dto);
+
+    res.cookie('token', results.token, cookieConfig);
+
+    return results;
   }
 }
