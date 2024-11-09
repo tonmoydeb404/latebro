@@ -1,5 +1,5 @@
-import { IS_PUBLIC_KEY } from '@/common/guards/public.guard';
 import { IAuthPayload } from '@/common/interfaces/auth.interfaces';
+import { IS_PUBLIC_KEY } from '@/modules/auth/decorators/public.decorator';
 import {
   CanActivate,
   ExecutionContext,
@@ -11,7 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Request } from 'express';
 import { Model } from 'mongoose';
-import { User } from '../user/entities/user.entity';
+import { User } from '../../user/entities/user.entity';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

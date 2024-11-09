@@ -6,5 +6,8 @@ export const createSwaggerConfig = () => {
     .setDescription('API documentation')
     .setVersion('1.0')
     .addBearerAuth()
+    .addCookieAuth('token')
+    .addSecurityRequirements('bearer')
+    .addSecurityRequirements('cookie')
     .build();
 };
