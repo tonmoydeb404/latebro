@@ -4,6 +4,7 @@ import {
 } from '@/common/interfaces/auth.interfaces';
 import { HashService } from '@/common/services/hash.service';
 import {
+  BadRequestException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -54,13 +55,20 @@ export class AuthService {
     const user = entity.toObject();
     delete user.password;
 
-    return { user: entity.toObject(), payload, token };
+    return { user, payload, token };
   }
 
   async register(dto: RegisterDto): Promise<IAuthResponse> {
     const { email, password } = dto;
 
-    const entity = new this.userModel({ email, password });
+    let entity = await this.userModel.findOne({ email });
+
+    if (entity)
+      throw new BadRequestException(
+        'User account already exists with this email',
+      );
+
+    entity = new this.userModel({ email, password });
 
     await entity.save();
 
