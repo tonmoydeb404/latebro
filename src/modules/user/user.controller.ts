@@ -3,10 +3,10 @@ import { UserService } from './user.service';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly usersService: UserService) {}
+  constructor(private readonly service: UserService) {}
 
   @Get()
   getAll() {
-    return this.usersService.getAll();
+    return this.service.getAll();
   }
 }
