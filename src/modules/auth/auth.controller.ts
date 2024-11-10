@@ -41,4 +41,11 @@ export class AuthController {
     res.cookie('token', results.token, cookieConfig);
     return results;
   }
+
+  @Post('/logout')
+  async logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('token');
+
+    return true;
+  }
 }
