@@ -16,7 +16,7 @@ import { CreateResumeDto } from '../dto/create-resume.dto';
 import { UpdateResumeDto } from '../dto/update-resume.dto';
 import { ResumeService } from '../services/resume.service';
 
-@Controller('resume')
+@Controller('resumes')
 export class ResumeController {
   constructor(private readonly service: ResumeService) {}
 
