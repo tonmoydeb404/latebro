@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateResumeDto } from '../dto/create-resume.dto';
 import { UpdateResumeDto } from '../dto/update-resume.dto';
+import { ResumeContact } from '../entities/resume-contact.entity';
 import { ResumeProfile } from '../entities/resume-profile.entity';
 import { Resume } from '../entities/resume.entity';
 
@@ -14,6 +15,8 @@ export class ResumeService {
     private readonly model: Model<Resume>,
     @InjectModel(ResumeProfile.name)
     private readonly profileModel: Model<ResumeProfile>,
+    @InjectModel(ResumeContact.name)
+    private readonly contactModel: Model<ResumeContact>,
   ) {}
 
   // Controller Specific ----------------------------------------------------------------------
@@ -54,10 +57,14 @@ export class ResumeService {
     const profile = new this.profileModel();
     await profile.save();
 
+    const contact = new this.contactModel();
+    await contact.save();
+
     const entity = new this.model({
       title,
       user: userId,
       profile: profile._id,
+      contact: contact._id,
     });
 
     await entity.save();
