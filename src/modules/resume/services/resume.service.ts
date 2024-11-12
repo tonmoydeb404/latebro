@@ -19,6 +19,13 @@ export class ResumeService {
     private readonly contactModel: Model<ResumeContact>,
   ) {}
 
+  getOneWithPermission(userId: string, resumeId: string) {
+    return this.model.findOne({
+      user: userId,
+      _id: resumeId,
+    });
+  }
+
   // Controller Specific ----------------------------------------------------------------------
   async getAll(userId: string, page: number = 1, limit: number = 10) {
     const currentPage = page - 1 || 0;
