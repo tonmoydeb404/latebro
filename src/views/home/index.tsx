@@ -1,4 +1,6 @@
 import { Button } from "@/components/ui/button";
+import { paths } from "@/router/paths";
+import Link from "next/link";
 
 type Props = {};
 
@@ -35,9 +37,11 @@ const HomeView = (_props: Props) => {
               </div>
               {/* Buttons */}
               <div className="mt-8 gap-3 flex justify-center">
-                <Button size={"lg"}>Get started</Button>
-                <Button size={"lg"} variant={"outline"}>
-                  Learn more
+                <Button size={"lg"} asChild>
+                  <Link href={paths.auth.login}>Get started</Link>
+                </Button>
+                <Button size={"lg"} variant={"outline"} asChild>
+                  <Link href={paths.auth.register}>Sign Up</Link>
                 </Button>
               </div>
               {/* End Buttons */}
