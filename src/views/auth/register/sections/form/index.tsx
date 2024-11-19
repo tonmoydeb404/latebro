@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 
+import { RHFForm } from "@/components/common/rhf";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,11 +11,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { paths } from "@/router/paths";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import Fields from "./fields";
+import schema, { SchemaType } from "./schema";
 
 const RegisterForm = () => {
+  const defaultValues: SchemaType = {
+    email: "",
+    password: "",
+    confirmPassword: "",
+  };
+  const formOptions = useForm({ defaultValues, resolver: zodResolver(schema) });
+
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
@@ -22,30 +34,18 @@ const RegisterForm = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="m@example.com"
-              required
-            />
+        <RHFForm formOptions={formOptions}>
+          <div className="grid gap-4">
+            <Fields />
+            <Button type="submit" className="w-full">
+              Register
+            </Button>
           </div>
-          <div className="grid gap-2">
-            <div className="flex items-center">
-              <Label htmlFor="password">Password</Label>
-            </div>
-            <Input id="password" type="password" required />
-          </div>
-          <Button type="submit" className="w-full">
-            Register
-          </Button>
-        </div>
+        </RHFForm>
         <div className="mt-4 text-center text-sm">
           Already have an account?{" "}
           <Link href={paths.auth.login} className="underline">
-            Login up
+            Login
           </Link>
         </div>
       </CardContent>

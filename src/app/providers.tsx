@@ -8,12 +8,7 @@ type Props = {
 const Providers = (props: Props) => {
   const { children } = props;
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="dark"
-      enableSystem
-      disableTransitionOnChange
-    >
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
       {children}
     </ThemeProvider>
   );
