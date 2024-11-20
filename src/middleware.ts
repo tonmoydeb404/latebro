@@ -20,7 +20,7 @@ export function middleware(request: NextRequest) {
   );
 
   if (isProtectedRoute && !token) {
-    const url = new URL("/login", request.url);
+    const url = new URL("/auth/login", request.url);
     url.searchParams.set("redirect", request.nextUrl.pathname);
     return NextResponse.redirect(url);
   }

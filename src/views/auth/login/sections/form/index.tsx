@@ -15,11 +15,15 @@ import { toast } from "@/hooks/use-toast";
 import { paths } from "@/router/paths";
 import { useLoginMutation } from "@/store/features/auth/api";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter, useSearchParams } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Fields from "./fields";
 import schema, { SchemaType } from "./schema";
 
 const LoginForm = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
   const [login] = useLoginMutation();
 
   // ----------------------------------------------------------------------
@@ -34,6 +38,7 @@ const LoginForm = () => {
     const response = await login(values);
     if (response.data?.status === "success") {
       toast({ title: "Login Successfull" });
+      router.replace(redirect ?? "/profiles");
     } else {
       toast({
         title: response.data?.message || "Something wents to wrong!",

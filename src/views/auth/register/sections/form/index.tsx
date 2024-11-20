@@ -11,19 +11,44 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { toast } from "@/hooks/use-toast";
 import { paths } from "@/router/paths";
+import { useRegisterMutation } from "@/store/features/auth/api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useRouter, useSearchParams } from "next/navigation";
+import { SubmitHandler, useForm } from "react-hook-form";
 import Fields from "./fields";
 import schema, { SchemaType } from "./schema";
 
 const RegisterForm = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
+  const [mutate] = useRegisterMutation();
+
+  // ----------------------------------------------------------------------
+
   const defaultValues: SchemaType = {
     email: "",
     password: "",
     confirmPassword: "",
   };
   const formOptions = useForm({ defaultValues, resolver: zodResolver(schema) });
+
+  const onValid: SubmitHandler<SchemaType> = async (values) => {
+    const response = await mutate(values);
+    if (response.data?.status === "success") {
+      toast({ title: "Registration Successfull" });
+      router.replace(redirect ?? "/profiles");
+    } else {
+      toast({
+        title: response.data?.message || "Something wents to wrong!",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // ----------------------------------------------------------------------
 
   return (
     <Card className="mx-auto max-w-sm">
@@ -34,7 +59,7 @@ const RegisterForm = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <RHFForm formOptions={formOptions}>
+        <RHFForm formOptions={formOptions} onValid={onValid}>
           <div className="grid gap-4">
             <Fields />
             <Button type="submit" className="w-full">
