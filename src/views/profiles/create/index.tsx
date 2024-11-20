@@ -1,27 +1,22 @@
 "use client";
 
-import Stepper from "@/components/ui/stepper";
-import { useState } from "react";
-import { steps } from "./config";
-import ProfileInfo from "./sections/profile-info";
+import ProfileInfo from "./sections/profile";
+import Sidebar from "./sections/sidebar";
 
 type Props = {};
 
 const ProfileCreateView = (props: Props) => {
-  const [step, setStep] = useState(1);
-
   return (
-    <div className="container max-w-screen-xl mt-10 flex">
-      <Stepper
-        steps={steps}
-        currentStep={step}
-        onStepClick={setStep}
-        hideLabels={true}
-        direction="y"
-      />
-      <div className="max-w-md w-full mt-5 ml-10">
-        <ProfileInfo />
+    <div className="w-full h-screen overflow-hidden flex">
+      <div className="w-full flex-1 flex py-5 gap-5 pr-10">
+        <Sidebar />
+        <div className="w-full flex-1 mt-5">
+          {/* <h2 className="text-2xl mb-10 font-bold">{activeStep?.label}</h2> */}
+          <ProfileInfo />
+        </div>
       </div>
+
+      <div className="shrink-0 w-[700px] bg-slate-100"></div>
     </div>
   );
 };

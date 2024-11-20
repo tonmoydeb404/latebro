@@ -1,4 +1,5 @@
 import ThemeProvider from "@/providers/theme-provider";
+import StoreProvider from "@/store/provider";
 import { ReactNode } from "react";
 
 type Props = {
@@ -9,7 +10,7 @@ const Providers = (props: Props) => {
   const { children } = props;
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-      {children}
+      <StoreProvider>{children}</StoreProvider>
     </ThemeProvider>
   );
 };

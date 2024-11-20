@@ -1,4 +1,5 @@
 import { RHFForm } from "@/components/common/rhf";
+import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -21,9 +22,11 @@ const ProfileInfo = (props: Props) => {
 
   return (
     <RHFForm formOptions={formOptions}>
-      <h2 className="text-2xl mb-10 font-bold">Personal Info</h2>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 mb-5">
         <Fields />
+      </div>
+      <div>
+        <Button>Next</Button>
       </div>
     </RHFForm>
   );
