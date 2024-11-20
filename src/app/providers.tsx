@@ -1,4 +1,5 @@
 import ThemeProvider from "@/providers/theme-provider";
+import AuthProvider from "@/store/features/auth/provider";
 import StoreProvider from "@/store/provider";
 import { ReactNode } from "react";
 
@@ -10,7 +11,9 @@ const Providers = (props: Props) => {
   const { children } = props;
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-      <StoreProvider>{children}</StoreProvider>
+      <StoreProvider>
+        <AuthProvider>{children}</AuthProvider>
+      </StoreProvider>
     </ThemeProvider>
   );
 };
