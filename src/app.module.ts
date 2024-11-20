@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { pinoConfig } from './common/config/pino.config';
 import { AuthModule } from './modules/auth/auth.module';
+import { ResumeModule } from './modules/resume/resume.module';
 import { UserModule } from './modules/user/user.module';
 
 @Module({
@@ -15,6 +16,7 @@ import { UserModule } from './modules/user/user.module';
     DatabaseModule,
     UserModule,
     AuthModule,
+    ResumeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
