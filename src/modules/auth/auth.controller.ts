@@ -22,7 +22,7 @@ export class AuthController {
   }
 
   @Public()
-  @Get('/register')
+  @Post('/register')
   async register(
     @Body() dto: RegisterDto,
     @Res({ passthrough: true }) res: Response,
@@ -32,7 +32,7 @@ export class AuthController {
     return results;
   }
 
-  @Post('/refresh')
+  @Get('/refresh')
   async refresh(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
