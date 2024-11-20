@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/toaster";
 import ThemeProvider from "@/providers/theme-provider";
 import AuthProvider from "@/store/features/auth/provider";
 import StoreProvider from "@/store/provider";
@@ -14,6 +15,7 @@ const Providers = (props: Props) => {
       <StoreProvider>
         <AuthProvider>{children}</AuthProvider>
       </StoreProvider>
+      <Toaster />
     </ThemeProvider>
   );
 };

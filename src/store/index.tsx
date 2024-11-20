@@ -10,6 +10,9 @@ export const makeStore = () => {
       [authSlice.name]: authSlice.reducer,
       [authApi.reducerPath]: authApi.reducer,
     },
+    middleware(getDefaultMiddleware) {
+      return getDefaultMiddleware().concat(authApi.middleware);
+    },
   });
 };
 

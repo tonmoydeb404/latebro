@@ -11,18 +11,38 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { toast } from "@/hooks/use-toast";
 import { paths } from "@/router/paths";
+import { useLoginMutation } from "@/store/features/auth/api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import Fields from "./fields";
 import schema, { SchemaType } from "./schema";
 
 const LoginForm = () => {
+  const [login] = useLoginMutation();
+
+  // ----------------------------------------------------------------------
+
   const defaultValues: SchemaType = {
     email: "",
     password: "",
   };
   const formOptions = useForm({ defaultValues, resolver: zodResolver(schema) });
+
+  const onValid: SubmitHandler<SchemaType> = async (values) => {
+    const response = await login(values);
+    if (response.data?.status === "success") {
+      toast({ title: "Login Successfull" });
+    } else {
+      toast({
+        title: response.data?.message || "Something wents to wrong!",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // ----------------------------------------------------------------------
 
   return (
     <Card className="mx-auto max-w-sm">
@@ -33,7 +53,7 @@ const LoginForm = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <RHFForm formOptions={formOptions}>
+        <RHFForm formOptions={formOptions} onValid={onValid}>
           <div className="grid gap-4">
             <Fields />
             <Button type="submit" className="w-full">
