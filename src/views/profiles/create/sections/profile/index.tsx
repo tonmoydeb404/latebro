@@ -3,12 +3,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import Actions from "../../common/actions";
+import Header from "../../common/header";
 import Fields from "./fields";
 import schema, { SchemaType } from "./schema";
 
 type Props = {};
 
-const ProfileInfo = (props: Props) => {
+const ProfileForm = (props: Props) => {
   const defaultValues = useMemo<SchemaType>(
     () => ({
       name: "",
@@ -22,13 +23,11 @@ const ProfileInfo = (props: Props) => {
 
   return (
     <RHFForm formOptions={formOptions}>
-      <div className="mb-10">
-        <h2 className="text-xl font-bold">Personal Information</h2>
-        <p className="text-sm">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quos,
-          similique.
-        </p>
-      </div>
+      <Header
+        title="Personal Information"
+        description="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quos, similique."
+      />
+
       <div className="flex flex-col gap-4 mb-16">
         <Fields />
       </div>
@@ -37,4 +36,4 @@ const ProfileInfo = (props: Props) => {
   );
 };
 
-export default ProfileInfo;
+export default ProfileForm;

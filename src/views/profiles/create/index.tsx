@@ -1,6 +1,6 @@
 "use client";
 
-import ProfileInfo from "./sections/profile";
+import Form from "./sections/form";
 import Sidebar from "./sections/sidebar";
 
 type Props = {};
@@ -11,7 +11,7 @@ const ProfileCreateView = (props: Props) => {
       <div className="w-full flex-1 flex py-5 gap-5 pr-10">
         <Sidebar />
         <div className="w-full flex-1 mt-5">
-          <ProfileInfo />
+          <Form />
         </div>
       </div>
 
