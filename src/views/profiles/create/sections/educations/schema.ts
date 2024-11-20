@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 const schema = z.object({
-  _id: z.string(),
   instituteName: z.string().min(1, "Institute name is required"),
   description: z.string().optional(),
   startDate: z.string().refine((date) => !isNaN(Date.parse(date)), {

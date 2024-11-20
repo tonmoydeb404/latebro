@@ -27,6 +27,7 @@ const ContactForm = (props: Props) => {
       <Header
         title="Contact Information"
         description="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quos, similique."
+        className="mb-10"
       />
 
       <div className="flex flex-col gap-4 mb-16">

@@ -1,12 +1,12 @@
 type Props = {
   title: string;
   description: string;
-};
+} & JSX.IntrinsicElements["div"];
 
 const Header = (props: Props) => {
-  const { description, title } = props;
+  const { description, title, ...others } = props;
   return (
-    <div className="mb-10">
+    <div {...others}>
       <h2 className="text-xl font-bold">{title}</h2>
       <p className="text-sm">{description}</p>
     </div>
