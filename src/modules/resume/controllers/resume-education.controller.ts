@@ -21,7 +21,7 @@ export class ResumeEducationController {
   @Get()
   getAll(
     @Req() req: Request,
-    @Param(':resume_id', new ParseObjectIdPipe()) resumeId: string,
+    @Param('resume_id', ParseObjectIdPipe) resumeId: string,
   ) {
     return this.service.getAll(String(req.user._id), resumeId);
   }
@@ -29,7 +29,7 @@ export class ResumeEducationController {
   @Post()
   create(
     @Req() req: Request,
-    @Param(':resume_id', new ParseObjectIdPipe()) resumeId: string,
+    @Param('resume_id', ParseObjectIdPipe) resumeId: string,
     @Body() body: CreateResumeEducationDto,
   ) {
     return this.service.create(String(req.user._id), resumeId, body);
@@ -38,8 +38,8 @@ export class ResumeEducationController {
   @Get(':id')
   getOne(
     @Req() req: Request,
-    @Param(':resume_id', new ParseObjectIdPipe()) resumeId: string,
-    @Param(':id', new ParseObjectIdPipe()) id: string,
+    @Param('resume_id', ParseObjectIdPipe) resumeId: string,
+    @Param('id', ParseObjectIdPipe) id: string,
   ) {
     return this.service.getOne(String(req.user._id), resumeId, id);
   }
@@ -47,8 +47,8 @@ export class ResumeEducationController {
   @Patch(':id')
   update(
     @Req() req: Request,
-    @Param(':resume_id', new ParseObjectIdPipe()) resumeId: string,
-    @Param(':id', new ParseObjectIdPipe()) id: string,
+    @Param('resume_id', ParseObjectIdPipe) resumeId: string,
+    @Param('id', ParseObjectIdPipe) id: string,
     @Body() body: UpdateResumeEducationDto,
   ) {
     return this.service.update(String(req.user._id), resumeId, id, body);
@@ -57,8 +57,8 @@ export class ResumeEducationController {
   @Delete(':id')
   delete(
     @Req() req: Request,
-    @Param(':resume_id', new ParseObjectIdPipe()) resumeId: string,
-    @Param(':id', new ParseObjectIdPipe()) id: string,
+    @Param('resume_id', ParseObjectIdPipe) resumeId: string,
+    @Param('id', ParseObjectIdPipe) id: string,
   ) {
     return this.service.delete(String(req.user._id), resumeId, id);
   }

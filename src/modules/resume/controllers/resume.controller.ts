@@ -37,7 +37,7 @@ export class ResumeController {
   @Get(':id')
   getOne(
     @Req() req: Request,
-    @Param(':id', new ParseObjectIdPipe()) id: string,
+    @Param('id', new ParseObjectIdPipe()) id: string,
   ) {
     return this.service.getOne(String(req.user._id), id);
   }
@@ -45,7 +45,7 @@ export class ResumeController {
   @Patch(':id')
   update(
     @Req() req: Request,
-    @Param(':id', new ParseObjectIdPipe()) id: string,
+    @Param('id', new ParseObjectIdPipe()) id: string,
     @Body() body: UpdateResumeDto,
   ) {
     return this.service.update(String(req.user._id), id, body);
@@ -54,7 +54,7 @@ export class ResumeController {
   @Delete(':id')
   delete(
     @Req() req: Request,
-    @Param(':id', new ParseObjectIdPipe()) id: string,
+    @Param('id', new ParseObjectIdPipe()) id: string,
   ) {
     return this.service.delete(String(req.user._id), id);
   }

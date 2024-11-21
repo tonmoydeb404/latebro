@@ -11,7 +11,7 @@ export class ResumeProfileController {
   @Get()
   getOne(
     @Req() req: Request,
-    @Param(':resume_id', new ParseObjectIdPipe()) resumeId: string,
+    @Param('resume_id', new ParseObjectIdPipe()) resumeId: string,
   ) {
     return this.service.getOne(String(req.user._id), resumeId);
   }
@@ -19,7 +19,7 @@ export class ResumeProfileController {
   @Patch()
   update(
     @Req() req: Request,
-    @Param(':resume_id', new ParseObjectIdPipe()) resumeId: string,
+    @Param('resume_id', new ParseObjectIdPipe()) resumeId: string,
     @Body() body: UpdateResumeProfileDto,
   ) {
     return this.service.update(String(req.user._id), resumeId, body);
