@@ -18,8 +18,7 @@ export class ResponseInterceptor<T>
     return next.handle().pipe(
       map((results) => ({
         status: 'success',
-        message: 'Request successful',
-        results,
+        ...results,
       })),
     );
   }
