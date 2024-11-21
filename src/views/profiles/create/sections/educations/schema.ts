@@ -3,15 +3,8 @@ import { z } from "zod";
 const schema = z.object({
   instituteName: z.string().min(1, "Institute name is required"),
   description: z.string().optional(),
-  startDate: z.string().refine((date) => !isNaN(Date.parse(date)), {
-    message: "Invalid start date",
-  }),
-  endDate: z
-    .string()
-    .nullable()
-    .refine((date) => date === null || !isNaN(Date.parse(date)), {
-      message: "Invalid end date",
-    }),
+  startedAt: z.date(),
+  endedAt: z.date().optional(),
   isCurrent: z.boolean(),
   subject: z.string().min(1, "Subject is required"),
 });

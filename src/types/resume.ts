@@ -32,8 +32,8 @@ export type ResumeEducation = {
   _id: string;
   instituteName: string;
   description: string;
-  startDate: string;
-  endDate: string | null;
+  startedAt: string;
+  endedAt: string | null;
   isCurrent: boolean;
   subject: string;
 };
@@ -43,8 +43,8 @@ export type ResumeExperience = {
   companyName: string;
   position: string;
   description: string;
-  startDate: string;
-  endDate: string | null;
+  startedAt: string;
+  endedAt: string | null;
   isCurrent: boolean;
 };
 

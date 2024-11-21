@@ -6,7 +6,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { ReactNode } from "react";
 import { useFormContext } from "react-hook-form";
 
@@ -16,10 +16,10 @@ type Props = {
   labelPrev?: ReactNode;
   labelEnd?: ReactNode;
   description?: string;
-} & React.ComponentProps<"input">;
+} & React.ComponentProps<"textarea">;
 
-const RHFTextField = (props: Props) => {
-  const { name, label, description, labelEnd, labelPrev, ...other } = props;
+const RHFTextareaField = (props: Props) => {
+  const { name, label, description, labelEnd, labelPrev, ...others } = props;
   const form = useFormContext();
   return (
     <FormField
@@ -33,7 +33,7 @@ const RHFTextField = (props: Props) => {
             {labelEnd}
           </div>
           <FormControl>
-            <Input {...field} {...other} />
+            <Textarea {...field} {...others} />
           </FormControl>
           {description && <FormDescription>{description}</FormDescription>}
           <FormMessage />
@@ -43,4 +43,4 @@ const RHFTextField = (props: Props) => {
   );
 };
 
-export default RHFTextField;
+export default RHFTextareaField;
