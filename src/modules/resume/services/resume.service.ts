@@ -47,7 +47,7 @@ export class ResumeService {
       total,
     };
 
-    return { results: entities, pagination };
+    return { items: entities, pagination };
   }
 
   async getOne(userId: string, id: string) {

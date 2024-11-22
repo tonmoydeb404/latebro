@@ -29,7 +29,7 @@ export class ResumeExperienceService {
       .find({ resume: resume._id })
       .sort({ createdAt: -1 });
 
-    return { results: entities };
+    return { items: entities };
   }
 
   async getOne(userId: string, resumeId: string, id: string) {
