@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { hasApiError } from "@/helpers/api";
 import { toast } from "@/hooks/use-toast";
 import { useCreateEducationMutation } from "@/store/features/resume/education/api";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -38,8 +39,6 @@ const CreateModal = (props: Props) => {
   const formOptions = useForm({ resolver: zodResolver(schema), defaultValues });
 
   const onValid: SubmitHandler<SchemaType> = async (values) => {
-    console.log({ values });
-
     const response = await create({
       ...values,
       startedAt: values.startedAt.toISOString(),
@@ -47,11 +46,18 @@ const CreateModal = (props: Props) => {
       resumeId: "673e9e56e96cb7bb8646a68d",
     });
 
-    if (response.data?.status !== "success") {
+    if (response.error) {
+      console.error("Login Error: ", response);
+
+      let message = "Something wents to wrong!";
+      if (hasApiError(response.error)) {
+        message = response.error.data.message;
+      }
       toast({
-        title: response.data?.message || "Something wents to wrong",
+        title: message,
         variant: "destructive",
       });
+
       return;
     }
 

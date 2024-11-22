@@ -12,4 +12,4 @@ export type EducationCreatePayload = {
 
 export type EducationCreateResponse = ApiResponse<ResumeEducation>;
 
-export type EducationListResponse = ApiResponse<ResumeEducation[]>;
+export type EducationListResponse = ApiResponse<{ items: ResumeEducation[] }>;

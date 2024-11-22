@@ -35,9 +35,9 @@ const EducationsForm = (props: Props) => {
         <CreateModal />
       </div>
 
-      {data?.results && data.results?.length > 0 && (
+      {data?.results && data.results?.items?.length > 0 && (
         <div>
-          {data.results.map((item) => (
+          {data.results.items.map((item) => (
             <Card key={item._id}>
               <CardHeader>
                 <CardTitle className="text-lg">{item.instituteName}</CardTitle>
@@ -69,7 +69,7 @@ const EducationsForm = (props: Props) => {
         </div>
       )}
 
-      {data?.results?.length === 0 && (
+      {data?.results?.items?.length === 0 && (
         <div className="border border-dashed h-20 flex flex-col items-center justify-center text-center">
           <span className="text-xs uppercase text-muted-foreground">
             currently nothing

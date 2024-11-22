@@ -24,10 +24,10 @@ const UpdateModal = (props: Props) => {
   const { data, onClose, open } = props;
   const defaultValues = useMemo<SchemaType>(
     () => ({
-      endDate: data?.endDate || "",
+      endedAt: new Date(data?.endedAt || ""),
       instituteName: data?.instituteName || "",
       isCurrent: data?.isCurrent || false,
-      startDate: data?.startDate || "",
+      startedAt: new Date(data?.startedAt || ""),
       subject: data?.subject || "",
       description: data?.description || "",
     }),

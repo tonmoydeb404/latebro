@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { hasApiError } from "@/helpers/api";
 import { toast } from "@/hooks/use-toast";
 import { paths } from "@/router/paths";
 import { useRegisterMutation } from "@/store/features/auth/api";
@@ -24,7 +25,7 @@ const RegisterForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect");
-  const [mutate] = useRegisterMutation();
+  const [register] = useRegisterMutation();
 
   // ----------------------------------------------------------------------
 
@@ -36,16 +37,26 @@ const RegisterForm = () => {
   const formOptions = useForm({ defaultValues, resolver: zodResolver(schema) });
 
   const onValid: SubmitHandler<SchemaType> = async (values) => {
-    const response = await mutate(values);
-    if (response.data?.status === "success") {
-      toast({ title: "Registration Successfull" });
-      router.replace(redirect ?? "/profiles");
-    } else {
+    const response = await register(values);
+    console.log({ response });
+
+    if (response.error) {
+      console.error("Register Error: ", response);
+
+      let message = "Something wents to wrong!";
+      if (hasApiError(response.error)) {
+        message = response.error.data.message;
+      }
       toast({
-        title: response.data?.message || "Something wents to wrong!",
+        title: message,
         variant: "destructive",
       });
+
+      return;
     }
+
+    toast({ title: "Register Successfull" });
+    router.replace(redirect ?? "/profiles");
   };
 
   // ----------------------------------------------------------------------

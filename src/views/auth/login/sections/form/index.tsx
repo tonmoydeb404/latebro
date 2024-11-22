@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { hasApiError } from "@/helpers/api";
 import { toast } from "@/hooks/use-toast";
 import { paths } from "@/router/paths";
 import { useLoginMutation } from "@/store/features/auth/api";
@@ -36,15 +37,25 @@ const LoginForm = () => {
 
   const onValid: SubmitHandler<SchemaType> = async (values) => {
     const response = await login(values);
-    if (response.data?.status === "success") {
-      toast({ title: "Login Successfull" });
-      router.replace(redirect ?? "/profiles");
-    } else {
+    console.log({ response });
+
+    if (response.error) {
+      console.error("Login Error: ", response);
+
+      let message = "Something wents to wrong!";
+      if (hasApiError(response.error)) {
+        message = response.error.data.message;
+      }
       toast({
-        title: response.data?.message || "Something wents to wrong!",
+        title: message,
         variant: "destructive",
       });
+
+      return;
     }
+
+    toast({ title: "Login Successfull" });
+    router.replace(redirect ?? "/profiles");
   };
 
   // ----------------------------------------------------------------------
