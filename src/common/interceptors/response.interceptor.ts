@@ -15,11 +15,19 @@ export class ResponseInterceptor<T>
     context: ExecutionContext,
     next: CallHandler,
   ): Observable<ApiResponse<T>> {
+    const httpContext = context.switchToHttp();
+    const response = httpContext.getResponse();
+
     return next.handle().pipe(
-      map((results) => ({
-        status: 'success',
-        ...results,
-      })),
+      map((results) => {
+        const statusCode = response.statusCode || 200;
+        return {
+          status: 'success',
+          results,
+          error: null,
+          code: statusCode,
+        };
+      }),
     );
   }
 }

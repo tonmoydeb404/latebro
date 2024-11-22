@@ -9,6 +9,22 @@ export interface ApiPagination {
 
 export interface ApiResponse<T> {
   status: ApiResponseStatus;
-  message: string;
+  code: number;
   results: T;
+  error: null;
+}
+
+export interface ApiErrorDetail {
+  key: string;
+  error: string;
+}
+
+export interface ApiErrorResponse {
+  status: 'error';
+  code: number;
+  message: string;
+  error: {
+    type: string;
+    details: ApiErrorDetail[];
+  };
 }

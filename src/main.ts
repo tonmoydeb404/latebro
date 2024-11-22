@@ -4,6 +4,7 @@ import { SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { createSwaggerConfig } from './common/config/swagger.config';
+import { ResponseExceptionFilter } from './common/filters/response.exception';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 
 async function bootstrap() {
@@ -25,8 +26,11 @@ async function bootstrap() {
   // Api Versioning
   app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
 
-  // Response Structure
+  // Success Response Structure
   app.useGlobalInterceptors(new ResponseInterceptor());
+
+  // Error Response Structure
+  app.useGlobalFilters(new ResponseExceptionFilter());
 
   // Swagger setup
   const config = createSwaggerConfig();
