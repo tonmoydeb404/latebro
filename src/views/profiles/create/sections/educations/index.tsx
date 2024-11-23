@@ -1,3 +1,4 @@
+import { StateWrapper } from "@/components/common/state";
 import { useLazyListEducationQuery } from "@/store/features/resume/education/api";
 import { useEffect } from "react";
 import Header from "../../common/header";
@@ -7,7 +8,8 @@ import Item from "./item";
 type Props = {};
 
 const EducationsForm = (props: Props) => {
-  const [listEducation, { data }] = useLazyListEducationQuery();
+  const [listEducation, { data, isLoading, isError }] =
+    useLazyListEducationQuery();
 
   useEffect(() => {
     listEducation("673e9e56e96cb7bb8646a68d");
@@ -26,23 +28,19 @@ const EducationsForm = (props: Props) => {
         <CreateModal />
       </div>
 
-      {data?.results && data.results?.items?.length > 0 && (
-        <div>
-          {data.results.items.map((item) => (
-            <Item key={item._id} data={item} />
-          ))}
-        </div>
-      )}
-
-      {data?.results?.items?.length === 0 && (
-        <div className="border border-dashed h-20 flex flex-col items-center justify-center text-center">
-          <span className="text-xs uppercase text-muted-foreground">
-            currently nothing
-          </span>
-        </div>
-      )}
-
-      <div className="flex flex-col gap-4 mb-16"></div>
+      <StateWrapper
+        isLoading={isLoading}
+        isError={isError}
+        isEmpty={data?.results?.items?.length === 0}
+      >
+        {data?.results && data.results?.items?.length > 0 && (
+          <div>
+            {data.results.items.map((item) => (
+              <Item key={item._id} data={item} />
+            ))}
+          </div>
+        )}
+      </StateWrapper>
     </>
   );
 };
