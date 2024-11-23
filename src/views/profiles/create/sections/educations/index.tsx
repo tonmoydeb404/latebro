@@ -1,13 +1,19 @@
 import { StateWrapper } from "@/components/common/state";
+import useModal from "@/hooks/use-modal";
 import { useLazyListEducationQuery } from "@/store/features/resume/education/api";
+import { ResumeEducation } from "@/types/resume";
 import { useEffect } from "react";
 import Header from "../../common/header";
 import CreateModal from "./create-modal";
+import DeleteModal from "./delete-modal";
 import Item from "./item";
+import UpdateModal from "./update-modal";
 
 type Props = {};
 
 const EducationsForm = (props: Props) => {
+  const deleteModal = useModal<ResumeEducation>();
+  const updateModal = useModal<ResumeEducation>();
   const [listEducation, { data, isLoading, isError }] =
     useLazyListEducationQuery();
 
@@ -31,16 +37,33 @@ const EducationsForm = (props: Props) => {
       <StateWrapper
         isLoading={isLoading}
         isError={isError}
-        isEmpty={data?.results?.items?.length === 0}
+        isEmpty={data?.results?.length === 0}
       >
-        {data?.results && data.results?.items?.length > 0 && (
-          <div>
-            {data.results.items.map((item) => (
-              <Item key={item._id} data={item} />
+        {data?.results && data.results?.length > 0 && (
+          <div className="flex flex-col gap-2">
+            {data.results.map((item) => (
+              <Item
+                key={item._id}
+                data={item}
+                onDelete={() => deleteModal.openModal(item)}
+                onEdit={() => updateModal.openModal(item)}
+              />
             ))}
           </div>
         )}
       </StateWrapper>
+
+      <DeleteModal
+        data={deleteModal.data}
+        onClose={deleteModal.closeModal}
+        open={deleteModal.isOpen}
+      />
+
+      <UpdateModal
+        data={updateModal.data}
+        onClose={updateModal.closeModal}
+        open={updateModal.isOpen}
+      />
     </>
   );
 };

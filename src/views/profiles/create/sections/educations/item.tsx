@@ -13,10 +13,12 @@ import moment from "moment";
 
 type Props = {
   data: ResumeEducation;
+  onDelete?: () => void;
+  onEdit?: () => void;
 };
 
 const Item = (props: Props) => {
-  const { data } = props;
+  const { data, onDelete, onEdit } = props;
   return (
     <Card>
       <CardHeader className="pb-2">
@@ -39,11 +41,21 @@ const Item = (props: Props) => {
         </CardDescription>
       </CardContent>
       <CardFooter className="gap-2">
-        <Button size={"sm"} variant={"outline"}>
-          <LucideEdit /> Edit
+        <Button
+          Icon={LucideEdit}
+          size={"sm"}
+          variant={"outline"}
+          onClick={onEdit}
+        >
+          Edit
         </Button>
-        <Button size={"sm"} variant={"destructive"}>
-          <LucideTrash /> Delete
+        <Button
+          Icon={LucideTrash}
+          size={"sm"}
+          variant={"destructive"}
+          onClick={onDelete}
+        >
+          Delete
         </Button>
       </CardFooter>
     </Card>

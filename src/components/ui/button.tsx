@@ -1,11 +1,11 @@
-import { Slot } from "@radix-ui/react-slot";
+import { cn } from "@/lib/utils";
+import { Slot, Slottable } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
+import { LucideLoader2 } from "lucide-react";
 import * as React from "react";
 
-import { cn } from "@/lib/utils";
-
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
@@ -33,21 +33,96 @@ const buttonVariants = cva(
   }
 );
 
+const iconVariants = cva("", {
+  variants: {
+    placement: {
+      default: "",
+      left: "mr-1",
+      right: "ml-1",
+    },
+    size: {
+      default: "w-4",
+      sm: "w-[14px]",
+      lg: "w-[18px]",
+      icon: "hidden",
+    },
+    loading: {
+      true: "animate-spin",
+      false: "",
+    },
+  },
+  defaultVariants: {
+    placement: "default",
+    size: "default",
+  },
+});
+
+interface IconProps {
+  Icon: React.ElementType;
+  iconPlacement?: "left" | "right";
+}
+
+interface IconRefProps {
+  Icon?: never;
+  iconPlacement?: undefined;
+}
+
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
+  loading?: boolean;
+  loadingText?: string;
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+export type ButtonIconProps = IconProps | IconRefProps;
+
+const Button = React.forwardRef<
+  HTMLButtonElement,
+  ButtonProps & ButtonIconProps
+>(
+  (
+    {
+      className,
+      variant,
+      size,
+      asChild = false,
+      Icon,
+      iconPlacement = "left",
+      loading,
+      loadingText,
+      ...props
+    },
+    ref
+  ) => {
     const Comp = asChild ? Slot : "button";
+    const CompIcon = loading ? LucideLoader2 : Icon;
+
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(buttonVariants({ variant, size, className }), "")}
         ref={ref}
+        disabled={loading}
         {...props}
-      />
+      >
+        {CompIcon && iconPlacement === "left" && (
+          <CompIcon
+            className={cn(
+              iconVariants({ placement: iconPlacement, size, loading })
+            )}
+          />
+        )}
+        <Slottable>
+          {loading && loadingText ? loadingText : props.children}
+        </Slottable>
+        {CompIcon && iconPlacement === "right" && (
+          <CompIcon
+            className={cn(
+              iconVariants({ placement: iconPlacement, size, loading })
+            )}
+          />
+        )}
+      </Comp>
     );
   }
 );

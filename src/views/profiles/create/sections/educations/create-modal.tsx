@@ -21,7 +21,7 @@ type Props = {};
 
 const CreateModal = (props: Props) => {
   const [open, setOpen] = useState(false);
-  const [create] = useCreateEducationMutation();
+  const [mutate] = useCreateEducationMutation();
 
   // ----------------------------------------------------------------------
 
@@ -39,11 +39,11 @@ const CreateModal = (props: Props) => {
   const formOptions = useForm({ resolver: zodResolver(schema), defaultValues });
 
   const onValid: SubmitHandler<SchemaType> = async (values) => {
-    const response = await create({
+    const response = await mutate({
       ...values,
       startedAt: values.startedAt.toISOString(),
       endedAt: values.endedAt?.toISOString(),
-      resumeId: "673e9e56e96cb7bb8646a68d",
+      resume: "673e9e56e96cb7bb8646a68d",
     });
 
     if (response.error) {
@@ -67,8 +67,6 @@ const CreateModal = (props: Props) => {
   };
 
   // ----------------------------------------------------------------------
-
-  console.log(formOptions.getValues());
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

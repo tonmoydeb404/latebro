@@ -36,6 +36,7 @@ export type ResumeEducation = {
   endedAt: string | null;
   isCurrent: boolean;
   subject: string;
+  resume: string;
 };
 
 export type ResumeExperience = {
