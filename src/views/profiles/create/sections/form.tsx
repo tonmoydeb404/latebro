@@ -6,6 +6,7 @@ import LanguagesForm from "./languages";
 import ProfileForm from "./profile";
 import ProjectsForm from "./projects";
 import SkillsForm from "./skills";
+import SocialsForm from "./socials";
 
 type Props = {};
 
@@ -20,6 +21,7 @@ const Form = (props: Props) => {
       {nav === 4 && <ProjectsForm />}
       {nav === 5 && <SkillsForm />}
       {nav === 6 && <LanguagesForm />}
+      {nav === 7 && <SocialsForm />}
     </>
   );
 };

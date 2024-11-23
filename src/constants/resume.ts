@@ -12,3 +12,22 @@ export const languageExperiences = {
   proficient: "Proficient",
   basic: "Basic",
 };
+
+export const socialTypes = {
+  codepen: "Codepen",
+  github: "Github",
+  dribble: "Dribble",
+  linkedin: "Linkedin",
+  medium: "Medium",
+  gitlab: "Gitlab",
+  x: "X",
+  tableau: "Tableau",
+  stackoverflow: "Stackoverflow",
+  repl_it: "Repl it",
+  behance: "Behance",
+  hashnode: "Hashnode",
+  dev_to: "Dev to",
+  instagram: "Instagram",
+  youtube: "Youtube",
+  facebook: "Facebook",
+};

@@ -7,6 +7,7 @@ import resumeExperienceApi from "./features/resume/experience/api";
 import resumeLanguageApi from "./features/resume/language/api";
 import resumeProjectApi from "./features/resume/project/api";
 import resumeSkillApi from "./features/resume/skill/api";
+import resumeSocialApi from "./features/resume/social/api";
 
 export const makeStore = () => {
   return configureStore({
@@ -19,6 +20,7 @@ export const makeStore = () => {
       [resumeProjectApi.reducerPath]: resumeProjectApi.reducer,
       [resumeSkillApi.reducerPath]: resumeSkillApi.reducer,
       [resumeLanguageApi.reducerPath]: resumeLanguageApi.reducer,
+      [resumeSocialApi.reducerPath]: resumeSocialApi.reducer,
     },
     middleware(getDefaultMiddleware) {
       return getDefaultMiddleware().concat(
@@ -27,7 +29,8 @@ export const makeStore = () => {
         resumeExperienceApi.middleware,
         resumeProjectApi.middleware,
         resumeSkillApi.middleware,
-        resumeLanguageApi.middleware
+        resumeLanguageApi.middleware,
+        resumeSocialApi.middleware
       );
     },
   });
