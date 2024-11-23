@@ -24,7 +24,7 @@ export type ResumeContact = {
   phone: string;
   email: string;
   address: string;
-  addressLink: string | null;
+  address_link: string | null;
   website: string;
 };
 

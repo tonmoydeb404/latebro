@@ -8,7 +8,7 @@ const Fields = (props: Props) => {
       <RHFTextField name="phone" label="Phone" />
       <RHFTextField name="email" label="Email" />
       <RHFTextField name="address" label="Address" />
-      <RHFTextField name="addressLink" label="Address Link" />
+      <RHFTextField name="address_link" label="Address Link" />
       <RHFTextField name="website" label="Website" />
     </>
   );

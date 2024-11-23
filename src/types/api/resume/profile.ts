@@ -1,5 +1,5 @@
 import { ApiResponse } from "..";
-import { ResumeProfile, ResumeSocial } from "../../resume";
+import { ResumeProfile, ResumeProject } from "../../resume";
 
 // ----------------------------------------------------------------------
 
@@ -11,6 +11,6 @@ export type ProfileUpdatePayload = Partial<
   Pick<ResumeProfile, "name" | "avatar" | "bio" | "profession">
 > & { resume: string };
 
-export type ProfileUpdateResponse = ApiResponse<ResumeSocial>;
+export type ProfileUpdateResponse = ApiResponse<ResumeProject>;
 
 // ----------------------------------------------------------------------
