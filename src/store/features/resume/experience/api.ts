@@ -1,49 +1,49 @@
 import { backendBaseQuery } from "@/store/helpers/base-queries";
 import {
-  EducationCreatePayload,
-  EducationCreateResponse,
-  EducationDeletePayload,
-  EducationDeleteResponse,
-  EducationListResponse,
-  EducationUpdatePayload,
-  EducationUpdateResponse,
-} from "@/types/api/resume/education";
+  ExperienceCreatePayload,
+  ExperienceCreateResponse,
+  ExperienceDeletePayload,
+  ExperienceDeleteResponse,
+  ExperienceListResponse,
+  ExperienceUpdatePayload,
+  ExperienceUpdateResponse,
+} from "@/types/api/resume/experience";
 import { createApi } from "@reduxjs/toolkit/query/react";
 
-const resumeEducationApi = createApi({
-  reducerPath: "resumeEducationApi",
+const resumeExperienceApi = createApi({
+  reducerPath: "resumeExperienceApi",
   baseQuery: backendBaseQuery("/resumes"),
-  tagTypes: ["Education"], // Define tag type
+  tagTypes: ["Experience"], // Define tag type
   endpoints: (builder) => ({
-    listEducation: builder.query<EducationListResponse, string>({
+    listExperience: builder.query<ExperienceListResponse, string>({
       query: (resumeId) => ({
-        url: `/${resumeId}/educations`,
+        url: `/${resumeId}/experiences`,
       }),
       providesTags: (result, error, resumeId) => [
-        { type: "Education", id: resumeId },
+        { type: "Experience", id: resumeId },
       ],
     }),
-    createEducation: builder.mutation<
-      EducationCreateResponse,
-      EducationCreatePayload
+    createExperience: builder.mutation<
+      ExperienceCreateResponse,
+      ExperienceCreatePayload
     >({
       query: (payload) => ({
-        url: `/${payload.resume}/educations`,
+        url: `/${payload.resume}/experiences`,
         body: payload,
         method: "POST",
       }),
       onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
         try {
           const { data } = await queryFulfilled; // Await API response
-          const newEducation = data.results;
+          const newExperience = data.results;
 
-          // Manually update the cache for listEducation
+          // Manually update the cache for listExperience
           dispatch(
-            resumeEducationApi.util.updateQueryData(
-              "listEducation",
+            resumeExperienceApi.util.updateQueryData(
+              "listExperience",
               args.resume,
               (draft) => {
-                draft.results.push(newEducation);
+                draft.results.push(newExperience);
               }
             )
           );
@@ -52,31 +52,31 @@ const resumeEducationApi = createApi({
         }
       },
     }),
-    updateEducation: builder.mutation<
-      EducationUpdateResponse,
-      EducationUpdatePayload
+    updateExperience: builder.mutation<
+      ExperienceUpdateResponse,
+      ExperienceUpdatePayload
     >({
       query: (payload) => ({
-        url: `/${payload.resume}/educations/${payload._id}`,
+        url: `/${payload.resume}/experiences/${payload._id}`,
         body: payload,
         method: "PATCH",
       }),
       onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
         try {
           const { data } = await queryFulfilled; // Await API response
-          const updatedEducation = data.results;
+          const updatedExperience = data.results;
 
-          // Update the cache for listEducation
+          // Update the cache for listExperience
           dispatch(
-            resumeEducationApi.util.updateQueryData(
-              "listEducation",
+            resumeExperienceApi.util.updateQueryData(
+              "listExperience",
               args.resume,
               (draft) => {
                 const index = draft.results.findIndex(
-                  (item) => item._id === updatedEducation._id
+                  (item) => item._id === updatedExperience._id
                 );
                 if (index !== -1) {
-                  draft.results[index] = updatedEducation;
+                  draft.results[index] = updatedExperience;
                 }
               }
             )
@@ -86,22 +86,22 @@ const resumeEducationApi = createApi({
         }
       },
     }),
-    deleteEducation: builder.mutation<
-      EducationDeleteResponse,
-      EducationDeletePayload
+    deleteExperience: builder.mutation<
+      ExperienceDeleteResponse,
+      ExperienceDeletePayload
     >({
       query: (payload) => ({
-        url: `/${payload.resume}/educations/${payload._id}`,
+        url: `/${payload.resume}/experiences/${payload._id}`,
         method: "DELETE",
       }),
       onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
         try {
           await queryFulfilled; // Await API success
 
-          // Remove the education from the cache for listEducation
+          // Remove the education from the cache for listExperience
           dispatch(
-            resumeEducationApi.util.updateQueryData(
-              "listEducation",
+            resumeExperienceApi.util.updateQueryData(
+              "listExperience",
               args.resume,
               (draft) => {
                 draft.results = draft.results.filter(
@@ -119,10 +119,10 @@ const resumeEducationApi = createApi({
 });
 
 export const {
-  useCreateEducationMutation,
-  useLazyListEducationQuery,
-  useListEducationQuery,
-  useDeleteEducationMutation,
-  useUpdateEducationMutation,
-} = resumeEducationApi;
-export default resumeEducationApi;
+  useCreateExperienceMutation,
+  useLazyListExperienceQuery,
+  useListExperienceQuery,
+  useDeleteExperienceMutation,
+  useUpdateExperienceMutation,
+} = resumeExperienceApi;
+export default resumeExperienceApi;

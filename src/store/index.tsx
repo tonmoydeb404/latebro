@@ -3,6 +3,7 @@ import authApi from "./features/auth/api";
 import authSlice from "./features/auth/slice";
 import editorSlice from "./features/editor/slice";
 import resumeEducationApi from "./features/resume/education/api";
+import resumeExperienceApi from "./features/resume/experience/api";
 
 export const makeStore = () => {
   return configureStore({
@@ -11,11 +12,13 @@ export const makeStore = () => {
       [authSlice.name]: authSlice.reducer,
       [authApi.reducerPath]: authApi.reducer,
       [resumeEducationApi.reducerPath]: resumeEducationApi.reducer,
+      [resumeExperienceApi.reducerPath]: resumeExperienceApi.reducer,
     },
     middleware(getDefaultMiddleware) {
       return getDefaultMiddleware().concat(
         authApi.middleware,
-        resumeEducationApi.middleware
+        resumeEducationApi.middleware,
+        resumeExperienceApi.middleware
       );
     },
   });

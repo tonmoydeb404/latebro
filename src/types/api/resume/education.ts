@@ -1,5 +1,5 @@
-import { ApiResponse } from ".";
-import { ResumeEducation } from "../resume";
+import { ApiResponse } from "..";
+import { ResumeEducation } from "../../resume";
 
 // ----------------------------------------------------------------------
 

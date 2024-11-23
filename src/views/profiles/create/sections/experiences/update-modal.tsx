@@ -6,44 +6,54 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { hasApiError } from "@/helpers/api";
 import { toast } from "@/hooks/use-toast";
-import { useCreateEducationMutation } from "@/store/features/resume/education/api";
+import { useUpdateExperienceMutation } from "@/store/features/resume/experience/api";
+import { ResumeExperience } from "@/types/resume";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Fields from "./fields";
 import schema, { SchemaType } from "./schema";
 
-type Props = {};
+type Props = {
+  data: ResumeExperience | null;
+  open: boolean;
+  onClose: () => void;
+};
 
-const CreateModal = (props: Props) => {
-  const [open, setOpen] = useState(false);
-  const [mutate, response] = useCreateEducationMutation();
+const UpdateModal = (props: Props) => {
+  const { data, onClose, open } = props;
+  const [mutate, response] = useUpdateExperienceMutation();
 
   // ----------------------------------------------------------------------
 
   const defaultValues = useMemo<SchemaType>(
     () => ({
-      endedAt: undefined,
-      instituteName: "",
-      isCurrent: false,
-      startedAt: new Date(),
-      subject: "",
-      description: "",
+      endedAt: new Date(data?.endedAt || ""),
+      companyName: data?.companyName || "",
+      isCurrent: data?.isCurrent || false,
+      startedAt: new Date(data?.startedAt || ""),
+      position: data?.position || "",
+      description: data?.description || "",
     }),
-    []
+    [data]
   );
-  const formOptions = useForm({ resolver: zodResolver(schema), defaultValues });
+  const formOptions = useForm({
+    resolver: zodResolver(schema),
+    defaultValues,
+  });
 
   const onValid: SubmitHandler<SchemaType> = async (values) => {
+    if (!data) return;
+
     const response = await mutate({
       ...values,
       startedAt: values.startedAt.toISOString(),
       endedAt: values.endedAt?.toISOString(),
-      resume: "673e9e56e96cb7bb8646a68d",
+      resume: data.resume,
+      _id: data._id,
     });
 
     if (response.error) {
@@ -61,38 +71,34 @@ const CreateModal = (props: Props) => {
       return;
     }
 
-    toast({ title: "Education created successfully!" });
+    toast({ title: "Experience record updated successfully!" });
     formOptions.reset();
-    setOpen(false);
+    onClose();
   };
+
+  useEffect(() => {
+    formOptions.reset(defaultValues);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultValues]);
 
   // ----------------------------------------------------------------------
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant={"default"} size={"sm"}>
-          Add New
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader className="mb-5">
-          <DialogTitle>Create Education</DialogTitle>
+          <DialogTitle>Update Experience Record</DialogTitle>
         </DialogHeader>
         <RHFForm formOptions={formOptions} onValid={onValid}>
           <div className="flex flex-col gap-4">
             <Fields />
           </div>
           <DialogFooter>
-            <Button
-              variant={"secondary"}
-              type="button"
-              onClick={() => setOpen(false)}
-            >
+            <Button type="button" variant={"secondary"}>
               Cancel
             </Button>
             <Button type="submit" loading={response.isLoading}>
-              Create
+              Update
             </Button>
           </DialogFooter>
         </RHFForm>
@@ -101,4 +107,4 @@ const CreateModal = (props: Props) => {
   );
 };
 
-export default CreateModal;
+export default UpdateModal;

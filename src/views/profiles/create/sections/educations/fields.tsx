@@ -17,7 +17,7 @@ const Fields = (props: Props) => {
         <RHFDateField name="startedAt" label="Start Date" />
         <RHFDateField name="endedAt" label="End Date" />
       </div>
-      <RHFCheckboxField name="isCurrent" label="Currently Working" />
+      <RHFCheckboxField name="isCurrent" label="Currently Studying" />
     </>
   );
 };

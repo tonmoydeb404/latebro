@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { hasApiError } from "@/helpers/api";
 import { toast } from "@/hooks/use-toast";
-import { useCreateEducationMutation } from "@/store/features/resume/education/api";
+import { useCreateExperienceMutation } from "@/store/features/resume/experience/api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -21,17 +21,17 @@ type Props = {};
 
 const CreateModal = (props: Props) => {
   const [open, setOpen] = useState(false);
-  const [mutate, response] = useCreateEducationMutation();
+  const [mutate, response] = useCreateExperienceMutation();
 
   // ----------------------------------------------------------------------
 
   const defaultValues = useMemo<SchemaType>(
     () => ({
-      endedAt: undefined,
-      instituteName: "",
+      endedAt: null,
+      companyName: "",
       isCurrent: false,
       startedAt: new Date(),
-      subject: "",
+      position: "",
       description: "",
     }),
     []
@@ -42,7 +42,7 @@ const CreateModal = (props: Props) => {
     const response = await mutate({
       ...values,
       startedAt: values.startedAt.toISOString(),
-      endedAt: values.endedAt?.toISOString(),
+      endedAt: values.endedAt?.toISOString() ?? null,
       resume: "673e9e56e96cb7bb8646a68d",
     });
 
@@ -61,7 +61,7 @@ const CreateModal = (props: Props) => {
       return;
     }
 
-    toast({ title: "Education created successfully!" });
+    toast({ title: "Experience record created successfully!" });
     formOptions.reset();
     setOpen(false);
   };
@@ -77,7 +77,7 @@ const CreateModal = (props: Props) => {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader className="mb-5">
-          <DialogTitle>Create Education</DialogTitle>
+          <DialogTitle>Create Experience Record</DialogTitle>
         </DialogHeader>
         <RHFForm formOptions={formOptions} onValid={onValid}>
           <div className="flex flex-col gap-4">

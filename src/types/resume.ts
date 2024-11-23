@@ -47,6 +47,7 @@ export type ResumeExperience = {
   startedAt: string;
   endedAt: string | null;
   isCurrent: boolean;
+  resume: string;
 };
 
 export type ResumeProject = {
@@ -57,18 +58,21 @@ export type ResumeProject = {
   sourceLink: string;
   caseStudyLink: string;
   tools: string;
+  resume: string;
 };
 
 export type ResumeSkill = {
   _id: string;
   title: string;
   experience: ResumeSkillExperience;
+  resume: string;
 };
 
 export type ResumeLanguage = {
   _id: string;
   title: string;
   experience: ResumeLanguageExperience;
+  resume: string;
 };
 
 export type ResumeSocial = {
@@ -76,6 +80,7 @@ export type ResumeSocial = {
   type: ResumeSocialType;
   title: string;
   url: string;
+  resume: string;
 };
 
 export enum ResumeSkillExperience {
