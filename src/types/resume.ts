@@ -83,36 +83,33 @@ export type ResumeSocial = {
   resume: string;
 };
 
-export enum ResumeSkillExperience {
-  Beginner = "Beginner",
-  Junior = "Junior",
-  MidLevel = "Mid-level",
-  Senior = "Senior",
-  Expert = "Expert",
-}
+export type ResumeSkillExperience =
+  | "beginner"
+  | "junior"
+  | "mid_level"
+  | "senior"
+  | "expert";
 
-export enum ResumeLanguageExperience {
-  Native = "Native",
-  Fluent = "Fluent",
-  Proficient = "Proficient",
-  Basic = "Basic",
-}
+export type ResumeLanguageExperience =
+  | "Native"
+  | "Fluent"
+  | "Proficient"
+  | "Basic";
 
-export enum ResumeSocialType {
-  Codepen = "codepen",
-  GitHub = "github",
-  Dribble = "dribble",
-  LinkedIn = "linkedin",
-  Medium = "medium",
-  GitLab = "gitlab",
-  X = "x",
-  Tableau = "tableau",
-  StackOverflow = "stackoverflow",
-  ReplIt = "repl_it",
-  Behance = "behance",
-  Hashnode = "hashnode",
-  DevTo = "dev_to",
-  Instagram = "instagram",
-  YouTube = "youtube",
-  Facebook = "facebook",
-}
+export type ResumeSocialType =
+  | "codepen"
+  | "github"
+  | "dribble"
+  | "linkedin"
+  | "medium"
+  | "gitlab"
+  | "x"
+  | "tableau"
+  | "stackoverflow"
+  | "repl_it"
+  | "behance"
+  | "hashnode"
+  | "dev_to"
+  | "instagram"
+  | "youtube"
+  | "facebook";
