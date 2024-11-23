@@ -1,8 +1,9 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { paths } from "./router/paths";
 
 // routes that require authentication ----------------------------------------------------------------------
-const protectedRoutes = ["/profiles"];
+const protectedRoutes = ["/resumes"];
 // routes that only for unauthenticated ----------------------------------------------------------------------
 const guestRoutes = ["/auth/login", "/auth/register"];
 
@@ -26,7 +27,7 @@ export function middleware(request: NextRequest) {
   }
 
   if (isGuestPath && token) {
-    return NextResponse.redirect(new URL("/profiles", request.url));
+    return NextResponse.redirect(new URL(paths.resumes.root, request.url));
   }
 
   return NextResponse.next();
@@ -37,7 +38,7 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // Protected routes ----------------------------------------------------------------------
-    "/profiles/:path*",
+    "/resumes/:path*",
     // Guest routes ----------------------------------------------------------------------
     "/auth/login",
     "/auth/register",

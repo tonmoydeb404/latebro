@@ -5,7 +5,7 @@ import Sidebar from "./sections/sidebar";
 
 type Props = {};
 
-const ProfileCreateView = (props: Props) => {
+const ProfileEditorView = (props: Props) => {
   return (
     <div className="w-full h-screen overflow-hidden flex">
       <div className="w-full flex-1 flex py-5 gap-5 pr-10 border-r">
@@ -20,4 +20,4 @@ const ProfileCreateView = (props: Props) => {
   );
 };
 
-export default ProfileCreateView;
+export default ProfileEditorView;

@@ -4,8 +4,8 @@ export const paths = {
     login: "/auth/login",
     register: "/auth/register",
   },
-  profiles: {
-    root: "/profiles",
-    create: "/profiles/create",
+  resumes: {
+    root: "/resumes",
+    editor: "/resumes/editor",
   },
 };

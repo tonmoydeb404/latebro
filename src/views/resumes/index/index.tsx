@@ -4,14 +4,14 @@ import Link from "next/link";
 
 type Props = {};
 
-const ProfilesView = (props: Props) => {
+const ResumesView = (props: Props) => {
   return (
     <div>
       <Button>
-        <Link href={paths.profiles.create}>Create</Link>
+        <Link href={paths.resumes.editor}>Create</Link>
       </Button>
     </div>
   );
 };
 
-export default ProfilesView;
+export default ResumesView;
