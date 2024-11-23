@@ -10,91 +10,71 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { hasApiError } from "@/helpers/api";
-import { toast } from "@/hooks/use-toast";
-import { setResume } from "@/store/features/editor/slice";
-import {
-  useLazyGetResumeQuery,
-  useListResumeQuery,
-} from "@/store/features/resume/api";
-import { useAppDispatch, useEditor } from "@/store/hooks";
+import useModal from "@/hooks/use-modal";
+import { paths } from "@/router/paths";
+import { useListResumeQuery } from "@/store/features/resume/api";
 import { LucideMoreHorizontal, LucidePlus } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+import CreateModal from "./create-modal";
 
 type Props = {};
 
 const ResumeDropdown = (props: Props) => {
-  const dispatch = useAppDispatch();
-  const { resume } = useEditor();
+  const router = useRouter();
+  const searchparams = useSearchParams();
+  const resume = searchparams.get("resume");
+  const createModal = useModal();
   const response = useListResumeQuery();
   const { data, isLoading } = response;
-  const [query, queryResponse] = useLazyGetResumeQuery();
 
   const updateResume = async (id: string) => {
-    const response = await query(id);
-
-    if (response.error || !response.data?.results) {
-      console.error("Resume Fetching Error: ", response);
-
-      let message = "Something wents to wrong!";
-      if (hasApiError(response.error)) {
-        message = response.error.data.message;
-      }
-      toast({
-        title: message,
-        variant: "destructive",
-      });
-
-      return;
-    }
-
-    dispatch(setResume(response.data.results));
-    toast({ title: "Resume updated!" });
+    router.replace(`${paths.resumes.editor}?resume=${id}`);
   };
 
   // ----------------------------------------------------------------------
 
   useEffect(() => {
-    if (!resume && data?.results && data?.results?.length > 0) {
+    if (!resume && data?.results && data?.results.length > 0) {
       updateResume(data.results[0]._id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data?.results, dispatch, resume]);
-
-  useEffect(() => {
-    if (queryResponse.data?.results) {
-      dispatch(setResume(queryResponse.data.results));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [queryResponse]);
+  }, [data?.results, resume]);
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild disabled={isLoading} className="mb-2">
-        <Button size={"icon"} variant="outline" loading={isLoading}>
-          <LucideMoreHorizontal size={16} />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 mt-5" side="right">
-        <DropdownMenuItem>
-          <LucidePlus />
-          <span>New Resume</span>
-          <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
-        </DropdownMenuItem>
-        <DropdownMenuLabel>Resumes</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuRadioGroup
-          value={resume?._id}
-          onValueChange={(v) => updateResume(v)}
-        >
-          {data?.results.map((item) => (
-            <DropdownMenuRadioItem key={item._id} value={item._id}>
-              {item.title}
-            </DropdownMenuRadioItem>
-          ))}
-        </DropdownMenuRadioGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild disabled={isLoading} className="mb-2">
+          <Button size={"icon"} variant="outline" loading={isLoading}>
+            <LucideMoreHorizontal size={16} />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56 mt-5" side="right">
+          <DropdownMenuItem onClick={() => createModal.openModal(undefined)}>
+            <LucidePlus />
+            <span>New Resume</span>
+            <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuLabel>Resumes</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuRadioGroup
+            value={resume || undefined}
+            onValueChange={updateResume}
+          >
+            {data?.results.map((item) => (
+              <DropdownMenuRadioItem key={item._id} value={item._id}>
+                {item.title}
+              </DropdownMenuRadioItem>
+            ))}
+          </DropdownMenuRadioGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <CreateModal
+        onClose={createModal.closeModal}
+        open={createModal.isOpen}
+        onSuccess={(v) => updateResume(v._id)}
+      />
+    </>
   );
 };
 
