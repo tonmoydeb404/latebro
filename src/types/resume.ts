@@ -53,11 +53,11 @@ export type ResumeExperience = {
 export type ResumeProject = {
   _id: string;
   name: string;
-  description: string;
-  previewLink: string;
-  sourceLink: string;
-  caseStudyLink: string;
-  tools: string;
+  description?: string;
+  previewUrl?: string;
+  sourceUrl?: string;
+  caseStudyUrl?: string;
+  tools: string[];
   resume: string;
 };
 

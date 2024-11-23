@@ -48,7 +48,7 @@ const resumeExperienceApi = createApi({
             )
           );
         } catch (error) {
-          console.error("Failed to update education cache:", error);
+          console.error("Failed to update experience cache:", error);
         }
       },
     }),
@@ -82,7 +82,7 @@ const resumeExperienceApi = createApi({
             )
           );
         } catch (error) {
-          console.error("Failed to update education cache:", error);
+          console.error("Failed to update experience cache:", error);
         }
       },
     }),
@@ -98,7 +98,7 @@ const resumeExperienceApi = createApi({
         try {
           await queryFulfilled; // Await API success
 
-          // Remove the education from the cache for listExperience
+          // Remove the experience from the cache for listExperience
           dispatch(
             resumeExperienceApi.util.updateQueryData(
               "listExperience",
@@ -111,7 +111,7 @@ const resumeExperienceApi = createApi({
             )
           );
         } catch (error) {
-          console.error("Failed to update education cache:", error);
+          console.error("Failed to update experience cache:", error);
         }
       },
     }),
