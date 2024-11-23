@@ -97,6 +97,12 @@ const Button = React.forwardRef<
   ) => {
     const Comp = asChild ? Slot : "button";
     const CompIcon = loading ? LucideLoader2 : Icon;
+    const loadingComp =
+      size === "icon" ? (
+        <LucideLoader2 size={16} className="animate-spin" />
+      ) : (
+        loadingText
+      );
 
     return (
       <Comp
@@ -113,7 +119,7 @@ const Button = React.forwardRef<
           />
         )}
         <Slottable>
-          {loading && loadingText ? loadingText : props.children}
+          {loading && loadingComp ? loadingComp : props.children}
         </Slottable>
         {CompIcon && iconPlacement === "right" && (
           <CompIcon

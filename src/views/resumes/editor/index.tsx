@@ -8,9 +8,9 @@ type Props = {};
 const ProfileEditorView = (props: Props) => {
   return (
     <div className="w-full h-screen overflow-hidden flex">
-      <div className="w-full flex-1 flex py-5 gap-5 pr-10 border-r">
+      <div className="w-full flex-1 flex border-r">
         <Sidebar />
-        <div className="w-full flex-1 mt-5">
+        <div className="w-full flex-1">
           <Form />
         </div>
       </div>

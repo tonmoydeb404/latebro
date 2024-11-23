@@ -14,6 +14,13 @@ export interface ApiResponse<T> {
   error: null;
 }
 
+export interface ApiPaginationResponse<T> {
+  status: "success";
+  code: number;
+  results: { items: T[]; pagination: ApiPagination };
+  error: null;
+}
+
 // ----------------------------------------------------------------------
 
 export interface ApiErrorDetail {

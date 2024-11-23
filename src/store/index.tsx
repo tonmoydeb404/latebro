@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import authApi from "./features/auth/api";
 import authSlice from "./features/auth/slice";
 import editorSlice from "./features/editor/slice";
+import resumeApi from "./features/resume/api";
 import resumeContactApi from "./features/resume/contact/api";
 import resumeEducationApi from "./features/resume/education/api";
 import resumeExperienceApi from "./features/resume/experience/api";
@@ -25,10 +26,12 @@ export const makeStore = () => {
       [resumeSocialApi.reducerPath]: resumeSocialApi.reducer,
       [resumeProfileApi.reducerPath]: resumeProfileApi.reducer,
       [resumeContactApi.reducerPath]: resumeContactApi.reducer,
+      [resumeApi.reducerPath]: resumeApi.reducer,
     },
     middleware(getDefaultMiddleware) {
       return getDefaultMiddleware().concat(
         authApi.middleware,
+        resumeApi.middleware,
         resumeEducationApi.middleware,
         resumeExperienceApi.middleware,
         resumeProjectApi.middleware,
