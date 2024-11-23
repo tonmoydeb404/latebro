@@ -51,9 +51,20 @@ export class ResumeService {
   }
 
   async getOne(userId: string, id: string) {
-    const entity = await this.model.findOne({ user: userId, _id: id });
+    const entity = await this.model
+      .findOne({ user: userId, _id: id })
+      .populate(['profile', 'contact']);
 
     if (!entity) throw new NotFoundException('Resume not found');
+
+    await entity.populate([
+      'educations',
+      'experiences',
+      'languages',
+      'projects',
+      'skills',
+      'socials',
+    ]);
 
     return entity.toObject();
   }

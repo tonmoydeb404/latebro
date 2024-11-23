@@ -4,12 +4,15 @@ import {
   ExceptionFilter,
   HttpException,
   HttpStatus,
+  Logger,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { ApiErrorResponse } from '../interfaces/response.interface';
 
 @Catch()
 export class ResponseExceptionFilter implements ExceptionFilter {
+  private readonly logger = new Logger('Exception');
+
   catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
@@ -36,6 +39,7 @@ export class ResponseExceptionFilter implements ExceptionFilter {
       },
     };
 
+    this.logger.error(exception);
     response.status(status).json(errorResponse);
   }
 }

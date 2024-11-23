@@ -11,6 +11,7 @@ import {
   Query,
   Req,
 } from '@nestjs/common';
+import { ApiQuery } from '@nestjs/swagger';
 import { Request } from 'express';
 import { CreateResumeDto } from '../dto/create-resume.dto';
 import { UpdateResumeDto } from '../dto/update-resume.dto';
@@ -21,6 +22,8 @@ export class ResumeController {
   constructor(private readonly service: ResumeService) {}
 
   @Get()
+  @ApiQuery({ name: 'page', required: false })
+  @ApiQuery({ name: 'limit', required: false })
   getAll(
     @Req() req: Request,
     @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
