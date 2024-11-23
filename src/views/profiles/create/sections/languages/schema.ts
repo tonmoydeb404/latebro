@@ -1,17 +1,17 @@
+import { languageExperiences } from "@/constants/resume";
 import { z } from "zod";
 
-export const ResumeLanguageExperience = z.enum([
-  "Native",
-  "Fluent",
-  "Proficient",
-  "Basic",
-]);
+export const ResumeLanguageExperience = z.enum(
+  Object.keys(languageExperiences) as [
+    keyof typeof languageExperiences,
+    ...Array<keyof typeof languageExperiences>
+  ]
+);
 
 const schema = z.object({
-  _id: z.string(),
   title: z.string().min(1, "Language title is required"),
   experience: ResumeLanguageExperience,
 });
 
-export type ResumeLanguage = z.infer<typeof schema>;
+export type SchemaType = z.infer<typeof schema>;
 export default schema;

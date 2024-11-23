@@ -5,3 +5,10 @@ export const skillExperiences = {
   senior: "Senior",
   expert: "Expert",
 };
+
+export const languageExperiences = {
+  native: "Native",
+  fluent: "Fluent",
+  proficient: "Proficient",
+  basic: "Basic",
+};

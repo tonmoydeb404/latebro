@@ -2,6 +2,7 @@ import { useEditor } from "@/store/hooks";
 import ContactForm from "./contact";
 import EducationsForm from "./educations";
 import ExperiencesForm from "./experiences";
+import LanguagesForm from "./languages";
 import ProfileForm from "./profile";
 import ProjectsForm from "./projects";
 import SkillsForm from "./skills";
@@ -18,6 +19,7 @@ const Form = (props: Props) => {
       {nav === 3 && <ExperiencesForm />}
       {nav === 4 && <ProjectsForm />}
       {nav === 5 && <SkillsForm />}
+      {nav === 6 && <LanguagesForm />}
     </>
   );
 };

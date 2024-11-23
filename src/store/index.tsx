@@ -4,6 +4,7 @@ import authSlice from "./features/auth/slice";
 import editorSlice from "./features/editor/slice";
 import resumeEducationApi from "./features/resume/education/api";
 import resumeExperienceApi from "./features/resume/experience/api";
+import resumeLanguageApi from "./features/resume/language/api";
 import resumeProjectApi from "./features/resume/project/api";
 import resumeSkillApi from "./features/resume/skill/api";
 
@@ -17,6 +18,7 @@ export const makeStore = () => {
       [resumeExperienceApi.reducerPath]: resumeExperienceApi.reducer,
       [resumeProjectApi.reducerPath]: resumeProjectApi.reducer,
       [resumeSkillApi.reducerPath]: resumeSkillApi.reducer,
+      [resumeLanguageApi.reducerPath]: resumeLanguageApi.reducer,
     },
     middleware(getDefaultMiddleware) {
       return getDefaultMiddleware().concat(
@@ -24,7 +26,8 @@ export const makeStore = () => {
         resumeEducationApi.middleware,
         resumeExperienceApi.middleware,
         resumeProjectApi.middleware,
-        resumeSkillApi.middleware
+        resumeSkillApi.middleware,
+        resumeLanguageApi.middleware
       );
     },
   });

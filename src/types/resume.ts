@@ -91,10 +91,10 @@ export type ResumeSkillExperience =
   | "expert";
 
 export type ResumeLanguageExperience =
-  | "Native"
-  | "Fluent"
-  | "Proficient"
-  | "Basic";
+  | "native"
+  | "fluent"
+  | "proficient"
+  | "basic";
 
 export type ResumeSocialType =
   | "codepen"
