@@ -11,6 +11,7 @@ import {
 import { hasApiError } from "@/helpers/api";
 import { toast } from "@/hooks/use-toast";
 import { useCreateEducationMutation } from "@/store/features/resume/education/api";
+import { useEditor } from "@/store/hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -20,6 +21,7 @@ import schema, { SchemaType } from "./schema";
 type Props = {};
 
 const CreateModal = (props: Props) => {
+  const { resume } = useEditor();
   const [open, setOpen] = useState(false);
   const [mutate, response] = useCreateEducationMutation();
 
@@ -39,11 +41,13 @@ const CreateModal = (props: Props) => {
   const formOptions = useForm({ resolver: zodResolver(schema), defaultValues });
 
   const onValid: SubmitHandler<SchemaType> = async (values) => {
+    if (!resume) return;
+
     const response = await mutate({
       ...values,
       startedAt: values.startedAt.toISOString(),
       endedAt: values.endedAt?.toISOString(),
-      resume: "673e9e56e96cb7bb8646a68d",
+      resume: resume._id,
     });
 
     if (response.error) {

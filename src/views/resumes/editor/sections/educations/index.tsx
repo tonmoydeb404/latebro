@@ -1,8 +1,7 @@
 import { StateWrapper } from "@/components/common/state";
 import useModal from "@/hooks/use-modal";
-import { useLazyListEducationQuery } from "@/store/features/resume/education/api";
+import { useEditor } from "@/store/hooks";
 import { ResumeEducation } from "@/types/resume";
-import { useEffect } from "react";
 import Header from "../../common/header";
 import CreateModal from "./create-modal";
 import DeleteModal from "./delete-modal";
@@ -12,15 +11,9 @@ import UpdateModal from "./update-modal";
 type Props = {};
 
 const EducationsForm = (props: Props) => {
+  const { resume } = useEditor();
   const deleteModal = useModal<ResumeEducation>();
   const updateModal = useModal<ResumeEducation>();
-  const [listEducation, { data, isLoading, isError }] =
-    useLazyListEducationQuery();
-
-  useEffect(() => {
-    listEducation("673e9e56e96cb7bb8646a68d");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   // ----------------------------------------------------------------------
 
@@ -35,13 +28,13 @@ const EducationsForm = (props: Props) => {
       </div>
 
       <StateWrapper
-        isLoading={isLoading}
-        isError={isError}
-        isEmpty={data?.results?.length === 0}
+        isLoading={!resume}
+        isError={false}
+        isEmpty={resume?.educations?.length === 0}
       >
-        {data?.results && data.results?.length > 0 && (
+        {resume && resume.educations?.length > 0 && (
           <div className="flex flex-col gap-2">
-            {data.results.map((item) => (
+            {resume.educations.map((item) => (
               <Item
                 key={item._id}
                 data={item}

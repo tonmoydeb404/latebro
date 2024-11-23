@@ -2,10 +2,8 @@ import { RHFForm } from "@/components/common/rhf";
 import { Button } from "@/components/ui/button";
 import { hasApiError } from "@/helpers/api";
 import { toast } from "@/hooks/use-toast";
-import {
-  useLazyGetContactQuery,
-  useUpdateContactMutation,
-} from "@/store/features/resume/contact/api";
+import { useUpdateContactMutation } from "@/store/features/resume/contact/api";
+import { useEditor } from "@/store/hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LucideEdit } from "lucide-react";
 import { useEffect, useMemo } from "react";
@@ -17,27 +15,29 @@ import schema, { SchemaType } from "./schema";
 type Props = {};
 
 const ContactForm = (props: Props) => {
-  const [query, queryResponse] = useLazyGetContactQuery();
+  const { resume } = useEditor();
   const [mutate, mutateResponse] = useUpdateContactMutation();
 
   // ----------------------------------------------------------------------
 
   const defaultValues = useMemo<SchemaType>(
     () => ({
-      address: queryResponse.data?.results?.address || "",
-      address_link: queryResponse.data?.results?.address_link || "",
-      email: queryResponse.data?.results?.email || "",
-      phone: queryResponse.data?.results?.phone || "",
-      website: queryResponse.data?.results?.website || "",
+      address: resume?.contact?.address || "",
+      address_link: resume?.contact?.address_link || "",
+      email: resume?.contact?.email || "",
+      phone: resume?.contact?.phone || "",
+      website: resume?.contact?.website || "",
     }),
-    [queryResponse.data?.results]
+    [resume?.contact]
   );
   const formOptions = useForm({ resolver: zodResolver(schema), defaultValues });
 
   const onValid: SubmitHandler<SchemaType> = async (values) => {
+    if (!resume) return;
+
     const response = await mutate({
       ...values,
-      resume: "673e9e56e96cb7bb8646a68d",
+      resume: resume._id,
     });
 
     if (response.error) {
@@ -59,11 +59,6 @@ const ContactForm = (props: Props) => {
   };
 
   // ----------------------------------------------------------------------
-
-  useEffect(() => {
-    query("673e9e56e96cb7bb8646a68d");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     formOptions.reset(defaultValues);

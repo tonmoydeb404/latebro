@@ -1,8 +1,7 @@
 import { StateWrapper } from "@/components/common/state";
 import useModal from "@/hooks/use-modal";
-import { useLazyListProjectQuery } from "@/store/features/resume/project/api";
+import { useEditor } from "@/store/hooks";
 import { ResumeProject } from "@/types/resume";
-import { useEffect } from "react";
 import Header from "../../common/header";
 import CreateModal from "./create-modal";
 import DeleteModal from "./delete-modal";
@@ -14,13 +13,7 @@ type Props = {};
 const ProjectsForm = (props: Props) => {
   const deleteModal = useModal<ResumeProject>();
   const updateModal = useModal<ResumeProject>();
-  const [query, response] = useLazyListProjectQuery();
-  const { data, isLoading, isError } = response;
-
-  useEffect(() => {
-    query("673e9e56e96cb7bb8646a68d");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { resume } = useEditor();
 
   // ----------------------------------------------------------------------
 
@@ -35,13 +28,13 @@ const ProjectsForm = (props: Props) => {
       </div>
 
       <StateWrapper
-        isLoading={isLoading}
-        isError={isError}
-        isEmpty={data?.results?.length === 0}
+        isLoading={!resume}
+        isError={false}
+        isEmpty={resume?.projects?.length === 0}
       >
-        {data?.results && data.results?.length > 0 && (
+        {resume?.projects && resume?.projects?.length > 0 && (
           <div className="flex flex-col gap-2">
-            {data.results.map((item) => (
+            {resume?.projects?.map((item) => (
               <Item
                 key={item._id}
                 data={item}

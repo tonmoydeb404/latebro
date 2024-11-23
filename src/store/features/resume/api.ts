@@ -117,5 +117,7 @@ export const {
   useListResumeQuery,
   useDeleteResumeMutation,
   useUpdateResumeMutation,
+  useGetResumeQuery,
+  useLazyGetResumeQuery,
 } = resumeApi;
 export default resumeApi;

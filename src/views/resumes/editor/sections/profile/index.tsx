@@ -2,10 +2,8 @@ import { RHFForm } from "@/components/common/rhf";
 import { Button } from "@/components/ui/button";
 import { hasApiError } from "@/helpers/api";
 import { toast } from "@/hooks/use-toast";
-import {
-  useLazyGetProfileQuery,
-  useUpdateProfileMutation,
-} from "@/store/features/resume/profile/api";
+import { useUpdateProfileMutation } from "@/store/features/resume/profile/api";
+import { useEditor } from "@/store/hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LucideEdit } from "lucide-react";
 import { useEffect, useMemo } from "react";
@@ -17,26 +15,28 @@ import schema, { SchemaType } from "./schema";
 type Props = {};
 
 const ProfileForm = (props: Props) => {
-  const [query, queryResponse] = useLazyGetProfileQuery();
+  const { resume } = useEditor();
   const [mutate, mutateResponse] = useUpdateProfileMutation();
 
   // ----------------------------------------------------------------------
 
   const defaultValues = useMemo<SchemaType>(
     () => ({
-      name: queryResponse?.data?.results?.name || "",
-      avatar: queryResponse?.data?.results?.avatar || "",
-      bio: queryResponse?.data?.results?.bio || "",
-      profession: queryResponse?.data?.results?.profession || "",
+      name: resume?.profile?.name || "",
+      avatar: resume?.profile?.avatar || "",
+      bio: resume?.profile?.bio || "",
+      profession: resume?.profile?.profession || "",
     }),
-    [queryResponse.data?.results]
+    [resume?.profile]
   );
   const formOptions = useForm({ resolver: zodResolver(schema), defaultValues });
 
   const onValid: SubmitHandler<SchemaType> = async (values) => {
+    if (!resume) return;
+
     const response = await mutate({
       ...values,
-      resume: "673e9e56e96cb7bb8646a68d",
+      resume: resume?._id,
     });
 
     if (response.error) {
@@ -58,11 +58,6 @@ const ProfileForm = (props: Props) => {
   };
 
   // ----------------------------------------------------------------------
-
-  useEffect(() => {
-    query("673e9e56e96cb7bb8646a68d");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     formOptions.reset(defaultValues);
