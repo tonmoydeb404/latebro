@@ -1,4 +1,4 @@
-import { RHFTextField } from "@/components/common/rhf";
+import { RHFTextareaField, RHFTextField } from "@/components/common/rhf";
 
 type Props = {};
 
@@ -8,7 +8,7 @@ const Fields = (props: Props) => {
       <RHFTextField name="avatar" label="Avatar URL" />
       <RHFTextField name="name" label="Name" />
       <RHFTextField name="profession" label="Profession" />
-      <RHFTextField name="bio" label="Bio" />
+      <RHFTextareaField name="bio" label="Bio" />
     </>
   );
 };

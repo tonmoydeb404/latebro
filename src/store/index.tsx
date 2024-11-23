@@ -5,6 +5,7 @@ import editorSlice from "./features/editor/slice";
 import resumeEducationApi from "./features/resume/education/api";
 import resumeExperienceApi from "./features/resume/experience/api";
 import resumeLanguageApi from "./features/resume/language/api";
+import resumeProfileApi from "./features/resume/profile/api";
 import resumeProjectApi from "./features/resume/project/api";
 import resumeSkillApi from "./features/resume/skill/api";
 import resumeSocialApi from "./features/resume/social/api";
@@ -21,6 +22,7 @@ export const makeStore = () => {
       [resumeSkillApi.reducerPath]: resumeSkillApi.reducer,
       [resumeLanguageApi.reducerPath]: resumeLanguageApi.reducer,
       [resumeSocialApi.reducerPath]: resumeSocialApi.reducer,
+      [resumeProfileApi.reducerPath]: resumeProfileApi.reducer,
     },
     middleware(getDefaultMiddleware) {
       return getDefaultMiddleware().concat(
@@ -30,7 +32,8 @@ export const makeStore = () => {
         resumeProjectApi.middleware,
         resumeSkillApi.middleware,
         resumeLanguageApi.middleware,
-        resumeSocialApi.middleware
+        resumeSocialApi.middleware,
+        resumeProfileApi.middleware
       );
     },
   });
