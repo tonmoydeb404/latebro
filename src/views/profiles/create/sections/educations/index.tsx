@@ -1,17 +1,8 @@
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { useLazyListEducationQuery } from "@/store/features/resume/education/api";
-import { LucideEdit, LucideTrash } from "lucide-react";
-import moment from "moment";
 import { useEffect } from "react";
 import Header from "../../common/header";
 import CreateModal from "./create-modal";
+import Item from "./item";
 
 type Props = {};
 
@@ -38,33 +29,7 @@ const EducationsForm = (props: Props) => {
       {data?.results && data.results?.items?.length > 0 && (
         <div>
           {data.results.items.map((item) => (
-            <Card key={item._id}>
-              <CardHeader>
-                <CardTitle className="text-lg">{item.instituteName}</CardTitle>
-                <div className="flex items-center !mt-0">
-                  <span className="text-sm mr-4">{item.subject}</span>
-                  <span className="text-sm mr-1">
-                    {moment(item.startedAt).format("ll")}
-                  </span>
-                  <span className="text-sm mr-1">-</span>
-                  <span className="text-sm mr-1">
-                    {moment(item.endedAt).format("ll")}
-                  </span>
-                </div>
-                <CardDescription>
-                  {item.description} Lorem ipsum, dolor sit amet consectetur
-                  adipisicing elit. Dolore, expedita?
-                </CardDescription>
-              </CardHeader>
-              <CardFooter className="justify-end gap-2">
-                <Button size={"icon"} variant={"ghost"}>
-                  <LucideTrash />
-                </Button>
-                <Button size={"icon"} variant={"ghost"}>
-                  <LucideEdit />
-                </Button>
-              </CardFooter>
-            </Card>
+            <Item key={item._id} data={item} />
           ))}
         </div>
       )}

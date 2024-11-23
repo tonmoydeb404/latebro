@@ -24,7 +24,7 @@ const authApi = createApi({
           );
         } catch (error) {
           dispatch(logout());
-          console.error("Refresh API Error: ", error);
+          // console.error("Refresh API Error: ", error);
         }
       },
     }),
