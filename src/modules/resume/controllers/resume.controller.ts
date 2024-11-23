@@ -5,13 +5,10 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
-  Query,
   Req,
 } from '@nestjs/common';
-import { ApiQuery } from '@nestjs/swagger';
 import { Request } from 'express';
 import { CreateResumeDto } from '../dto/create-resume.dto';
 import { UpdateResumeDto } from '../dto/update-resume.dto';
@@ -22,14 +19,8 @@ export class ResumeController {
   constructor(private readonly service: ResumeService) {}
 
   @Get()
-  @ApiQuery({ name: 'page', required: false })
-  @ApiQuery({ name: 'limit', required: false })
-  getAll(
-    @Req() req: Request,
-    @Query('page', new ParseIntPipe({ optional: true })) page: number = 1,
-    @Query('limit', new ParseIntPipe({ optional: true })) limit: number = 10,
-  ) {
-    return this.service.getAll(String(req.user._id), page, limit);
+  getAll(@Req() req: Request) {
+    return this.service.getAll(String(req.user._id));
   }
 
   @Post()

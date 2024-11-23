@@ -1,4 +1,3 @@
-import { ApiPagination } from '@/common/interfaces/response.interface';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -27,27 +26,12 @@ export class ResumeService {
   }
 
   // Controller Specific ----------------------------------------------------------------------
-  async getAll(userId: string, page: number = 1, limit: number = 10) {
-    const currentPage = page - 1 || 0;
-    const skip = currentPage * limit;
-
-    const total = await this.model.countDocuments({ user: userId });
+  async getAll(userId: string) {
     const entities = await this.model
       .find({ user: userId })
-      .skip(skip)
-      .limit(limit)
       .sort({ updatedAt: -1 });
 
-    const totalPages = Math.ceil(total / limit);
-
-    const pagination: ApiPagination = {
-      current: page,
-      limit,
-      pages: totalPages,
-      total,
-    };
-
-    return { items: entities, pagination };
+    return entities;
   }
 
   async getOne(userId: string, id: string) {
