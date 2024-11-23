@@ -5,6 +5,7 @@ import {
   ProfileUpdateResponse,
 } from "@/types/api/resume/profile";
 import { createApi } from "@reduxjs/toolkit/query/react";
+import resumeApi from "../api";
 
 const resumeProfileApi = createApi({
   reducerPath: "resumeProfileApi",
@@ -31,7 +32,7 @@ const resumeProfileApi = createApi({
       onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
         try {
           const { data } = await queryFulfilled; // Await API response
-          const updateProfile = data.results;
+          const updates = data.results;
 
           // Update the cache for listEducation
           dispatch(
@@ -39,7 +40,21 @@ const resumeProfileApi = createApi({
               "getProfile",
               args.resume,
               (draft) => {
-                draft.results = { ...draft.results, ...updateProfile };
+                draft.results = { ...draft.results, ...updates };
+              }
+            )
+          );
+
+          // Update the cache for getResume
+          dispatch(
+            resumeApi.util.updateQueryData(
+              "getResume",
+              args.resume,
+              (draft) => {
+                draft.results.profile = {
+                  ...draft.results.profile,
+                  ...updates,
+                };
               }
             )
           );

@@ -9,6 +9,7 @@ import {
   ProjectUpdateResponse,
 } from "@/types/api/resume/project";
 import { createApi } from "@reduxjs/toolkit/query/react";
+import resumeApi from "../api";
 
 const resumeProjectApi = createApi({
   reducerPath: "resumeProjectApi",
@@ -35,7 +36,7 @@ const resumeProjectApi = createApi({
       onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
         try {
           const { data } = await queryFulfilled; // Await API response
-          const newProject = data.results;
+          const updates = data.results;
 
           // Manually update the cache for listProject
           dispatch(
@@ -43,7 +44,18 @@ const resumeProjectApi = createApi({
               "listProject",
               args.resume,
               (draft) => {
-                draft.results.push(newProject);
+                draft.results.push(updates);
+              }
+            )
+          );
+
+          // Update the cache for getResume
+          dispatch(
+            resumeApi.util.updateQueryData(
+              "getResume",
+              args.resume,
+              (draft) => {
+                draft.results.projects.push(updates);
               }
             )
           );
@@ -64,7 +76,7 @@ const resumeProjectApi = createApi({
       onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
         try {
           const { data } = await queryFulfilled; // Await API response
-          const updatedProject = data.results;
+          const updates = data.results;
 
           // Update the cache for listProject
           dispatch(
@@ -73,10 +85,26 @@ const resumeProjectApi = createApi({
               args.resume,
               (draft) => {
                 const index = draft.results.findIndex(
-                  (item) => item._id === updatedProject._id
+                  (item) => item._id === updates._id
                 );
                 if (index !== -1) {
-                  draft.results[index] = updatedProject;
+                  draft.results[index] = updates;
+                }
+              }
+            )
+          );
+
+          // Update the cache for getResume
+          dispatch(
+            resumeApi.util.updateQueryData(
+              "getResume",
+              args.resume,
+              (draft) => {
+                const index = draft.results.projects.findIndex(
+                  (item) => item._id === updates._id
+                );
+                if (index !== -1) {
+                  draft.results.projects[index] = updates;
                 }
               }
             )
@@ -105,6 +133,19 @@ const resumeProjectApi = createApi({
               args.resume,
               (draft) => {
                 draft.results = draft.results.filter(
+                  (item) => item._id !== args._id
+                );
+              }
+            )
+          );
+
+          // Update the cache for getResume
+          dispatch(
+            resumeApi.util.updateQueryData(
+              "getResume",
+              args.resume,
+              (draft) => {
+                draft.results.projects = draft.results.projects.filter(
                   (item) => item._id !== args._id
                 );
               }

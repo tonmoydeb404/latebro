@@ -5,6 +5,7 @@ import {
   ContactUpdateResponse,
 } from "@/types/api/resume/contact";
 import { createApi } from "@reduxjs/toolkit/query/react";
+import resumeApi from "../api";
 
 const resumeContactApi = createApi({
   reducerPath: "resumeContactApi",
@@ -40,6 +41,20 @@ const resumeContactApi = createApi({
               args.resume,
               (draft) => {
                 draft.results = { ...draft.results, ...updateContact };
+              }
+            )
+          );
+
+          // Update the cache for getResume
+          dispatch(
+            resumeApi.util.updateQueryData(
+              "getResume",
+              args.resume,
+              (draft) => {
+                draft.results.contact = {
+                  ...draft.results.contact,
+                  ...updateContact,
+                };
               }
             )
           );

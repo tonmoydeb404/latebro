@@ -28,7 +28,7 @@ const ResumeDropdown = (props: Props) => {
   const { resume } = useEditor();
   const response = useListResumeQuery();
   const { data, isLoading } = response;
-  const [query] = useLazyGetResumeQuery();
+  const [query, queryResponse] = useLazyGetResumeQuery();
 
   const updateResume = async (id: string) => {
     const response = await query(id);
@@ -52,12 +52,21 @@ const ResumeDropdown = (props: Props) => {
     toast({ title: "Resume updated!" });
   };
 
+  // ----------------------------------------------------------------------
+
   useEffect(() => {
     if (!resume && data?.results && data?.results?.length > 0) {
       updateResume(data.results[0]._id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.results, dispatch, resume]);
+
+  useEffect(() => {
+    if (queryResponse.data?.results) {
+      dispatch(setResume(queryResponse.data.results));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryResponse]);
 
   return (
     <DropdownMenu>

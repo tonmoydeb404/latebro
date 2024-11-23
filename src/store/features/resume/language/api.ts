@@ -9,6 +9,7 @@ import {
   LanguageUpdateResponse,
 } from "@/types/api/resume/language";
 import { createApi } from "@reduxjs/toolkit/query/react";
+import resumeApi from "../api";
 
 const resumeLanguageApi = createApi({
   reducerPath: "resumeLanguageApi",
@@ -35,7 +36,7 @@ const resumeLanguageApi = createApi({
       onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
         try {
           const { data } = await queryFulfilled; // Await API response
-          const newLanguage = data.results;
+          const updates = data.results;
 
           // Manually update the cache for listLanguage
           dispatch(
@@ -43,7 +44,18 @@ const resumeLanguageApi = createApi({
               "listLanguage",
               args.resume,
               (draft) => {
-                draft.results.push(newLanguage);
+                draft.results.push(updates);
+              }
+            )
+          );
+
+          // Update the cache for getResume
+          dispatch(
+            resumeApi.util.updateQueryData(
+              "getResume",
+              args.resume,
+              (draft) => {
+                draft.results.languages.push(updates);
               }
             )
           );
@@ -64,7 +76,7 @@ const resumeLanguageApi = createApi({
       onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
         try {
           const { data } = await queryFulfilled; // Await API response
-          const updatedLanguage = data.results;
+          const updates = data.results;
 
           // Update the cache for listLanguage
           dispatch(
@@ -73,10 +85,26 @@ const resumeLanguageApi = createApi({
               args.resume,
               (draft) => {
                 const index = draft.results.findIndex(
-                  (item) => item._id === updatedLanguage._id
+                  (item) => item._id === updates._id
                 );
                 if (index !== -1) {
-                  draft.results[index] = updatedLanguage;
+                  draft.results[index] = updates;
+                }
+              }
+            )
+          );
+
+          // Update the cache for getResume
+          dispatch(
+            resumeApi.util.updateQueryData(
+              "getResume",
+              args.resume,
+              (draft) => {
+                const index = draft.results.languages.findIndex(
+                  (item) => item._id === updates._id
+                );
+                if (index !== -1) {
+                  draft.results.languages[index] = updates;
                 }
               }
             )
@@ -105,6 +133,19 @@ const resumeLanguageApi = createApi({
               args.resume,
               (draft) => {
                 draft.results = draft.results.filter(
+                  (item) => item._id !== args._id
+                );
+              }
+            )
+          );
+
+          // Update the cache for getResume
+          dispatch(
+            resumeApi.util.updateQueryData(
+              "getResume",
+              args.resume,
+              (draft) => {
+                draft.results.languages = draft.results.languages.filter(
                   (item) => item._id !== args._id
                 );
               }
