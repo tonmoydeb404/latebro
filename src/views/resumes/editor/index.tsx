@@ -1,14 +1,20 @@
 "use client";
 
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { hasApiError } from "@/helpers/api";
 import { toast } from "@/hooks/use-toast";
 import { setResume } from "@/store/features/editor/slice";
 import { useLazyGetResumeQuery } from "@/store/features/resume/api";
 import { useAppDispatch } from "@/store/hooks";
+import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import Form from "./sections/form";
 import Sidebar from "./sections/sidebar";
+const Preview = dynamic(() => import("./sections/preview/index"), {
+  ssr: false,
+  loading: () => <p>Loading Preview...</p>,
+});
 
 type Props = {};
 
@@ -61,7 +67,9 @@ const ProfileEditorView = (props: Props) => {
         </div>
       </div>
 
-      <div className="shrink-0 w-[700px] bg-slate-100"></div>
+      <ScrollArea className="shrink-0 w-[700px] bg-slate-100">
+        <Preview />
+      </ScrollArea>
     </div>
   );
 };
