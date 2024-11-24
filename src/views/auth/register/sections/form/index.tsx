@@ -56,7 +56,7 @@ const RegisterForm = () => {
     }
 
     toast({ title: "Register Successfull" });
-    router.replace(redirect ?? "/profiles");
+    router.replace(redirect ?? paths.resumes.root);
   };
 
   // ----------------------------------------------------------------------

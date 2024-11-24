@@ -55,7 +55,7 @@ const LoginForm = () => {
     }
 
     toast({ title: "Login Successfull" });
-    router.replace(redirect ?? "/profiles");
+    router.replace(redirect ?? paths.resumes.root);
   };
 
   // ----------------------------------------------------------------------
