@@ -1,62 +1,71 @@
-import { Button } from "@/components/ui/button";
 import { useEditor } from "@/store/hooks";
+import { Resume } from "@/types/resume";
 import { pdf } from "@react-pdf/renderer";
-import { LucideRefreshCcw } from "lucide-react";
 import "pdfjs-dist/build/pdf.worker.mjs";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Document, Page } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
+import Actions from "./actions";
 
 type Props = {};
 
 const Preview = (props: Props) => {
   const { resume } = useEditor();
-  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
+  const [templateStatus, setTemplateStatus] = useState(0);
+  const templateRef = useRef<React.FC<{ data: Resume }> | null>(null);
 
-  const generatePDF = async () => {
-    if (!resume) return;
-
-    if (pdfUrl) {
-      URL.revokeObjectURL(pdfUrl);
+  const refreshPDF = async () => {
+    try {
+      const { default: Resume } = await import("./template");
+      templateRef.current = Resume;
+      setTemplateStatus((prev) => prev + 1);
+    } catch (error) {
+      setTemplateStatus(0);
     }
-
-    const { default: Resume } = await import("./template");
-
-    const blob = await pdf(<Resume data={resume} />).toBlob();
-    const url = URL.createObjectURL(blob);
-    setPdfUrl(url);
   };
 
-  useEffect(() => {
-    generatePDF();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  const generatePDF = useCallback(async () => {
+    if (!resume || !templateRef.current) return;
+    const blob = await pdf(<templateRef.current data={resume} />).toBlob();
+    setPdfBlob(blob);
   }, [resume]);
 
+  const downloadPDF = useCallback(async () => {
+    if (!pdfBlob) return;
+
+    // Create a temporary link to trigger the download
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(pdfBlob);
+    link.download = "resume.pdf";
+    link.click();
+
+    // Clean up the object URL
+    URL.revokeObjectURL(link.href);
+  }, [pdfBlob]);
+
   useEffect(() => {
-    return () => {
-      if (pdfUrl) {
-        URL.revokeObjectURL(pdfUrl);
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    refreshPDF();
   }, []);
+
+  useEffect(() => {
+    if (templateStatus) {
+      generatePDF();
+    }
+  }, [generatePDF, templateStatus]);
 
   return (
     <div className="p-10 relative min-h-screen">
-      {pdfUrl ? (
-        <Document file={pdfUrl} key={pdfUrl}>
+      {pdfBlob ? (
+        <Document file={pdfBlob}>
           <Page pageIndex={0} />
         </Document>
       ) : (
         <p>Loading PDF...</p>
       )}
 
-      <div className="fixed bottom-5 right-5">
-        <Button size={"icon"} onClick={generatePDF}>
-          <LucideRefreshCcw />
-        </Button>
-      </div>
+      {pdfBlob && <Actions refreshPDF={refreshPDF} downloadPDF={downloadPDF} />}
     </div>
   );
 };

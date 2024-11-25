@@ -59,17 +59,19 @@ const ProfileEditorView = (props: Props) => {
   }, [data]);
 
   return (
-    <div className="w-full h-screen overflow-hidden flex">
-      <div className="w-full flex-1 flex border-r">
-        <Sidebar />
-        <div className="w-full flex-1">
-          <Form />
+    <div className="w-full h-screen overflow-hidden">
+      <div className="w-full h-screen overflow-hidden flex">
+        <div className="w-full flex-1 flex border-r">
+          <Sidebar />
+          <div className="w-full flex-1">
+            <Form />
+          </div>
         </div>
-      </div>
 
-      <ScrollArea className="shrink-0 w-[700px] bg-slate-100">
-        <Preview />
-      </ScrollArea>
+        <ScrollArea className="shrink-0 w-[700px] bg-slate-100">
+          <Preview />
+        </ScrollArea>
+      </div>
     </div>
   );
 };
