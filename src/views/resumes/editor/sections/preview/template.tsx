@@ -52,9 +52,14 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     fontSize: 12,
   },
+  subtle: {
+    marginBottom: 2,
+    fontSize: 10,
+    opacity: 0.8,
+  },
   link: {
     color: "blue",
-    textDecoration: "underline",
+    textDecoration: "none",
     marginBottom: 8,
   },
   skillBar: {
@@ -143,16 +148,58 @@ const Template = ({ data }: { data: Resume }) => (
           ))}
         </View>
 
+        <View style={{ marginBottom: 15 }}>
+          <Text style={styles.sectionTitle}>PROJECTS</Text>
+
+          {data.projects?.map((item) => (
+            <View key={item._id}>
+              <Text style={[styles.text, { marginBottom: 0 }]}>
+                <Text style={{ fontWeight: 600 }}>{item.name}</Text>{" "}
+                {item.sourceUrl ? (
+                  <Text>
+                    |{" "}
+                    <Link style={styles.link} href={item.sourceUrl}>
+                      Source
+                    </Link>{" "}
+                  </Text>
+                ) : null}
+                {item.previewUrl ? (
+                  <Text>
+                    |{" "}
+                    <Link style={styles.link} href={item.previewUrl}>
+                      Preview
+                    </Link>{" "}
+                  </Text>
+                ) : null}
+                {item.caseStudyUrl ? (
+                  <Text>
+                    |{" "}
+                    <Link style={styles.link} href={item.caseStudyUrl}>
+                      Case Study
+                    </Link>
+                  </Text>
+                ) : null}
+              </Text>
+              <Text style={styles.text}>{item.description}</Text>
+              <Text style={styles.subtle}>{item.tools.join(", ")}</Text>
+            </View>
+          ))}
+        </View>
+
         <View style={{}}>
           <Text style={styles.sectionTitle}>EDUCATION</Text>
           {data.educations?.map((item) => (
-            <Text key={item._id} style={styles.text}>
-              {item.instituteName} | {item.subject} |{" "}
-              {moment(item.startedAt).format("MMMM YYYY")} -{" "}
-              {item.endedAt
-                ? moment(item.endedAt).format("MMMM YYYY")
-                : "Present"}
-            </Text>
+            <View key={item._id}>
+              <Text style={styles.text}>
+                {item.instituteName} | {item.subject}
+              </Text>
+              <Text style={styles.subtle}>
+                {moment(item.startedAt).format("MMMM YYYY")} -{" "}
+                {item.endedAt
+                  ? moment(item.endedAt).format("MMMM YYYY")
+                  : "Present"}
+              </Text>
+            </View>
           ))}
         </View>
       </View>
