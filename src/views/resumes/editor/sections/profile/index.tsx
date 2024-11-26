@@ -6,7 +6,7 @@ import { useUpdateProfileMutation } from "@/store/features/resume/profile/api";
 import { useEditor } from "@/store/hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LucideEdit } from "lucide-react";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Header from "../../common/header";
 import Fields from "./fields";
@@ -31,31 +31,35 @@ const ProfileForm = (props: Props) => {
   );
   const formOptions = useForm({ resolver: zodResolver(schema), defaultValues });
 
-  const onValid: SubmitHandler<SchemaType> = async (values) => {
-    if (!resume) return;
+  const onValid: SubmitHandler<SchemaType> = useCallback(
+    async (values) => {
+      if (!resume?._id) return;
 
-    const response = await mutate({
-      ...values,
-      resume: resume?._id,
-    });
-
-    if (response.error) {
-      console.error("Profile update error: ", response);
-
-      let message = "Something wents to wrong!";
-      if (hasApiError(response.error)) {
-        message = response.error.data.message;
-      }
-      toast({
-        title: message,
-        variant: "destructive",
+      const response = await mutate({
+        ...values,
+        resume: resume?._id,
       });
 
-      return;
-    }
+      if (response.error) {
+        console.error("Profile update error: ", response);
 
-    toast({ title: "Profile updated successfully!" });
-  };
+        let message = "Something wents to wrong!";
+        if (hasApiError(response.error)) {
+          message = response.error.data.message;
+        }
+        toast({
+          title: message,
+          variant: "destructive",
+        });
+
+        return;
+      }
+
+      toast({ title: "Profile updated successfully!" });
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [resume?._id]
+  );
 
   // ----------------------------------------------------------------------
 
@@ -79,6 +83,7 @@ const ProfileForm = (props: Props) => {
         <Button loading={mutateResponse.isLoading} Icon={LucideEdit}>
           Update
         </Button>
+        {/* <AutoSave defaultValues={defaultValues} onSubmit={onValid} /> */}
       </div>
     </RHFForm>
   );
