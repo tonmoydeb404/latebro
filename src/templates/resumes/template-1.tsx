@@ -1,7 +1,8 @@
+import { getSkillPercentage } from "@/helpers/resume";
+import { registerOpenSans } from "@/lib/react-pdf/fonts";
 import type { Resume, Resume as Template } from "@/types/resume";
 import {
   Document,
-  Font,
   Link,
   Page,
   StyleSheet,
@@ -10,28 +11,18 @@ import {
 } from "@react-pdf/renderer";
 import moment from "moment";
 
-// Register a font if needed
-Font.register({
-  family: "Open Sans",
-  fonts: [
-    { src: "/fonts/open-sans/400.ttf", fontWeight: 400 },
-    { src: "/fonts/open-sans/500.ttf", fontWeight: 500 },
-    { src: "/fonts/open-sans/600.ttf", fontWeight: 600 },
-    { src: "/fonts/open-sans/700.ttf", fontWeight: 700 },
-    { src: "/fonts/open-sans/800.ttf", fontWeight: 800 },
-  ],
-});
+registerOpenSans();
 
 const styles = StyleSheet.create({
   page: {
     flexDirection: "row",
-    padding: 20,
+    padding: 30,
     fontSize: 12,
     fontFamily: "Open Sans",
     lineHeight: 1.6,
   },
   leftColumn: {
-    width: "30%",
+    width: "35%",
   },
   rightColumn: {
     paddingLeft: 25,
@@ -40,27 +31,29 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 24,
     fontWeight: 800,
-    marginBottom: 10,
   },
   sectionTitle: {
     fontSize: 14,
     fontWeight: "bold",
-    marginBottom: 8,
+    marginBottom: 10,
     textTransform: "uppercase",
   },
   text: {
-    marginBottom: 4,
     fontSize: 12,
+    color: "#000",
+    textDecoration: "none",
+  },
+  textTitle: {
+    fontSize: 12,
+    fontWeight: 600,
   },
   subtle: {
-    marginBottom: 2,
     fontSize: 10,
     opacity: 0.8,
   },
   link: {
     color: "blue",
     textDecoration: "none",
-    marginBottom: 8,
   },
   skillBar: {
     height: 5,
@@ -75,29 +68,55 @@ const Template = ({ data }: { data: Resume }) => (
     <Page size="A4" style={styles.page}>
       {/* Left Column */}
       <View style={styles.leftColumn}>
-        <Text style={styles.header}>{data.profile?.name}</Text>
-        <Text style={styles.text}>{data.profile?.profession}</Text>
+        <Text style={[styles.header, { marginBottom: 15 }]}>
+          {data.profile?.name}
+        </Text>
+        <Text style={[styles.text, { marginBottom: 15 }]}>
+          {data.profile?.profession}
+        </Text>
 
-        <View style={{ marginBottom: 15, marginTop: 10 }}>
+        <View style={{ marginBottom: 15 }}>
           <Text style={styles.sectionTitle}>DETAILS</Text>
-          <Text style={styles.text}>
-            <Text style={{ fontWeight: 600 }}>Address:</Text>{" "}
-            {data.contact?.address}
-          </Text>
-          <Text style={styles.text}>
-            <Text style={{ fontWeight: 600 }}>Phone:</Text>{" "}
-            {data.contact?.phone}
-          </Text>
-          <Text style={styles.text}>
-            <Text style={{ fontWeight: 600 }}>Email:</Text>{" "}
-            {data.contact?.email}
-          </Text>
+          {data.contact?.address && (
+            <View>
+              <Text style={[styles.textTitle]}>Address:</Text>
+              {data.contact?.address_link ? (
+                <Link style={styles.text} href={data.contact.address_link}>
+                  {data.contact?.address}
+                </Link>
+              ) : (
+                <Text style={styles.text}>{data.contact?.address}</Text>
+              )}
+            </View>
+          )}
+
+          {data.contact?.phone && (
+            <View style={{ marginTop: 6 }}>
+              <Text style={[styles.textTitle]}>Phone:</Text>
+              <Link style={styles.text} href={`tel:${data.contact.phone}`}>
+                {data.contact.phone}
+              </Link>
+            </View>
+          )}
+
+          {data.contact?.email && (
+            <View style={{ marginTop: 6 }}>
+              <Text style={[styles.textTitle]}>Email:</Text>
+              <Link style={styles.text} href={`mailto:${data.contact.email}`}>
+                {data.contact.email}
+              </Link>
+            </View>
+          )}
         </View>
 
         <View style={{ marginBottom: 15 }}>
           <Text style={styles.sectionTitle}>LINKS</Text>
           {data.socials?.map((item) => (
-            <Link key={item._id} style={styles.link} href={item.url}>
+            <Link
+              key={item._id}
+              style={[styles.link, { marginBottom: 4 }]}
+              href={item.url}
+            >
               {item.title}
             </Link>
           ))}
@@ -108,17 +127,25 @@ const Template = ({ data }: { data: Resume }) => (
 
           {data.skills?.map((item) => (
             <View key={item._id}>
-              <Text style={styles.text}>{item.title}</Text>
-              <View style={styles.skillBar}></View>
+              <Text style={[styles.text, { marginBottom: 2 }]}>
+                {item.title}
+              </Text>
+              <View
+                style={[
+                  styles.skillBar,
+                  { width: `${getSkillPercentage(item.experience)}%` },
+                ]}
+              ></View>
             </View>
           ))}
         </View>
 
-        <View style={{ marginBottom: 10 }}>
+        <View>
           <Text style={styles.sectionTitle}>LANGUAGES</Text>
           {data.languages?.map((item) => (
-            <Text style={styles.text} key={item._id}>
-              {item.title} - {item.experience}
+            <Text style={[styles.text, { marginBottom: 4 }]} key={item._id}>
+              {item.title} -{" "}
+              <Text style={{ opacity: 0.7 }}>{item.experience}</Text>
             </Text>
           ))}
         </View>
@@ -134,73 +161,81 @@ const Template = ({ data }: { data: Resume }) => (
         <View style={{ marginBottom: 15 }}>
           <Text style={styles.sectionTitle}>EXPERIENCE</Text>
 
-          {data.experiences?.map((item) => (
-            <View key={item._id}>
-              <Text style={styles.text}>
-                <Text style={{ fontWeight: 600 }}>{item.companyName}</Text> |{" "}
-                {item.position} |{moment(item.startedAt).format("MMMM YYYY")} -{" "}
-                {item.endedAt
-                  ? moment(item.endedAt).format("MMMM YYYY")
-                  : "Present"}
-              </Text>
-              <Text style={styles.text}>{item.description}</Text>
-            </View>
-          ))}
+          <View style={{ gap: 10 }}>
+            {data.experiences?.map((item) => (
+              <View key={item._id}>
+                <Text style={[styles.textTitle]}>{item.companyName}</Text>
+                <Text style={styles.subtle}>
+                  {item.position} | {moment(item.startedAt).format("MMMM YYYY")}{" "}
+                  -{" "}
+                  {item.endedAt
+                    ? moment(item.endedAt).format("MMMM YYYY")
+                    : "Present"}
+                </Text>
+                <Text style={[styles.text]}>{item.description}</Text>
+              </View>
+            ))}
+          </View>
         </View>
 
         <View style={{ marginBottom: 15 }}>
           <Text style={styles.sectionTitle}>PROJECTS</Text>
 
-          {data.projects?.map((item) => (
-            <View key={item._id}>
-              <Text style={[styles.text, { marginBottom: 0 }]}>
-                <Text style={{ fontWeight: 600 }}>{item.name}</Text>{" "}
-                {item.sourceUrl ? (
-                  <Text>
-                    |{" "}
-                    <Link style={styles.link} href={item.sourceUrl}>
-                      Source
-                    </Link>{" "}
-                  </Text>
-                ) : null}
-                {item.previewUrl ? (
-                  <Text>
-                    |{" "}
-                    <Link style={styles.link} href={item.previewUrl}>
-                      Preview
-                    </Link>{" "}
-                  </Text>
-                ) : null}
-                {item.caseStudyUrl ? (
-                  <Text>
-                    |{" "}
-                    <Link style={styles.link} href={item.caseStudyUrl}>
-                      Case Study
-                    </Link>
-                  </Text>
-                ) : null}
-              </Text>
-              <Text style={styles.text}>{item.description}</Text>
-              <Text style={styles.subtle}>{item.tools.join(", ")}</Text>
-            </View>
-          ))}
+          <View style={{ gap: 10 }}>
+            {data.projects?.map((item) => (
+              <View key={item._id}>
+                <Text style={[styles.textTitle]}>{item.name}</Text>
+                <Text style={[styles.text]}>
+                  {item.sourceUrl ? (
+                    <Text>
+                      <Link style={styles.link} href={item.sourceUrl}>
+                        Source
+                      </Link>{" "}
+                    </Text>
+                  ) : null}
+                  {item.previewUrl ? (
+                    <Text>
+                      |{" "}
+                      <Link style={styles.link} href={item.previewUrl}>
+                        Preview
+                      </Link>{" "}
+                    </Text>
+                  ) : null}
+                  {item.caseStudyUrl ? (
+                    <Text>
+                      |{" "}
+                      <Link style={styles.link} href={item.caseStudyUrl}>
+                        Case Study
+                      </Link>
+                    </Text>
+                  ) : null}
+                </Text>
+                <Text style={[styles.text, { marginBottom: 5, marginTop: 5 }]}>
+                  {item.description}
+                </Text>
+                <Text style={styles.subtle}>{item.tools.join(", ")}</Text>
+              </View>
+            ))}
+          </View>
         </View>
 
         <View style={{}}>
           <Text style={styles.sectionTitle}>EDUCATION</Text>
-          {data.educations?.map((item) => (
-            <View key={item._id}>
-              <Text style={styles.text}>
-                {item.instituteName} | {item.subject}
-              </Text>
-              <Text style={styles.subtle}>
-                {moment(item.startedAt).format("MMMM YYYY")} -{" "}
-                {item.endedAt
-                  ? moment(item.endedAt).format("MMMM YYYY")
-                  : "Present"}
-              </Text>
-            </View>
-          ))}
+
+          <View style={{ gap: 10 }}>
+            {data.educations?.map((item) => (
+              <View key={item._id}>
+                <Text style={styles.textTitle}>{item.instituteName}</Text>
+                <Text style={styles.subtle}>
+                  {item.subject} | {moment(item.startedAt).format("MMMM YYYY")}{" "}
+                  -{" "}
+                  {item.endedAt
+                    ? moment(item.endedAt).format("MMMM YYYY")
+                    : "Present"}
+                </Text>
+              </View>
+            ))}
+          </View>
         </View>
       </View>
     </Page>

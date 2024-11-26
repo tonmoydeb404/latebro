@@ -35,10 +35,7 @@ const Item = (props: Props) => {
         </div>
       </CardHeader>
       <CardContent>
-        <CardDescription>
-          {data.description} Lorem ipsum, dolor sit amet consectetur adipisicing
-          elit. Dolore, expedita?
-        </CardDescription>
+        <CardDescription>{data.description}</CardDescription>
       </CardContent>
       <CardFooter className="gap-2">
         <Button
