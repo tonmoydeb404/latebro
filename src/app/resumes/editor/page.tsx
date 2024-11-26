@@ -1,5 +1,6 @@
 import ResumeEditorView from "@/views/resumes/editor";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Resume Editor",
@@ -8,7 +9,11 @@ export const metadata: Metadata = {
 type Props = {};
 
 const ResumeCreatePage = (props: Props) => {
-  return <ResumeEditorView />;
+  return (
+    <Suspense>
+      <ResumeEditorView />
+    </Suspense>
+  );
 };
 
 export default ResumeCreatePage;

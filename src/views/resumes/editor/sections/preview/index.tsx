@@ -1,8 +1,10 @@
 import { useEditor } from "@/store/hooks";
+import { getTemplate } from "@/templates/resumes";
 import { Resume } from "@/types/resume";
 import { pdf } from "@react-pdf/renderer";
+import { useSearchParams } from "next/navigation";
 import "pdfjs-dist/build/pdf.worker.mjs";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Document, Page } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
@@ -12,19 +14,27 @@ type Props = {};
 
 const Preview = (props: Props) => {
   const { resume } = useEditor();
+  const searchParams = useSearchParams();
+  const templateId = searchParams.get("template");
   const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
   const [templateStatus, setTemplateStatus] = useState(0);
   const templateRef = useRef<React.FC<{ data: Resume }> | null>(null);
+  const template = useMemo(() => {
+    return templateId ? getTemplate(templateId) : undefined;
+  }, [templateId]);
 
-  const refreshPDF = async () => {
+  const refreshPDF = useCallback(async () => {
     try {
-      const { default: Resume } = await import("./template");
+      if (!template) throw new Error("Template not found!");
+
+      const { default: Resume } = await template.import();
       templateRef.current = Resume;
       setTemplateStatus((prev) => prev + 1);
     } catch (error) {
+      console.error("ERROR: ", error);
       setTemplateStatus(0);
     }
-  };
+  }, [template]);
 
   const generatePDF = useCallback(async () => {
     if (!resume || !templateRef.current) return;
@@ -47,7 +57,7 @@ const Preview = (props: Props) => {
 
   useEffect(() => {
     refreshPDF();
-  }, []);
+  }, [refreshPDF]);
 
   useEffect(() => {
     if (templateStatus) {

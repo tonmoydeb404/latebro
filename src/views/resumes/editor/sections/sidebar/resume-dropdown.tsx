@@ -11,17 +11,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import useModal from "@/hooks/use-modal";
-import { paths } from "@/router/paths";
+import { useQueryRouter } from "@/router/hooks";
 import { useListResumeQuery } from "@/store/features/resume/api";
 import { LucideMoreHorizontal, LucidePlus } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import CreateModal from "./create-modal";
 
 type Props = {};
 
 const ResumeDropdown = (props: Props) => {
-  const router = useRouter();
+  const queryRouter = useQueryRouter();
   const searchparams = useSearchParams();
   const resume = searchparams.get("resume");
   const createModal = useModal();
@@ -29,7 +29,7 @@ const ResumeDropdown = (props: Props) => {
   const { data, isLoading } = response;
 
   const updateResume = async (id: string) => {
-    router.replace(`${paths.resumes.editor}?resume=${id}`);
+    queryRouter.replace({ resume: id });
   };
 
   // ----------------------------------------------------------------------

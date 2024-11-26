@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import {
   Document,
   Image,
@@ -66,11 +67,10 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#ddd",
   },
-  skillProgress: (percentage) => ({
-    width: `${percentage}%`,
+  skillProgress: {
     height: "100%",
     backgroundColor: "#536DFE",
-  }),
+  },
 });
 
 const MyDocument = () => (
@@ -177,7 +177,9 @@ const MyDocument = () => (
               {label}: {percentage}%
             </Text>
             <View style={styles.skillBar}>
-              <View style={styles.skillProgress(percentage)}></View>
+              <View
+                style={[styles.skillProgress, { width: `${percentage}%` }]}
+              ></View>
             </View>
           </View>
         ))}

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import LoginForm from "./sections/form";
 
 type Props = {};
@@ -5,7 +6,9 @@ type Props = {};
 const AuthLoginView = (props: Props) => {
   return (
     <div className="flex h-screen w-full items-center justify-center px-4">
-      <LoginForm />
+      <Suspense>
+        <LoginForm />
+      </Suspense>
     </div>
   );
 };

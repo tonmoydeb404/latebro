@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import {
   Document,
   Font,
@@ -164,8 +165,8 @@ const Resume = () => (
                 • Designed safety-focused experiences for Riders and Drivers
               </Text>
               <Text style={styles.bulletPoint}>
-                • Physical space problem solving and it's interaction with the
-                digital
+                • Physical space problem solving and it&apos;s interaction with
+                the digital
               </Text>
               <Text style={styles.bulletPoint}>
                 • Navigated organization to achieve operational improvements
