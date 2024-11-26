@@ -88,11 +88,11 @@ export class ResumeExperienceService {
 
     const { description, endedAt, companyName, position, startedAt } = dto;
 
-    if (description) entity.description = description;
-    if (endedAt) entity.endedAt = endedAt;
-    if (companyName) entity.companyName = companyName;
-    if (position) entity.position = position;
-    if (startedAt) entity.startedAt = startedAt;
+    if (description !== undefined) entity.description = description;
+    if (endedAt !== undefined) entity.endedAt = endedAt;
+    if (companyName !== undefined) entity.companyName = companyName;
+    if (position !== undefined) entity.position = position;
+    if (startedAt !== undefined) entity.startedAt = startedAt;
 
     await entity.save();
 

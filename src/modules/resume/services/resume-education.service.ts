@@ -88,11 +88,11 @@ export class ResumeEducationService {
 
     const { description, endedAt, instituteName, startedAt, subject } = dto;
 
-    if (description) entity.description = description;
-    if (endedAt) entity.endedAt = endedAt;
-    if (instituteName) entity.instituteName = instituteName;
-    if (startedAt) entity.startedAt = startedAt;
-    if (subject) entity.subject = subject;
+    if (description !== undefined) entity.description = description;
+    if (endedAt !== undefined) entity.endedAt = endedAt;
+    if (instituteName !== undefined) entity.instituteName = instituteName;
+    if (startedAt !== undefined) entity.startedAt = startedAt;
+    if (subject !== undefined) entity.subject = subject;
 
     await entity.save();
 
