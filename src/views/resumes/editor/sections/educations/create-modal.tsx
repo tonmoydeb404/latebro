@@ -46,7 +46,7 @@ const CreateModal = (props: Props) => {
     const response = await mutate({
       ...values,
       startedAt: values.startedAt.toISOString(),
-      endedAt: values.endedAt?.toISOString(),
+      endedAt: values.endedAt ? values.endedAt.toISOString() : null,
       resume: resume._id,
     });
 

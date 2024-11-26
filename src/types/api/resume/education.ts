@@ -7,27 +7,21 @@ export type EducationListResponse = ApiResponse<ResumeEducation[]>;
 
 // ----------------------------------------------------------------------
 
-export type EducationCreatePayload = {
-  resume: string;
-  instituteName: string;
-  description?: string;
-  subject: string;
-  startedAt?: string;
-  endedAt?: string;
-};
+export type EducationCreatePayload = Pick<
+  ResumeEducation,
+  | "instituteName"
+  | "description"
+  | "endedAt"
+  | "startedAt"
+  | "subject"
+  | "resume"
+>;
 export type EducationCreateResponse = ApiResponse<ResumeEducation>;
 
 // ----------------------------------------------------------------------
 
-export type EducationUpdatePayload = {
-  _id: string;
-  resume: string;
-  instituteName?: string;
-  description?: string;
-  subject?: string;
-  startedAt?: string;
-  endedAt?: string;
-};
+export type EducationUpdatePayload = Partial<ResumeEducation> &
+  EducationDeletePayload;
 
 export type EducationUpdateResponse = ApiResponse<ResumeEducation>;
 

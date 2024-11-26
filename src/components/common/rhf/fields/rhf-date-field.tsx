@@ -50,6 +50,7 @@ const RHFDateField = (props: Props) => {
                     "w-full pl-3 text-left font-normal",
                     !field.value && "text-muted-foreground"
                   )}
+                  disabled={!!other?.disabled}
                 >
                   {field.value ? (
                     moment(field.value).format("ll")
@@ -69,7 +70,7 @@ const RHFDateField = (props: Props) => {
                   date > new Date() || date < new Date("1900-01-01")
                 }
                 initialFocus
-                {...props}
+                {...other}
               />
             </PopoverContent>
           </Popover>

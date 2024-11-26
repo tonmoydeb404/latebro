@@ -29,7 +29,7 @@ const CreateModal = (props: Props) => {
 
   const defaultValues = useMemo<SchemaType>(
     () => ({
-      endedAt: null,
+      endedAt: undefined,
       companyName: "",
       isCurrent: false,
       startedAt: new Date(),
@@ -46,7 +46,7 @@ const CreateModal = (props: Props) => {
     const response = await mutate({
       ...values,
       startedAt: values.startedAt.toISOString(),
-      endedAt: values.endedAt?.toISOString() ?? null,
+      endedAt: values.endedAt ? values.endedAt.toISOString() : null,
       resume: resume._id,
     });
 

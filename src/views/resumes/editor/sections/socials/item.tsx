@@ -1,6 +1,8 @@
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
+  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -19,11 +21,13 @@ const Item = (props: Props) => {
   const { data, onDelete, onEdit } = props;
   return (
     <Card>
-      <CardHeader className="pb-2">
+      <CardHeader className="flex-row space-y-0 gap-2 items-center pb-1">
         <CardTitle className="text-lg">{data.title}</CardTitle>
-        <CardDescription>{data.type}</CardDescription>
-        <CardDescription>{data.url}</CardDescription>
+        <Badge variant={"secondary"}>{data.type}</Badge>
       </CardHeader>
+      <CardContent>
+        <CardDescription>{data.url}</CardDescription>
+      </CardContent>
       <CardFooter className="gap-2">
         <Button
           Icon={LucideEdit}

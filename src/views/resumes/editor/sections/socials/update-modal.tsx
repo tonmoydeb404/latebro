@@ -89,7 +89,7 @@ const UpdateModal = (props: Props) => {
             <Fields />
           </div>
           <DialogFooter>
-            <Button type="button" variant={"secondary"}>
+            <Button type="button" variant={"secondary"} onClick={onClose}>
               Cancel
             </Button>
             <Button type="submit" loading={response.isLoading}>

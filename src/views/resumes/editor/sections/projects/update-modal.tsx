@@ -35,7 +35,9 @@ const UpdateModal = (props: Props) => {
       previewUrl: data?.previewUrl || "",
       sourceUrl: data?.sourceUrl || "",
       caseStudyUrl: data?.caseStudyUrl || "",
-      tools: data?.tools || [],
+      tools: Array.isArray(data?.tools)
+        ? data?.tools.map((text, index) => ({ id: index.toString(), text }))
+        : [],
       description: data?.description || "",
     }),
     [data]
@@ -52,6 +54,7 @@ const UpdateModal = (props: Props) => {
       ...values,
       resume: data.resume,
       _id: data._id,
+      tools: values.tools.map((t) => t.text),
     });
 
     if (response.error) {
@@ -83,16 +86,15 @@ const UpdateModal = (props: Props) => {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className={"overflow-y-scroll max-h-screen"}>
+      <DialogContent className={"overflow-y-auto max-h-screen max-w-4xl"}>
         <DialogHeader className="mb-5">
           <DialogTitle>Update Project Record</DialogTitle>
         </DialogHeader>
         <RHFForm formOptions={formOptions} onValid={onValid}>
-          <div className="flex flex-col gap-4 mb-10">
-            <Fields />
-          </div>
+          <Fields />
+
           <DialogFooter>
-            <Button type="button" variant={"secondary"}>
+            <Button type="button" variant={"secondary"} onClick={onClose}>
               Cancel
             </Button>
             <Button type="submit" loading={response.isLoading}>

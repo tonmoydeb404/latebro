@@ -9,7 +9,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ResumeProject } from "@/types/resume";
-import { LucideEdit, LucideTrash } from "lucide-react";
+import {
+  LucideEdit,
+  LucideExternalLink,
+  LucideFile,
+  LucideGitBranch,
+  LucideTrash,
+} from "lucide-react";
 import Link from "next/link";
 
 type Props = {
@@ -22,27 +28,45 @@ const Item = (props: Props) => {
   const { data, onDelete, onEdit } = props;
   return (
     <Card>
-      <CardHeader className="pb-2">
+      <CardHeader>
         <CardTitle className="text-lg">{data.name}</CardTitle>
-        <div className="flex items-center gap-2">
-          <Link href={data.previewUrl || "#"}>
-            <Badge variant="outline">Preview</Badge>
-          </Link>
-
-          <Link href={data.sourceUrl || "#"}>
-            <Badge variant="outline">Source</Badge>
-          </Link>
-
-          <Link href={data.caseStudyUrl || "#"}>
-            <Badge variant="outline">Case Study</Badge>
-          </Link>
-        </div>
+        <CardDescription>{data.description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <CardDescription>{data.description}</CardDescription>
-        <p>{data.tools.join(",")}</p>
+        <div className="flex gap-1 flex-wrap">
+          {data.tools.map((t) => (
+            <Badge key={t} variant={"outline"}>
+              {t}
+            </Badge>
+          ))}
+        </div>
       </CardContent>
       <CardFooter className="gap-2">
+        <div className="flex items-center mr-auto">
+          {data.previewUrl && (
+            <Link passHref href={data.previewUrl} target="_blank">
+              <Button variant="ghost" size={"icon"}>
+                <LucideExternalLink size={14} />
+              </Button>
+            </Link>
+          )}
+
+          {data.sourceUrl && (
+            <Link passHref href={data.sourceUrl} target="_blank">
+              <Button variant="ghost" size={"icon"}>
+                <LucideGitBranch size={14} />
+              </Button>
+            </Link>
+          )}
+
+          {data.caseStudyUrl && (
+            <Link passHref href={data.caseStudyUrl} target="_blank">
+              <Button variant="ghost" size={"icon"}>
+                <LucideFile size={14} />
+              </Button>
+            </Link>
+          )}
+        </div>
         <Button
           Icon={LucideEdit}
           size={"sm"}

@@ -25,20 +25,17 @@ const Item = (props: Props) => {
         <CardTitle className="text-lg">{data.instituteName}</CardTitle>
         <div className="flex items-center !mt-0">
           <span className="text-sm mr-4">{data.subject}</span>
-          <span className="text-sm mr-1">
+          <span className="text-sm mr-1 text-muted-foreground">
             {moment(data.startedAt).format("ll")}
           </span>
-          <span className="text-sm mr-1">-</span>
-          <span className="text-sm mr-1">
-            {moment(data.endedAt).format("ll")}
+          <span className="text-sm mr-1 text-muted-foreground">-</span>
+          <span className="text-sm mr-1 text-muted-foreground">
+            {data.endedAt ? moment(data.endedAt).format("ll") : "Current"}
           </span>
         </div>
       </CardHeader>
       <CardContent>
-        <CardDescription>
-          {data.description} Lorem ipsum, dolor sit amet consectetur adipisicing
-          elit. Dolore, expedita?
-        </CardDescription>
+        <CardDescription>{data.description}</CardDescription>
       </CardContent>
       <CardFooter className="gap-2">
         <Button

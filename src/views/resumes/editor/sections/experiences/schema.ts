@@ -5,7 +5,7 @@ const schema = z.object({
   position: z.string().min(1, "Position is required"),
   description: z.string(),
   startedAt: z.date(),
-  endedAt: z.date().nullable(),
+  endedAt: z.date().optional(),
   isCurrent: z.boolean(),
 });
 

@@ -1,11 +1,6 @@
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ResumeSkill } from "@/types/resume";
 import { LucideEdit, LucideTrash } from "lucide-react";
 
@@ -19,9 +14,9 @@ const Item = (props: Props) => {
   const { data, onDelete, onEdit } = props;
   return (
     <Card>
-      <CardHeader className="pb-2">
+      <CardHeader className="flex-row space-y-0 gap-2 items-center">
         <CardTitle className="text-lg">{data.title}</CardTitle>
-        <CardDescription>{data.experience}</CardDescription>
+        <Badge variant={"secondary"}>{data.experience}</Badge>
       </CardHeader>
       <CardFooter className="gap-2">
         <Button

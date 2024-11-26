@@ -10,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { LucideTrash } from "lucide-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
+import { EmptyState } from "../../state";
 
 type Props = {
   name: string;
@@ -39,12 +40,7 @@ const RHFArrayTextField = ({
           {description && <FormDescription>{description}</FormDescription>}
         </div>
 
-        <Button
-          type="button"
-          size="sm"
-          variant={"secondary"}
-          onClick={() => append("")} // Append an empty string for a new field
-        >
+        <Button type="button" size="sm" onClick={() => append("")}>
           {addButtonLabel}
         </Button>
       </div>
@@ -70,6 +66,8 @@ const RHFArrayTextField = ({
           )}
         />
       ))}
+
+      {fields.length === 0 && <EmptyState />}
 
       <FormMessage />
     </FormItem>

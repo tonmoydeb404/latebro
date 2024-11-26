@@ -31,10 +31,9 @@ export type ResumeContact = {
 export type ResumeEducation = {
   _id: string;
   instituteName: string;
-  description: string;
+  description?: string;
   startedAt: string;
   endedAt: string | null;
-  isCurrent: boolean;
   subject: string;
   resume: string;
 };
@@ -43,10 +42,9 @@ export type ResumeExperience = {
   _id: string;
   companyName: string;
   position: string;
-  description: string;
+  description?: string;
   startedAt: string;
   endedAt: string | null;
-  isCurrent: boolean;
   resume: string;
 };
 
