@@ -18,7 +18,7 @@ const Preview = (props: Props) => {
 
   const refreshPDF = async () => {
     try {
-      const { default: Resume } = await import("./template");
+      const { default: Resume } = await import("./template-9");
       templateRef.current = Resume;
       setTemplateStatus((prev) => prev + 1);
     } catch (error) {
