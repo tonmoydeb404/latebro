@@ -28,6 +28,7 @@ const Item = (props: Props) => {
             variant={nav === data.id ? "secondary" : "ghost"}
             size={"icon"}
             onClick={() => dispatch(setNav(data.id))}
+            className="max-sm:size-9"
           >
             <Icon size={16} />
           </Button>

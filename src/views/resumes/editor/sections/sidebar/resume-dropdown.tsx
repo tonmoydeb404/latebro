@@ -45,7 +45,12 @@ const ResumeDropdown = (props: Props) => {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild disabled={isLoading} className="mb-2">
-          <Button size={"icon"} variant="outline" loading={isLoading}>
+          <Button
+            size={"icon"}
+            variant="outline"
+            loading={isLoading}
+            className="max-sm:size-9"
+          >
             <LucideMoreHorizontal size={16} />
           </Button>
         </DropdownMenuTrigger>

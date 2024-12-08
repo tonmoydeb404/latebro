@@ -70,4 +70,8 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+
+  .scrollarea-with-spacing > div > div {
+    display: inherit !important;
+  }
 }

@@ -15,16 +15,16 @@ const Form = (props: Props) => {
   const { nav } = useEditor();
 
   return (
-    <ScrollArea>
-      <div className="py-5 px-5">
-        {nav === 0 && <ProfileForm />}
-        {nav === 1 && <ContactForm />}
-        {nav === 2 && <EducationsForm />}
-        {nav === 3 && <ExperiencesForm />}
-        {nav === 4 && <ProjectsForm />}
-        {nav === 5 && <SkillsForm />}
-        {nav === 6 && <LanguagesForm />}
-        {nav === 7 && <SocialsForm />}
+    <ScrollArea className="w-full flex-1 scrollarea-with-spacing">
+      <div className="flex flex-col gap-16 p-5">
+        <ProfileForm />
+        <ContactForm />
+        <EducationsForm />
+        <ExperiencesForm />
+        <ProjectsForm />
+        <SkillsForm />
+        <LanguagesForm />
+        <SocialsForm />
       </div>
     </ScrollArea>
   );

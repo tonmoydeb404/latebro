@@ -28,9 +28,7 @@ const ProfileEditorView = (props: Props) => {
             className="flex border-r w-full lg:w-[450px] xl:w-[600px] shrink-0"
           >
             <Sidebar />
-            <div className="w-full flex-1">
-              <Form />
-            </div>
+            <Form />
           </div>
 
           <ScrollArea
