@@ -68,9 +68,11 @@ const Preview = (props: Props) => {
   return (
     <div className="p-10 relative min-h-screen">
       {pdfBlob ? (
-        <Document file={pdfBlob}>
-          <Page pageIndex={0} />
-        </Document>
+        <div className="w-full max-w-[700px] mx-auto">
+          <Document file={pdfBlob}>
+            <Page pageIndex={0} />
+          </Document>
+        </div>
       ) : (
         <p>Loading PDF...</p>
       )}

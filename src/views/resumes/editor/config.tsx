@@ -1,6 +1,8 @@
 import {
   LucideBriefcase,
   LucideContact2,
+  LucideEdit,
+  LucideFile,
   LucideGraduationCap,
   LucideLanguages,
   LucideLink2,
@@ -20,4 +22,13 @@ export const navs: NavItem[] = [
   { id: 5, label: "Technical Skills", icon: LucidePencilRuler },
   { id: 6, label: "Language Skills", icon: LucideLanguages },
   { id: 7, label: "Socials", icon: LucideLink2 },
+];
+
+// ----------------------------------------------------------------------
+
+export type TabItem = { icon: React.ElementType; id: number; label: string };
+
+export const tabs: TabItem[] = [
+  { id: 0, label: "Editor", icon: LucideEdit },
+  { id: 1, label: "Preview", icon: LucideFile },
 ];
