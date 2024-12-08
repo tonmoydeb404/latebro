@@ -5,8 +5,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { setNav } from "@/store/features/editor/slice";
-import { useAppDispatch, useEditor } from "@/store/hooks";
+import { useQueryRouter } from "@/router/hooks";
+import { useEditor } from "@/store/hooks";
 import { NavItem } from "../../config";
 
 type Props = {
@@ -16,9 +16,12 @@ type Props = {
 const Item = (props: Props) => {
   const { data } = props;
   const { nav } = useEditor();
-  const dispatch = useAppDispatch();
-
+  const queryRouter = useQueryRouter();
   const Icon = data.icon;
+
+  const onNavChange = (item: number) => {
+    queryRouter.push({ nav: String(item) });
+  };
 
   return (
     <TooltipProvider delayDuration={0}>
@@ -27,7 +30,7 @@ const Item = (props: Props) => {
           <Button
             variant={nav === data.id ? "secondary" : "ghost"}
             size={"icon"}
-            onClick={() => dispatch(setNav(data.id))}
+            onClick={() => onNavChange(data.id)}
             className="max-sm:size-9"
           >
             <Icon size={16} />

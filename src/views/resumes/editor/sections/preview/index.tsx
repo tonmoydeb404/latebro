@@ -66,11 +66,11 @@ const Preview = (props: Props) => {
   }, [generatePDF, templateStatus]);
 
   return (
-    <div className="p-10 relative min-h-screen">
+    <div className="p-5 sm:p-10 relative min-h-screen">
       {pdfBlob ? (
-        <div className="w-full max-w-[700px] mx-auto">
+        <div className="max-w-[700px] mx-auto">
           <Document file={pdfBlob}>
-            <Page pageIndex={0} />
+            <Page pageIndex={0} scale={1} />
           </Document>
         </div>
       ) : (

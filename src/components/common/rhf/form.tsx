@@ -14,11 +14,18 @@ type Props<T extends FieldValues> = {
   onSubmit?: FormEventHandler<HTMLFormElement>;
   onValid?: SubmitHandler<T>;
   onInvalid?: SubmitErrorHandler<T>;
-};
+} & JSX.IntrinsicElements["form"];
 
 export const RHFForm = <T extends FieldValues>(props: Props<T>) => {
-  const { onReset, onSubmit, children, formOptions, onValid, onInvalid } =
-    props;
+  const {
+    onReset,
+    onSubmit,
+    children,
+    formOptions,
+    onValid,
+    onInvalid,
+    ...others
+  } = props;
 
   const handleFormSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
@@ -28,7 +35,7 @@ export const RHFForm = <T extends FieldValues>(props: Props<T>) => {
 
   return (
     <FormProvider {...formOptions}>
-      <form onSubmit={handleFormSubmit} onReset={onReset}>
+      <form onSubmit={handleFormSubmit} onReset={onReset} {...others}>
         {children}
       </form>
     </FormProvider>
