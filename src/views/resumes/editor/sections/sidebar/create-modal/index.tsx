@@ -10,7 +10,6 @@ import {
 import { hasApiError } from "@/helpers/api";
 import { toast } from "@/hooks/use-toast";
 import { useCreateResumeMutation } from "@/store/features/resume/api";
-import { useEditor } from "@/store/hooks";
 import { Resume } from "@/types/resume";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo } from "react";
@@ -26,7 +25,6 @@ type Props = {
 
 const CreateModal = (props: Props) => {
   const { onClose, open, onSuccess } = props;
-  const { resume } = useEditor();
   const [mutate, response] = useCreateResumeMutation();
 
   // ----------------------------------------------------------------------
@@ -40,8 +38,6 @@ const CreateModal = (props: Props) => {
   const formOptions = useForm({ resolver: zodResolver(schema), defaultValues });
 
   const onValid: SubmitHandler<SchemaType> = async (values) => {
-    if (!resume) return;
-
     const response = await mutate({ ...values });
 
     if (response.error || !response.data?.results) {
