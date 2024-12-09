@@ -7,13 +7,14 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import useModal from "@/hooks/use-modal";
 import { useQueryRouter } from "@/router/hooks";
+import { paths } from "@/router/paths";
 import { useListResumeQuery } from "@/store/features/resume/api";
-import { LucideMoreHorizontal, LucidePlus } from "lucide-react";
+import { LucideHome, LucideMoreHorizontal, LucidePlus } from "lucide-react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import CreateModal from "./create-modal";
@@ -55,10 +56,15 @@ const ResumeDropdown = (props: Props) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56 mt-5" side="right">
+          <DropdownMenuItem asChild>
+            <Link href={paths.resumes.root}>
+              <LucideHome />
+              <span>Back to templates</span>
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => createModal.openModal(undefined)}>
             <LucidePlus />
             <span>New Resume</span>
-            <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuLabel>Resumes</DropdownMenuLabel>
           <DropdownMenuSeparator />

@@ -4,7 +4,7 @@ import { hasApiError } from "@/helpers/api";
 import { toast } from "@/hooks/use-toast";
 import { setNav, setResume, setState } from "@/store/features/editor/slice";
 import { useLazyGetResumeQuery } from "@/store/features/resume/api";
-import { useAppDispatch, useEditor } from "@/store/hooks";
+import { useAppDispatch } from "@/store/hooks";
 import { useSearchParams } from "next/navigation";
 import { ReactNode, useEffect } from "react";
 
@@ -20,7 +20,6 @@ const Wrapper = (props: Props) => {
   const queryNav = searchparams.get("nav");
   const [query, response] = useLazyGetResumeQuery();
   const { data, isSuccess } = response;
-  const { state } = useEditor();
 
   const updateResume = async (id: string) => {
     const response = await query(id);
@@ -41,7 +40,6 @@ const Wrapper = (props: Props) => {
       return;
     }
 
-    toast({ title: "Resume updated!" });
     dispatch(setState("LOADED"));
   };
 
