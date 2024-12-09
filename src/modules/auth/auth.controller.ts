@@ -1,9 +1,8 @@
-import { getRequestDomain } from '@/common/utills/request';
 import { Public } from '@/modules/auth/decorators/public.decorator';
 import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
-import { cookieConfig } from './config/cookie.config';
+import { getCookieConfig } from './config/cookie.config';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 
@@ -19,10 +18,7 @@ export class AuthController {
     @Req() req: Request,
   ) {
     const results = await this.service.login(dto);
-    res.cookie('token', results.token, {
-      ...cookieConfig,
-      domain: getRequestDomain(req),
-    });
+    res.cookie('token', results.token, getCookieConfig(req));
     return results;
   }
 
@@ -34,10 +30,7 @@ export class AuthController {
     @Req() req: Request,
   ) {
     const results = await this.service.register(dto);
-    res.cookie('token', results.token, {
-      ...cookieConfig,
-      domain: getRequestDomain(req),
-    });
+    res.cookie('token', results.token, getCookieConfig(req));
     return results;
   }
 
@@ -47,19 +40,13 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const results = await this.service.refresh(String(req.user._id));
-    res.cookie('token', results.token, {
-      ...cookieConfig,
-      domain: getRequestDomain(req),
-    });
+    res.cookie('token', results.token, getCookieConfig(req));
     return results;
   }
 
   @Post('/logout')
   async logout(@Res({ passthrough: true }) res: Response, @Req() req: Request) {
-    res.clearCookie('token', {
-      ...cookieConfig,
-      domain: getRequestDomain(req),
-    });
+    res.clearCookie('token', getCookieConfig(req));
 
     return true;
   }
