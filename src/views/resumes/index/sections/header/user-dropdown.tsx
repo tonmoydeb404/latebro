@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { paths } from "@/router/paths";
+import { useLogoutMutation } from "@/store/features/auth/api";
 import { useAuth } from "@/store/hooks";
 import { LucideLogIn, LucideUser, LucideUserPlus } from "lucide-react";
 import Link from "next/link";
@@ -18,6 +19,15 @@ type Props = {};
 
 const UserDropdown = (props: Props) => {
   const { user } = useAuth();
+  const [mutate, response] = useLogoutMutation();
+
+  const onLogout = async () => {
+    const response = await mutate();
+    if (response.data) {
+      window.location.href = paths.auth.login;
+    }
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="outline-none">
@@ -39,7 +49,9 @@ const UserDropdown = (props: Props) => {
           <>
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem onClick={onLogout} disabled={response.isLoading}>
+              Logout
+            </DropdownMenuItem>
           </>
         ) : (
           <>
