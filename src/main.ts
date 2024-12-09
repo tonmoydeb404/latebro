@@ -21,7 +21,7 @@ async function bootstrap() {
   app.use(cookieParser(process.env.COOKIE_SECRET));
 
   // Api Prefixing
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api', { exclude: ['/'] });
 
   // Api Versioning
   app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
