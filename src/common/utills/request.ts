@@ -13,9 +13,9 @@ export const getDomain = (host: string) => {
 };
 
 export const getRequestDomain = (req: Request) => {
-  const origin = req.headers.origin;
+  // const origin = req.headers.origin;
 
-  if (!origin) return undefined;
+  // if (!origin) return undefined;
 
-  return new URL(origin).hostname;
+  return req.headers.host;
 };
