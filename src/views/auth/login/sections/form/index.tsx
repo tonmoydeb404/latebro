@@ -60,7 +60,7 @@ const LoginForm = () => {
   // ----------------------------------------------------------------------
 
   return (
-    <Card className="mx-auto max-w-sm">
+    <Card className="mx-auto max-w-md w-full">
       <CardHeader>
         <CardTitle className="text-2xl">Login</CardTitle>
         <CardDescription>

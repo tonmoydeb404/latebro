@@ -1,22 +1,44 @@
-import * as React from "react"
+import * as React from "react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
-const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
-  ({ className, type, ...props }, ref) => {
+export interface InputProps extends React.ComponentProps<"input"> {
+  startContent?: React.ReactNode;
+  endContent?: React.ReactNode;
+}
+
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, type, startContent, endContent, ...props }, ref) => {
     return (
-      <input
-        type={type}
+      <div
         className={cn(
-          "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+          "flex items-center w-full rounded-md border border-input bg-background ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
           className
         )}
-        ref={ref}
-        {...props}
-      />
-    )
+      >
+        {startContent && (
+          <span className="pl-1 pr-2 text-muted-foreground">
+            {startContent}
+          </span>
+        )}
+        <input
+          type={type}
+          className={cn(
+            "flex-1 h-10 bg-transparent px-3 py-2 text-base placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+            startContent ? "pl-2" : "",
+            endContent ? "pr-2" : ""
+          )}
+          ref={ref}
+          {...props}
+        />
+        {endContent && (
+          <span className="pr-1 pl-2 text-muted-foreground">{endContent}</span>
+        )}
+      </div>
+    );
   }
-)
-Input.displayName = "Input"
+);
 
-export { Input }
+Input.displayName = "Input";
+
+export { Input };

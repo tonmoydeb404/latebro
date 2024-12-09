@@ -6,19 +6,19 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Input, InputProps } from "@/components/ui/input";
 import { ReactNode } from "react";
 import { useFormContext } from "react-hook-form";
 
-type Props = {
+export type RHFTextFieldProps = {
   name: string;
   label?: string;
   labelPrev?: ReactNode;
   labelEnd?: ReactNode;
   description?: string;
-} & React.ComponentProps<"input">;
+} & InputProps;
 
-const RHFTextField = (props: Props) => {
+const RHFTextField = (props: RHFTextFieldProps) => {
   const { name, label, description, labelEnd, labelPrev, ...other } = props;
   const form = useFormContext();
   return (

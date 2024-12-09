@@ -1,4 +1,4 @@
-import { RHFTextField } from "@/components/common/rhf";
+import { RHFPasswordField, RHFTextField } from "@/components/common/rhf";
 
 type Props = {};
 
@@ -6,8 +6,17 @@ const Fields = (props: Props) => {
   return (
     <>
       <RHFTextField name="email" label="Email" />
-      <RHFTextField name="password" label="Password" />
-      <RHFTextField name="confirmPassword" label="Confirm Password" />
+      <RHFPasswordField name="password" label="Password">
+        {({ show }) => (
+          <>
+            <RHFTextField
+              name="confirmPassword"
+              label="Confirm Password"
+              type={show ? "text" : "password"}
+            />
+          </>
+        )}
+      </RHFPasswordField>
     </>
   );
 };

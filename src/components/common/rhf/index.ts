@@ -1,6 +1,7 @@
 import RHFArrayTextField from "./fields/rhf-array-text-field";
 import RHFCheckboxField from "./fields/rhf-checkbox-field";
 import RHFDateField from "./fields/rhf-date-field";
+import RHFPasswordField from "./fields/rhf-password-field";
 import RHFSelectField from "./fields/rhf-select-field";
 import RHFTagInput from "./fields/rhf-tag-input";
 import RHFTextField from "./fields/rhf-text-field";
@@ -12,6 +13,7 @@ export {
   RHFCheckboxField,
   RHFDateField,
   RHFForm,
+  RHFPasswordField,
   RHFSelectField,
   RHFTagInput,
   RHFTextareaField,
