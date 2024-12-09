@@ -25,10 +25,10 @@ const Item = (props: Props) => {
       onClick={() => router.push(`${paths.resumes.editor}?template=${id}`)}
       className="cursor-pointer"
     >
-      <CardHeader>
+      <CardHeader className="p-3 sm:p-4">
         <div className="aspect-video animate-pulse bg-slate-200 rounded-lg"></div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-3 sm:p-4 !pt-1">
         <CardTitle className="text-base">{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardContent>
