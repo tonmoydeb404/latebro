@@ -11,12 +11,17 @@ const guestRoutes = ["/auth/login", "/auth/register"];
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
+  console.log("token:", token);
 
-  const isProtectedRoute = protectedRoutes.some((route) =>
+  const isGuestPath = guestRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)
   );
 
-  const isGuestPath = guestRoutes.some((route) =>
+  if (isGuestPath && token) {
+    return NextResponse.redirect(new URL(paths.resumes.root, request.url));
+  }
+
+  const isProtectedRoute = protectedRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)
   );
 
@@ -24,10 +29,6 @@ export function middleware(request: NextRequest) {
     const url = new URL("/auth/login", request.url);
     url.searchParams.set("redirect", request.nextUrl.pathname);
     return NextResponse.redirect(url);
-  }
-
-  if (isGuestPath && token) {
-    return NextResponse.redirect(new URL(paths.resumes.root, request.url));
   }
 
   return NextResponse.next();
