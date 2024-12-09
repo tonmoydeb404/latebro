@@ -1,4 +1,4 @@
-import { getDomain } from '@/common/utills/request';
+import { getRequestDomain } from '@/common/utills/request';
 import { Public } from '@/modules/auth/decorators/public.decorator';
 import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
 import { Request, Response } from 'express';
@@ -21,7 +21,7 @@ export class AuthController {
     const results = await this.service.login(dto);
     res.cookie('token', results.token, {
       ...cookieConfig,
-      domain: getDomain(req),
+      domain: getRequestDomain(req),
     });
     return results;
   }
@@ -36,7 +36,7 @@ export class AuthController {
     const results = await this.service.register(dto);
     res.cookie('token', results.token, {
       ...cookieConfig,
-      domain: getDomain(req),
+      domain: getRequestDomain(req),
     });
     return results;
   }
@@ -49,7 +49,7 @@ export class AuthController {
     const results = await this.service.refresh(String(req.user._id));
     res.cookie('token', results.token, {
       ...cookieConfig,
-      domain: getDomain(req),
+      domain: getRequestDomain(req),
     });
     return results;
   }
@@ -58,7 +58,7 @@ export class AuthController {
   async logout(@Res({ passthrough: true }) res: Response, @Req() req: Request) {
     res.clearCookie('token', {
       ...cookieConfig,
-      domain: getDomain(req),
+      domain: getRequestDomain(req),
     });
 
     return true;
