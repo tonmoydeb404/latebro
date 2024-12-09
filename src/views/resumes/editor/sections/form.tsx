@@ -1,7 +1,11 @@
+import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import useScrollSpy from "@/hooks/use-scrollspy";
+import { paths } from "@/router/paths";
 import { setNav } from "@/store/features/editor/slice";
 import { useAppDispatch, useEditor } from "@/store/hooks";
+import { LucideLoader, LucideTriangleAlert } from "lucide-react";
+import Link from "next/link";
 import { useEffect } from "react";
 import ContactForm from "./contact";
 import EducationsForm from "./educations";
@@ -28,6 +32,26 @@ const Form = (props: Props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeId, state]);
+
+  if (state === "LOADING") {
+    return (
+      <div className="w-full flex-1 h-full flex flex-col items-center justify-center">
+        <LucideLoader className="animate-spin" />
+      </div>
+    );
+  }
+
+  if (state === "ERROR") {
+    return (
+      <div className="w-full flex-1 h-full flex flex-col items-center justify-center">
+        <LucideTriangleAlert className="text-destructive" />
+        <span className="text-sm mt-2 mb-4">something wents to wrong</span>
+        <Button asChild variant={"outline"} size={"sm"}>
+          <Link href={paths.resumes.root}>Go Back</Link>
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <ScrollArea className="w-full flex-1 scrollarea-with-spacing">
