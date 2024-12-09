@@ -21,23 +21,25 @@ const Item = (props: Props) => {
   const { data, onDelete, onEdit } = props;
   return (
     <Card>
-      <CardHeader className="pb-2">
+      <CardHeader className="p-3 sm:p-5 !pb-0">
         <CardTitle className="text-lg">{data.companyName}</CardTitle>
-        <div className="flex items-center !mt-0">
+        <div className="flex sm:items-center flex-col sm:flex-row !mt-0">
           <span className="text-sm mr-4">{data.position}</span>
-          <span className="text-sm mr-1 text-muted-foreground">
-            {moment(data.startedAt).format("ll")}
-          </span>
-          <span className="text-sm mr-1 text-muted-foreground">-</span>
-          <span className="text-sm mr-1 text-muted-foreground">
-            {data.endedAt ? moment(data.endedAt).format("ll") : "Current"}
-          </span>
+          <div className="flex items-center">
+            <span className="text-sm mr-1 text-muted-foreground">
+              {moment(data.startedAt).format("ll")}
+            </span>
+            <span className="text-sm mr-1 text-muted-foreground">-</span>
+            <span className="text-sm mr-1 text-muted-foreground">
+              {data.endedAt ? moment(data.endedAt).format("ll") : "Current"}
+            </span>
+          </div>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-3 sm:p-5 !pt-3">
         <CardDescription>{data.description}</CardDescription>
       </CardContent>
-      <CardFooter className="gap-2">
+      <CardFooter className="p-3 sm:p-5 !pt-3 gap-2">
         <Button
           Icon={LucideEdit}
           size={"sm"}

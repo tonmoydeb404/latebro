@@ -28,11 +28,11 @@ const Item = (props: Props) => {
   const { data, onDelete, onEdit } = props;
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="p-3 sm:p-5 !pb-0">
         <CardTitle className="text-lg">{data.name}</CardTitle>
         <CardDescription>{data.description}</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-3 sm:p-5 !pt-3">
         <div className="flex gap-1 flex-wrap">
           {data.tools.map((t) => (
             <Badge key={t} variant={"outline"}>
@@ -41,7 +41,7 @@ const Item = (props: Props) => {
           ))}
         </div>
       </CardContent>
-      <CardFooter className="gap-2">
+      <CardFooter className="p-3 sm:p-5 !pt-3 gap-2 flex-col sm:flex-row max-sm:items-start">
         <div className="flex items-center mr-auto">
           {data.previewUrl && (
             <Link passHref href={data.previewUrl} target="_blank">
@@ -67,22 +67,24 @@ const Item = (props: Props) => {
             </Link>
           )}
         </div>
-        <Button
-          Icon={LucideEdit}
-          size={"sm"}
-          variant={"outline"}
-          onClick={onEdit}
-        >
-          Edit
-        </Button>
-        <Button
-          Icon={LucideTrash}
-          size={"sm"}
-          variant={"destructive"}
-          onClick={onDelete}
-        >
-          Delete
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            Icon={LucideEdit}
+            size={"sm"}
+            variant={"outline"}
+            onClick={onEdit}
+          >
+            Edit
+          </Button>
+          <Button
+            Icon={LucideTrash}
+            size={"sm"}
+            variant={"destructive"}
+            onClick={onDelete}
+          >
+            Delete
+          </Button>
+        </div>
       </CardFooter>
     </Card>
   );

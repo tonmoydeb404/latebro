@@ -19,13 +19,11 @@ const SkillsForm = (props: Props) => {
 
   return (
     <>
-      <div className="flex items-center justify-between mb-10 gap-10">
-        <Header
-          title="Skills"
-          description="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quos, similique."
-        />
-        <CreateModal />
-      </div>
+      <Header
+        title="Skills"
+        description="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quos, similique."
+        actions={<CreateModal />}
+      />
 
       <StateWrapper
         isLoading={!resume}

@@ -74,7 +74,7 @@ const CreateModal = (props: Props) => {
   return (
     <Dialog open={open} onOpenChange={setOpen} modal={true}>
       <DialogTrigger asChild>
-        <Button variant={"default"} size={"sm"}>
+        <Button variant={"outline"} size={"sm"}>
           Add New
         </Button>
       </DialogTrigger>
