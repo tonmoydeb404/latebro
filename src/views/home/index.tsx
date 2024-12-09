@@ -41,7 +41,7 @@ const HomeView = (_props: Props) => {
                   <Link href={paths.auth.login}>Get started</Link>
                 </Button>
                 <Button size={"lg"} variant={"outline"} asChild>
-                  <Link href={paths.auth.register}>Sign Up</Link>
+                  <Link href={paths.resumes.root}>Explore</Link>
                 </Button>
               </div>
               {/* End Buttons */}

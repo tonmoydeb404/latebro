@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { paths } from "./router/paths";
 
 // routes that require authentication ----------------------------------------------------------------------
-const protectedRoutes = ["/resumes"];
+const protectedRoutes = ["/resumes/"];
 // routes that only for unauthenticated ----------------------------------------------------------------------
 const guestRoutes = ["/auth/login", "/auth/register"];
 
