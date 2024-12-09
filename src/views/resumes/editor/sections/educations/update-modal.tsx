@@ -90,7 +90,7 @@ const UpdateModal = (props: Props) => {
           <DialogTitle>Update Education</DialogTitle>
         </DialogHeader>
         <RHFForm formOptions={formOptions} onValid={onValid}>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 mb-10">
             <Fields />
           </div>
           <DialogFooter>

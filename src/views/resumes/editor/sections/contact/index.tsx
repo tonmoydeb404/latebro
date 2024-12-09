@@ -73,7 +73,7 @@ const ContactForm = (props: Props) => {
         className="mb-10"
       />
 
-      <div className="flex flex-col gap-4 mb-16">
+      <div className="flex flex-col gap-4 mb-10">
         <Fields />
       </div>
       <div className="flex items-center">

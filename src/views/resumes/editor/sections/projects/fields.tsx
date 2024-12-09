@@ -8,7 +8,7 @@ type Props = {};
 
 const Fields = (props: Props) => {
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="flex flex-col gap-4 mb-10">
         <RHFTextField name="name" label="Project Name" />
         <RHFTextareaField name="description" label="Description" />
