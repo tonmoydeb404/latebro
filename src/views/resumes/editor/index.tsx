@@ -1,6 +1,5 @@
 "use client";
 
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEditor } from "@/store/hooks";
 import dynamic from "next/dynamic";
 import { tabs } from "./config";
@@ -31,12 +30,12 @@ const ProfileEditorView = (props: Props) => {
             <Form />
           </div>
 
-          <ScrollArea
+          <div
             style={{ display: tab === tabs[1].id ? "block" : undefined }}
-            className="flex-1 w-full hidden lg:block bg-slate-100 *:!overflow-scroll"
+            className="flex-1 w-full hidden lg:block bg-slate-100"
           >
             <Preview />
-          </ScrollArea>
+          </div>
         </div>
       </div>
     </Wrapper>

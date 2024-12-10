@@ -1,3 +1,4 @@
+import useTailwindBreakpoint from "@/hooks/use-tailwind-breakpoint";
 import { useEditor } from "@/store/hooks";
 import { getTemplate } from "@/templates/resumes";
 import { Resume } from "@/types/resume";
@@ -9,6 +10,7 @@ import { Document, Page } from "react-pdf";
 import { OnDocumentLoadSuccess } from "react-pdf/dist/esm/shared/types.js";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
+import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import Actions from "./actions";
 import Pagination from "./pagination";
 
@@ -17,6 +19,7 @@ type Props = {};
 const Preview = (props: Props) => {
   const { resume } = useEditor();
   const searchParams = useSearchParams();
+  const breakpoint = useTailwindBreakpoint();
   const templateId = searchParams.get("template");
   const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
   const [templateStatus, setTemplateStatus] = useState(0);
@@ -76,13 +79,22 @@ const Preview = (props: Props) => {
   };
 
   return (
-    <div className="p-5 sm:p-10 relative min-h-screen">
+    <div className="relative min-h-screen">
       {pdfBlob ? (
-        <div className="max-w-[700px] mx-auto">
-          <Document file={pdfBlob} onLoadSuccess={onLoadSuccess}>
-            <Page pageNumber={page} scale={1} />
-          </Document>
-        </div>
+        <TransformWrapper
+          minScale={0.5}
+          initialScale={breakpoint === "sm" ? 0.6 : 1}
+          centerOnInit
+        >
+          <TransformComponent
+            wrapperClass="!w-full !max-w-full !h-screen"
+            contentClass="lg:!w-full lg:!max-w-full lg:!h-screen items-center justify-center"
+          >
+            <Document file={pdfBlob} onLoadSuccess={onLoadSuccess}>
+              <Page pageNumber={page} />
+            </Document>
+          </TransformComponent>
+        </TransformWrapper>
       ) : (
         <p>Loading PDF...</p>
       )}
