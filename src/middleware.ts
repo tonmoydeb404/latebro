@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { authToken } from "./constants/cookies";
 import { paths } from "./router/paths";
 
 // routes that require authentication ----------------------------------------------------------------------
@@ -10,7 +11,7 @@ const guestRoutes = ["/auth/login", "/auth/register"];
 // ----------------------------------------------------------------------
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get("token")?.value;
+  const token = request.cookies.get(authToken)?.value;
   console.log("token:", token);
 
   const isGuestPath = guestRoutes.some((route) =>

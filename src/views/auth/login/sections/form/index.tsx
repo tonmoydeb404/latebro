@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { hasApiError } from "@/helpers/api";
+import { setAuthToken } from "@/helpers/auth";
 import { toast } from "@/hooks/use-toast";
 import { paths } from "@/router/paths";
 import { useLoginMutation } from "@/store/features/auth/api";
@@ -53,8 +54,12 @@ const LoginForm = () => {
       return;
     }
 
-    toast({ title: "Login Successfull" });
-    window.location.href = redirect ?? paths.resumes.root;
+    const token = response.data?.results?.token;
+    if (token) {
+      await setAuthToken(token);
+      toast({ title: "Login Successfull" });
+      window.location.href = redirect ?? paths.resumes.root;
+    }
   };
 
   // ----------------------------------------------------------------------

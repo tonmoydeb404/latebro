@@ -1,6 +1,11 @@
 import { ApiResponse } from ".";
 import { User } from "../user";
 
+export type AuthPaylod = {
+  _id: string;
+  email: string;
+};
+
 // ----------------------------------------------------------------------
 
 export type LoginBody = {
@@ -10,9 +15,7 @@ export type LoginBody = {
 
 export type LoginResponse = ApiResponse<{
   user: User;
-  payload: {
-    _id: string;
-  };
+  payload: AuthPaylod;
   token: string;
 }>;
 
@@ -25,8 +28,6 @@ export type RegisterBody = {
 
 export type RegisterResponse = ApiResponse<{
   user: User;
-  payload: {
-    _id: string;
-  };
+  payload: AuthPaylod;
   token: string;
 }>;

@@ -1,3 +1,4 @@
+import { removeAuthToken, setAuthToken } from "@/helpers/auth";
 import { backendBaseQuery } from "@/store/helpers/base-queries";
 import {
   LoginBody,
@@ -19,6 +20,8 @@ const authApi = createApi({
       onQueryStarted: async (_arg, { dispatch, queryFulfilled }) => {
         try {
           const { data } = await queryFulfilled;
+          await setAuthToken(data.results.token);
+
           dispatch(
             login({ user: data.results.user, token: data.results.token })
           );
@@ -37,6 +40,7 @@ const authApi = createApi({
       onQueryStarted: async (_arg, { dispatch, queryFulfilled }) => {
         try {
           const { data } = await queryFulfilled;
+
           dispatch(
             login({ user: data.results.user, token: data.results.token })
           );
@@ -54,6 +58,7 @@ const authApi = createApi({
       onQueryStarted: async (_arg, { dispatch, queryFulfilled }) => {
         try {
           const { data } = await queryFulfilled;
+
           dispatch(
             login({ user: data.results.user, token: data.results.token })
           );
@@ -62,14 +67,19 @@ const authApi = createApi({
         }
       },
     }),
-    logout: build.mutation<RegisterResponse, void>({
-      query: () => ({
-        url: "/logout",
-        method: "POST",
-      }),
+    logout: build.mutation<boolean, void>({
+      queryFn: async () => {
+        try {
+          await removeAuthToken();
+          return { data: true };
+        } catch (error) {
+          return { data: false };
+        }
+      },
       onQueryStarted: async (_arg, { dispatch, queryFulfilled }) => {
         try {
           await queryFulfilled;
+
           dispatch(logout());
         } catch (error) {
           console.error("Logout API Error: ", error);
