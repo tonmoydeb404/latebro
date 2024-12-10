@@ -18,7 +18,7 @@ async function bootstrap() {
   });
 
   // Cookies
-  app.use(cookieParser(process.env.COOKIE_SECRET));
+  app.use(cookieParser());
 
   // Api Prefixing
   app.setGlobalPrefix('api', { exclude: ['/'] });
