@@ -6,9 +6,11 @@ import { useSearchParams } from "next/navigation";
 import "pdfjs-dist/build/pdf.worker.mjs";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Document, Page } from "react-pdf";
+import { OnDocumentLoadSuccess } from "react-pdf/dist/esm/shared/types.js";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import Actions from "./actions";
+import Pagination from "./pagination";
 
 type Props = {};
 
@@ -65,18 +67,29 @@ const Preview = (props: Props) => {
     }
   }, [generatePDF, templateStatus]);
 
+  // ----------------------------------------------------------------------
+  const [maxPage, setMaxPage] = useState(0);
+  const [page, setPage] = useState(1);
+  const onLoadSuccess: OnDocumentLoadSuccess = (document) => {
+    const { numPages } = document;
+    setMaxPage(numPages);
+  };
+
   return (
     <div className="p-5 sm:p-10 relative min-h-screen">
       {pdfBlob ? (
         <div className="max-w-[700px] mx-auto">
-          <Document file={pdfBlob}>
-            <Page pageIndex={0} scale={1} />
+          <Document file={pdfBlob} onLoadSuccess={onLoadSuccess}>
+            <Page pageNumber={page} scale={1} />
           </Document>
         </div>
       ) : (
         <p>Loading PDF...</p>
       )}
 
+      {pdfBlob && (
+        <Pagination maxPage={maxPage} page={page} setPage={setPage} />
+      )}
       {pdfBlob && <Actions refreshPDF={refreshPDF} downloadPDF={downloadPDF} />}
     </div>
   );
