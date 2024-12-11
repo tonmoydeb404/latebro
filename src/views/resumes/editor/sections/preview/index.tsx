@@ -12,6 +12,7 @@ import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import Actions from "./actions";
+import Controls from "./controls";
 import Pagination from "./pagination";
 
 type Props = {};
@@ -79,7 +80,7 @@ const Preview = (props: Props) => {
   };
 
   return (
-    <div className="relative min-h-screen">
+    <>
       {pdfBlob ? (
         <TransformWrapper
           minScale={0.5}
@@ -87,23 +88,21 @@ const Preview = (props: Props) => {
           centerOnInit
         >
           <TransformComponent
-            wrapperClass="!w-full !max-w-full !h-screen"
-            contentClass="lg:!w-full lg:!max-w-full lg:!h-screen items-center justify-center"
+            wrapperClass="!w-full !max-w-full !h-full"
+            contentClass="lg:!w-full lg:!max-w-full lg:!h-full items-center justify-center"
           >
             <Document file={pdfBlob} onLoadSuccess={onLoadSuccess}>
               <Page pageNumber={page} />
             </Document>
           </TransformComponent>
+          <Controls />
+          <Pagination maxPage={maxPage} page={page} setPage={setPage} />
+          <Actions refreshPDF={refreshPDF} downloadPDF={downloadPDF} />
         </TransformWrapper>
       ) : (
         <p>Loading PDF...</p>
       )}
-
-      {pdfBlob && (
-        <Pagination maxPage={maxPage} page={page} setPage={setPage} />
-      )}
-      {pdfBlob && <Actions refreshPDF={refreshPDF} downloadPDF={downloadPDF} />}
-    </div>
+    </>
   );
 };
 
