@@ -34,3 +34,21 @@ export const getLanguagePercentage = (exp: ResumeLanguageExperience) => {
 
   return 0;
 };
+
+export const splitByLineBreaks = (input: any) => {
+  if (typeof input !== "string") {
+    return [];
+  }
+  return input.split(/\r?\n/);
+};
+
+export const isValidImageUrl = (url: any): url is string => {
+  if (typeof url !== "string") {
+    return false;
+  }
+
+  const imageRegex = /\.(jpeg|jpg|png|gif|bmp|webp|svg)$/i; // Matches common image extensions
+  const urlRegex = /^https?:\/\/[^\s/$.?#].[^\s]*$/i; // Matches valid URLs
+
+  return urlRegex.test(url) && imageRegex.test(url);
+};

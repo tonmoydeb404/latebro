@@ -1,271 +1,370 @@
 /* eslint-disable jsx-a11y/alt-text */
 import {
+  getSkillPercentage,
+  isValidImageUrl,
+  splitByLineBreaks,
+} from "@/helpers/resume";
+import { registerOpenSans } from "@/lib/react-pdf/fonts";
+import { Resume } from "@/types/resume";
+import {
   Document,
-  Font,
   Image,
+  Link,
   Page,
   StyleSheet,
   Text,
   View,
 } from "@react-pdf/renderer";
+import moment from "moment";
 
 // Register fonts
-Font.register({
-  family: "Inter",
-  fonts: [
-    {
-      src: "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2",
-      fontWeight: 400,
-    },
-    {
-      src: "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiA.woff2",
-      fontWeight: 600,
-    },
-  ],
-});
+registerOpenSans();
 
 const styles = StyleSheet.create({
   page: {
     flexDirection: "row",
     backgroundColor: "#FFFFFF",
+    fontFamily: "Open Sans",
   },
   sidebar: {
-    width: "30%",
+    width: "33%",
+    flexShrink: 0,
     backgroundColor: "#1B4D3E",
     padding: 20,
     color: "white",
   },
   main: {
-    width: "70%",
+    flex: 1,
     padding: 20,
+    color: "black",
   },
-  profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+
+  // Section ----------------------------------------------------------------------
+  section_title: {
+    fontSize: 16,
+    fontWeight: 600,
     marginBottom: 10,
+    marginTop: 20,
+  },
+  section_text: {
+    fontSize: 12,
+    marginBottom: 3,
+  },
+
+  // Profile ----------------------------------------------------------------------
+  avatar: {
+    width: 90,
+    height: 90,
+    borderRadius: 50,
     alignSelf: "center",
   },
   name: {
-    fontSize: 24,
-    fontWeight: 600,
-    marginBottom: 5,
+    marginTop: 10,
+    fontSize: 20,
+    fontWeight: 700,
+    marginBottom: 2,
     color: "white",
     textAlign: "center",
   },
-  jobTitle: {
+  profession: {
     fontSize: 14,
     color: "#E0E0E0",
     marginBottom: 20,
     textAlign: "center",
   },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 600,
-    marginBottom: 10,
-    marginTop: 20,
+  bio: {
+    color: "#444444",
   },
-  sectionTitleSidebar: {
-    fontSize: 18,
-    fontWeight: 600,
-    marginBottom: 10,
-    marginTop: 20,
-    color: "white",
-  },
-  detailLabel: {
+
+  // Contact ----------------------------------------------------------------------
+  contact_label: {
     fontSize: 12,
-    color: "#E0E0E0",
-    marginBottom: 5,
+    color: "#a0a0a0",
+    marginBottom: 2,
+    fontWeight: 500,
   },
-  detailText: {
+  contact_text: {
     fontSize: 12,
     color: "white",
     marginBottom: 10,
+    textDecoration: "none",
   },
-  skillBar: {
+
+  // Social ----------------------------------------------------------------------
+  social_link: {
+    fontSize: 12,
+    color: "white",
+    marginBottom: 10,
+    textDecoration: "none",
+  },
+
+  // Skill ----------------------------------------------------------------------
+  skill_label: {
+    fontSize: 12,
+    color: "white",
+    marginBottom: 7,
+  },
+  skill_bar: {
     height: 4,
-    backgroundColor: "#E0E0E0",
+    backgroundColor: "#a0a0a0",
     marginBottom: 10,
   },
-  skillFill: {
+  skill_fill: {
     height: "100%",
     backgroundColor: "white",
   },
-  experienceItem: {
-    marginBottom: 15,
-  },
-  companyName: {
+
+  // Item ----------------------------------------------------------------------
+  item: {},
+  item_title: {
     fontSize: 14,
-    fontWeight: 600,
-    marginBottom: 5,
+    fontWeight: 500,
+    marginBottom: 3,
   },
-  jobDetails: {
+  item_subtitle: {
+    fontSize: 12,
+    marginBottom: 2,
+    color: "#666666",
+  },
+  item_details: {
     fontSize: 12,
     marginBottom: 5,
     color: "#666666",
   },
-  bulletPoint: {
-    fontSize: 12,
-    marginBottom: 3,
-    paddingLeft: 10,
+  item_tags: {
+    fontSize: 10,
+    marginBottom: 10,
+  },
+  bullet_point: {
+    paddingLeft: 5,
+  },
+  item_actions: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
+    gap: 5,
+    marginBottom: 6,
+  },
+  item_action: {
+    fontSize: 11,
+    color: "#1B4D3E",
+    textDecoration: "none",
+    borderRadius: 2,
+  },
+  item_action_divider: {
+    fontSize: 11,
   },
 });
 
-const Template2 = () => (
-  <Document>
-    <Page size="A4" style={styles.page}>
-      {/* Sidebar */}
-      <View style={styles.sidebar}>
-        <Image
-          src="https://media.graphassets.com/Fn8oPxB9Sja74IDWxqtO"
-          style={styles.profileImage}
-        />
-        <Text style={styles.name}>Rick Tang</Text>
-        <Text style={styles.jobTitle}>Product Designer</Text>
+type Props = { data: Resume };
+const Template2 = (props: Props) => {
+  const { data } = props;
+  const {
+    contact,
+    educations,
+    experiences,
+    languages,
+    profile,
+    projects,
+    skills,
+    socials,
+  } = data;
 
-        <Text style={styles.sectionTitleSidebar}>Details</Text>
-        <Text style={styles.detailLabel}>Address</Text>
-        <Text style={styles.detailText}>San Francisco, California</Text>
+  return (
+    <Document>
+      <Page size="A4" style={styles.page}>
+        {/* Sidebar */}
+        <View style={styles.sidebar}>
+          {isValidImageUrl(profile.avatar) && (
+            <Image src={profile.avatar} style={styles.avatar} />
+          )}
+          <Text style={styles.name}>{profile?.name}</Text>
+          <Text style={styles.profession}>{profile?.profession}</Text>
 
-        <Text style={styles.detailLabel}>Phone</Text>
-        <Text style={styles.detailText}>(315) 802-8179</Text>
+          <View>
+            <Text style={styles.section_title}>Contacts</Text>
 
-        <Text style={styles.detailLabel}>Email</Text>
-        <Text style={styles.detailText}>ricktang@gmail.com</Text>
+            {contact.address && (
+              <View>
+                <Text style={styles.contact_label}>Address</Text>
+                {contact.address_link ? (
+                  <Link style={styles.contact_text} href={contact.address_link}>
+                    {contact?.address}
+                  </Link>
+                ) : (
+                  <Text style={styles.contact_text}>{contact?.address}</Text>
+                )}
+              </View>
+            )}
 
-        <Text style={styles.sectionTitleSidebar}>Links</Text>
-        <Text style={styles.detailText}>LinkedIn</Text>
-        <Text style={styles.detailText}>Dribbble</Text>
-        <Text style={styles.detailText}>Behance</Text>
+            {contact.phone && (
+              <View>
+                <Text style={styles.contact_label}>Phone</Text>
+                <Link style={styles.contact_text} href={`tel:${contact.phone}`}>
+                  {contact.phone}
+                </Link>
+              </View>
+            )}
 
-        <Text style={styles.sectionTitleSidebar}>Skills</Text>
-        <Text style={styles.detailText}>Figma</Text>
-        <View style={styles.skillBar}>
-          <View style={[styles.skillFill, { width: "90%" }]} />
-        </View>
+            {contact.email && (
+              <View>
+                <Text style={styles.contact_label}>Email</Text>
+                <Link
+                  style={styles.contact_text}
+                  href={`mailto:${contact.email}`}
+                >
+                  {contact.email}
+                </Link>
+              </View>
+            )}
 
-        <Text style={styles.detailText}>Sketch</Text>
-        <View style={styles.skillBar}>
-          <View style={[styles.skillFill, { width: "85%" }]} />
-        </View>
-
-        <Text style={styles.detailText}>Adobe Photoshop</Text>
-        <View style={styles.skillBar}>
-          <View style={[styles.skillFill, { width: "80%" }]} />
-        </View>
-
-        <Text style={styles.detailText}>Adobe Illustrator</Text>
-        <View style={styles.skillBar}>
-          <View style={[styles.skillFill, { width: "75%" }]} />
-        </View>
-
-        <Text style={styles.detailText}>Principle</Text>
-        <View style={styles.skillBar}>
-          <View style={[styles.skillFill, { width: "70%" }]} />
-        </View>
-
-        <Text style={styles.detailText}>Adobe XD</Text>
-        <View style={styles.skillBar}>
-          <View style={[styles.skillFill, { width: "65%" }]} />
-        </View>
-      </View>
-
-      {/* Main Content */}
-      <View style={styles.main}>
-        <View>
-          <Text style={styles.sectionTitle}>Profile</Text>
-          <Text style={styles.bulletPoint}>
-            I&apos;m a product designer focused on ensuring great user
-            experience and meeting business needs of designed products. I&apos;m
-            also experienced in implementing marketing strategy and developing
-            both on and offline campaigns. My philosophy is to make products
-            understandable, useful and long lasting at the same time recognizing
-            they&apos;re never finished and constantly changing. I&apos;m always
-            excited to face new challenges and problems.
-          </Text>
-        </View>
-
-        <View>
-          <Text style={styles.sectionTitle}>Experience</Text>
-
-          <View style={styles.experienceItem}>
-            <Text style={styles.companyName}>Uber</Text>
-            <Text style={styles.jobDetails}>Product Designer</Text>
-            <Text style={styles.jobDetails}>Mar 2015 - Present</Text>
-            <Text style={styles.bulletPoint}>
-              • Designed safety-focused experiences for Riders and Drivers
-            </Text>
-            <Text style={styles.bulletPoint}>
-              • Physical space problem solving and it&apos;s interaction with
-              the digital
-            </Text>
-            <Text style={styles.bulletPoint}>
-              • Integrated organization to achieve operational improvements
-            </Text>
+            {contact.website && (
+              <View>
+                <Text style={styles.contact_label}>Website</Text>
+                <Link style={styles.contact_text} href={contact.website}>
+                  {contact.website}
+                </Link>
+              </View>
+            )}
           </View>
 
-          <View style={styles.experienceItem}>
-            <Text style={styles.companyName}>IFTTT</Text>
-            <Text style={styles.jobDetails}>Product Designer</Text>
-            <Text style={styles.jobDetails}>Dec 2013 - Mar 2015</Text>
-            <Text style={styles.bulletPoint}>
-              • Product and system design for a complex product
-            </Text>
-            <Text style={styles.bulletPoint}>
-              • Designed both consumer and developer products for IFTTT
-            </Text>
-            <Text style={styles.bulletPoint}>
-              • Responsible for maintaining design across iOS, Android, and web
-            </Text>
+          <View>
+            <Text style={styles.section_title}>Socials</Text>
+            {socials.map((item) => (
+              <Link key={item._id} style={styles.social_link} href={item.url}>
+                {item.title}
+              </Link>
+            ))}
           </View>
 
-          <View style={styles.experienceItem}>
-            <Text style={styles.companyName}>Facebook</Text>
-            <Text style={styles.jobDetails}>Product Designer</Text>
-            <Text style={styles.jobDetails}>June 2013 - Sep 2013</Text>
-            <Text style={styles.bulletPoint}>
-              • Designer and prototyped internal tools
-            </Text>
-            <Text style={styles.bulletPoint}>
-              • Worked with Privacy team to build assets and features
-            </Text>
-            <Text style={styles.bulletPoint}>
-              • Redesigned NewsFeed curation experience for mobile
-            </Text>
-          </View>
-
-          <View style={styles.experienceItem}>
-            <Text style={styles.companyName}>Google Maps</Text>
-            <Text style={styles.jobDetails}>UX/UI Design Intern</Text>
-            <Text style={styles.jobDetails}>June 2012 - Sep 2013</Text>
-            <Text style={styles.bulletPoint}>
-              • Contributed to Maps on iOS wireframe and user experience
-            </Text>
-            <Text style={styles.bulletPoint}>
-              • Designed and prototyped onboarding experience
-            </Text>
-            <Text style={styles.bulletPoint}>
-              • Asset and feature design for Maps on Android
-            </Text>
+          <View>
+            <Text style={styles.section_title}>Skills</Text>
+            {skills.map((item) => (
+              <View key={item._id}>
+                <Text style={styles.skill_label}>{item.title}</Text>
+                <View style={styles.skill_bar}>
+                  <View
+                    style={[
+                      styles.skill_fill,
+                      { width: getSkillPercentage(item.experience) },
+                    ]}
+                  />
+                </View>
+              </View>
+            ))}
           </View>
         </View>
 
-        <View>
-          <Text style={styles.sectionTitle}>Education</Text>
-          <Text style={styles.companyName}>Brown University</Text>
-          <Text style={styles.jobDetails}>
-            Interdisciplinary Studies, Sep 2010 - May 2013
-          </Text>
+        {/* Main Content */}
+        <View style={styles.main}>
+          <View>
+            <Text style={styles.section_title}>Profile</Text>
+            <Text style={[styles.section_text, styles.bio]}>
+              {profile?.bio}
+            </Text>
+          </View>
+          actions
+          <View>
+            <Text style={styles.section_title}>Projects</Text>
+            <View style={{ rowGap: 15 }}>
+              {projects.map((item) => (
+                <View key={item._id}>
+                  <Text style={styles.item_title}>{item.name}</Text>
+                  <View style={styles.item_actions}>
+                    {item.caseStudyUrl && (
+                      <>
+                        <Link
+                          style={styles.item_action}
+                          href={item.caseStudyUrl}
+                        >
+                          Learn More
+                        </Link>
+                        <Text style={styles.item_action_divider}>|</Text>
+                      </>
+                    )}
+                    {item.previewUrl && (
+                      <>
+                        <Link style={styles.item_action} href={item.previewUrl}>
+                          Preview
+                        </Link>
+                        <Text style={styles.item_action_divider}>|</Text>
+                      </>
+                    )}
+                    {item.sourceUrl && (
+                      <Link style={styles.item_action} href={item.sourceUrl}>
+                        Source
+                      </Link>
+                    )}
+                  </View>
+                  <Text style={styles.item_details}>{item.description}</Text>
+                  <Text style={styles.item_tags}>
+                    Tools: {item.tools.join(", ")}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          </View>
+          <View>
+            <Text style={styles.section_title}>Experience</Text>
+            <View style={{ rowGap: 15 }}>
+              {experiences.map((item) => (
+                <View style={styles.item} key={item._id}>
+                  <Text style={styles.item_title}>{item.companyName}</Text>
+                  <Text style={styles.item_subtitle}>{item.position}</Text>
+                  <Text style={styles.item_details}>
+                    {moment(item.startedAt).format("MMM YYYY")} -{" "}
+                    {item.endedAt
+                      ? moment(item.endedAt).format("MMM YYYY")
+                      : "Present"}
+                  </Text>
+                  {splitByLineBreaks(item.description).map((item, index) => (
+                    <Text
+                      key={index}
+                      style={[styles.section_text, styles.bullet_point]}
+                    >
+                      •{"  "}
+                      {item}
+                    </Text>
+                  ))}
+                </View>
+              ))}
+            </View>
+          </View>
+          <View>
+            <Text style={styles.section_title}>Education</Text>
+            <View style={{ rowGap: 5 }}>
+              {educations.map((item) => (
+                <View key={item._id}>
+                  <Text style={styles.item_title}>{item.instituteName}</Text>
+                  <Text style={styles.item_details}>
+                    {item.subject}, {moment(item.startedAt).format("MMM YYYY")}{" "}
+                    -{" "}
+                    {item.endedAt
+                      ? moment(item.endedAt).format("MMM YYYY")
+                      : "Present"}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          </View>
+          <View>
+            <Text style={styles.section_title}>Languages</Text>
+            <View style={{ rowGap: 5 }}>
+              {languages.map((item) => (
+                <Text
+                  key={item._id}
+                  style={[styles.section_text, styles.bullet_point]}
+                >
+                  •{"  "}
+                  {item.title}
+                </Text>
+              ))}
+            </View>
+          </View>
         </View>
-
-        <View>
-          <Text style={styles.sectionTitle}>Languages</Text>
-          <Text style={styles.bulletPoint}>English</Text>
-          <Text style={styles.bulletPoint}>Italian</Text>
-        </View>
-      </View>
-    </Page>
-  </Document>
-);
+      </Page>
+    </Document>
+  );
+};
 
 export default Template2;

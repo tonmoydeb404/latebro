@@ -10,7 +10,7 @@ type Props = {
 const Pagination = (props: Props) => {
   const { page, maxPage, setPage } = props;
   return (
-    <div className="flex items-center justify-center fixed bottom-5 left-1/2 -translate-x-1/2 select-none">
+    <div className="flex items-center justify-center absolute bottom-5 left-1/2 -translate-x-1/2 select-none">
       <Button
         size={"icon"}
         disabled={page <= 1}
