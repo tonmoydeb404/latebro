@@ -21,10 +21,25 @@ import {
 // Register fonts
 registerInter();
 
+const FONT_SIZE = {
+  xs: 10.5,
+  sm: 11,
+  md: 12,
+  lg: 14,
+  xl: 24,
+};
+
+const COLORS = {
+  foreground: "#333333",
+  secondary: "#666666",
+  background: "#FFFFFF",
+  muted: "#E0E0E0",
+};
+
 const styles = StyleSheet.create({
   page: {
     padding: 40,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: COLORS.background,
     fontFamily: "Inter",
     fontWeight: "normal",
   },
@@ -54,13 +69,13 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
   title: {
-    fontSize: 24,
+    fontSize: FONT_SIZE.xl,
     fontWeight: 600,
     marginBottom: 4,
   },
   subtitle: {
-    fontSize: 14,
-    color: "#666666",
+    fontSize: FONT_SIZE.lg,
+    color: COLORS.secondary,
   },
   // Section ----------------------------------------------------------------------
   section: {
@@ -72,16 +87,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   paragraph: {
-    fontSize: 12,
+    fontSize: FONT_SIZE.md,
     lineHeight: 1.5,
-    color: "#333333",
-  },
-
-  skillBar: {
-    height: 2,
-    backgroundColor: "#E0E0E0",
-    marginTop: 4,
-    marginBottom: 8,
+    color: COLORS.foreground,
   },
 
   // Project ----------------------------------------------------------------------
@@ -95,19 +103,19 @@ const styles = StyleSheet.create({
   },
   project_title: {
     fontWeight: "medium",
-    fontSize: 14,
+    fontSize: FONT_SIZE.lg,
   },
   project_links: { marginLeft: "auto", flexDirection: "row" },
-  project_link: { fontSize: 11, textDecoration: "none" },
+  project_link: { fontSize: FONT_SIZE.sm, textDecoration: "none" },
   project_divider: {
-    fontSize: 11,
+    fontSize: FONT_SIZE.sm,
     marginLeft: 5,
     marginRight: 5,
   },
-  project_desc: { fontSize: 12, marginBottom: 8 },
+  project_desc: { fontSize: FONT_SIZE.md, marginBottom: 8 },
   project_tools: {
-    color: "#666666",
-    fontSize: 10.5,
+    color: COLORS.secondary,
+    fontSize: FONT_SIZE.xs,
     textTransform: "uppercase",
   },
   // Experience ----------------------------------------------------------------------
@@ -125,15 +133,15 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   exp_position: {
-    fontSize: 12,
+    fontSize: FONT_SIZE.md,
     marginBottom: 2,
   },
   exp_date: {
-    fontSize: 11,
-    color: "#666666",
+    fontSize: FONT_SIZE.sm,
+    color: COLORS.secondary,
   },
   exp_desc_point: {
-    fontSize: 12,
+    fontSize: FONT_SIZE.md,
     marginBottom: 2,
     paddingLeft: 10,
   },
@@ -147,23 +155,23 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   educations_subject: {
-    fontSize: 12,
+    fontSize: FONT_SIZE.md,
   },
   educations_date: {
-    fontSize: 11,
-    color: "#666666",
+    fontSize: FONT_SIZE.sm,
+    color: COLORS.secondary,
   },
   // Contacts ----------------------------------------------------------------------
   contact_item: {
     marginBottom: 8,
   },
   contact_label: {
-    fontSize: 11,
-    color: "#666666",
+    fontSize: FONT_SIZE.sm,
+    color: COLORS.secondary,
     marginBottom: 3,
   },
   contact_text: {
-    fontSize: 12,
+    fontSize: FONT_SIZE.md,
     color: "#000",
     textDecoration: "none",
   },
@@ -173,8 +181,8 @@ const styles = StyleSheet.create({
     rowGap: 6,
   },
   socials_item: {
-    fontSize: 12,
-    color: "#333333",
+    fontSize: FONT_SIZE.md,
+    color: COLORS.foreground,
     textDecoration: "none",
   },
 
@@ -188,12 +196,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   language_title: {
-    fontSize: 12,
+    fontSize: FONT_SIZE.md,
   },
   language_experience: {
-    fontSize: 11,
+    fontSize: FONT_SIZE.sm,
     textTransform: "uppercase",
-    color: "#666666",
+    color: COLORS.secondary,
   },
 
   // Skills ----------------------------------------------------------------------
@@ -201,17 +209,17 @@ const styles = StyleSheet.create({
     rowGap: 15,
   },
   skill_title: {
-    fontSize: 11,
+    fontSize: FONT_SIZE.sm,
     marginBottom: 4,
   },
   skill_bar: {
-    backgroundColor: "#E0E0E0",
+    backgroundColor: COLORS.muted,
     borderRadius: 2,
     overflow: "hidden",
   },
   skill_progress: {
     height: 3,
-    backgroundColor: "#333333",
+    backgroundColor: COLORS.foreground,
   },
 });
 
