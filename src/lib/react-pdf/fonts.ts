@@ -13,6 +13,19 @@ export const registerOpenSans = () => {
   });
 };
 
+export const registerInter = () => {
+  Font.register({
+    family: "Inter",
+    fonts: [
+      { src: "/fonts/inter/400.ttf", fontWeight: 400 },
+      { src: "/fonts/inter/500.ttf", fontWeight: 500 },
+      { src: "/fonts/inter/600.ttf", fontWeight: 600 },
+      { src: "/fonts/inter/700.ttf", fontWeight: 700 },
+      { src: "/fonts/inter/800.ttf", fontWeight: 800 },
+    ],
+  });
+};
+
 export const registerRoboto = () => {
   Font.register({
     family: "Roboto",
