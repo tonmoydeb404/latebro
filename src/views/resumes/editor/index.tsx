@@ -32,7 +32,7 @@ const ProfileEditorView = (props: Props) => {
 
           <div
             style={{ display: tab === tabs[1].id ? "block" : undefined }}
-            className="flex-1 w-full hidden lg:block bg-slate-100"
+            className="flex-1 w-full hidden lg:block bg-slate-100 relative"
           >
             <Preview />
           </div>
