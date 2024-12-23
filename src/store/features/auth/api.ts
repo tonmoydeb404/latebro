@@ -26,7 +26,7 @@ const authApi = createApi({
             login({ user: data.results.user, token: data.results.token })
           );
         } catch (error) {
-          dispatch(logout());
+          dispatch(authApi.endpoints.logout.initiate(undefined));
           // console.error("Refresh API Error: ", error);
         }
       },
@@ -45,7 +45,8 @@ const authApi = createApi({
             login({ user: data.results.user, token: data.results.token })
           );
         } catch (error) {
-          console.error("Login API Error: ", error);
+          dispatch(authApi.endpoints.logout.initiate(undefined));
+          // console.error("Login API Error: ", error);
         }
       },
     }),
@@ -63,7 +64,8 @@ const authApi = createApi({
             login({ user: data.results.user, token: data.results.token })
           );
         } catch (error) {
-          console.error("Register API Error: ", error);
+          dispatch(authApi.endpoints.logout.initiate(undefined));
+          // console.error("Register API Error: ", error);
         }
       },
     }),

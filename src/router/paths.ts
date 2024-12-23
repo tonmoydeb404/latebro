@@ -9,3 +9,9 @@ export const paths = {
     editor: "/resumes/editor",
   },
 };
+
+// routes that require authentication ----------------------------------------------------------------------
+export const protectedRoutes = ["/resumes/"];
+
+// routes that only for unauthenticated ----------------------------------------------------------------------
+export const guestRoutes = ["/auth/login", "/auth/register"];

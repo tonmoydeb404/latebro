@@ -1,12 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { authToken } from "./constants/cookies";
-import { paths } from "./router/paths";
-
-// routes that require authentication ----------------------------------------------------------------------
-const protectedRoutes = ["/resumes/"];
-// routes that only for unauthenticated ----------------------------------------------------------------------
-const guestRoutes = ["/auth/login", "/auth/register"];
+import { guestRoutes, paths, protectedRoutes } from "./router/paths";
 
 // ----------------------------------------------------------------------
 

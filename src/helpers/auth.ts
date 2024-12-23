@@ -11,6 +11,7 @@ export const setAuthToken = async (token: string) => {
   setCookie(authToken, token, {
     path: "/",
     maxAge: payload.exp * 1000,
+    httpOnly: false,
   });
 };
 
