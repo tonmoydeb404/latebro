@@ -1,8 +1,17 @@
 /* eslint-disable jsx-a11y/alt-text */
 import {
+  formatUrl,
+  getDateRange,
+  getSkillPercentage,
+  isValidImageUrl,
+  splitByLineBreaks,
+} from "@/helpers/resume";
+import { registerInter } from "@/lib/react-pdf/fonts";
+import { Resume } from "@/types/resume";
+import {
   Document,
-  Font,
   Image,
+  Link,
   Page,
   StyleSheet,
   Text,
@@ -10,63 +19,54 @@ import {
 } from "@react-pdf/renderer";
 
 // Register fonts
-Font.register({
-  family: "Inter",
-  fonts: [
-    {
-      src: "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2",
-      fontWeight: 400,
-    },
-    {
-      src: "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiA.woff2",
-      fontWeight: 600,
-    },
-  ],
-});
+registerInter();
 
 const styles = StyleSheet.create({
   page: {
     padding: 40,
     backgroundColor: "#FFFFFF",
-    backgroundImage: "linear-gradient(to bottom right, white 60%, #E3F2FF)",
+    fontFamily: "Inter",
+    fontWeight: "normal",
   },
+  main: {
+    flexDirection: "row",
+    gap: 40,
+  },
+  left_column: {
+    flex: 2,
+  },
+  right_column: {
+    flex: 1,
+  },
+  // Header ----------------------------------------------------------------------
   header: {
     flexDirection: "row",
     marginBottom: 20,
     alignItems: "center",
   },
-  profileImage: {
+  header_content: {
+    flex: 1,
+  },
+  avatar: {
     width: 60,
     height: 60,
     borderRadius: 30,
     marginRight: 15,
   },
-  headerText: {
-    flex: 1,
-  },
-  name: {
+  title: {
     fontSize: 24,
     fontWeight: 600,
     marginBottom: 4,
   },
-  title: {
+  subtitle: {
     fontSize: 14,
     color: "#666666",
   },
-  mainContent: {
-    flexDirection: "row",
-    gap: 40,
-  },
-  leftColumn: {
-    flex: 2,
-  },
-  rightColumn: {
-    flex: 1,
-  },
+  // Section ----------------------------------------------------------------------
   section: {
     marginBottom: 20,
   },
-  sectionTitle: {
+  section_title: {
     fontSize: 16,
     fontWeight: 600,
     marginBottom: 12,
@@ -76,259 +76,391 @@ const styles = StyleSheet.create({
     lineHeight: 1.5,
     color: "#333333",
   },
-  experienceItem: {
-    marginBottom: 15,
-  },
-  companyName: {
-    fontSize: 13,
-    fontWeight: 600,
-    marginBottom: 2,
-  },
-  jobTitle: {
-    fontSize: 12,
-    marginBottom: 2,
-  },
-  dateRange: {
-    fontSize: 12,
-    color: "#666666",
-    marginBottom: 4,
-  },
-  bulletPoint: {
-    fontSize: 12,
-    marginBottom: 2,
-    paddingLeft: 10,
-  },
-  detailItem: {
-    marginBottom: 8,
-  },
-  detailLabel: {
-    fontSize: 12,
-    color: "#666666",
-    marginBottom: 2,
-  },
-  detailText: {
-    fontSize: 12,
-  },
+
   skillBar: {
     height: 2,
     backgroundColor: "#E0E0E0",
     marginTop: 4,
     marginBottom: 8,
   },
-  link: {
+
+  // Project ----------------------------------------------------------------------
+  projects: {
+    rowGap: 15,
+  },
+  project_header: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 5,
+  },
+  project_title: {
+    fontWeight: "medium",
+    fontSize: 14,
+  },
+  project_links: { marginLeft: "auto", flexDirection: "row" },
+  project_link: { fontSize: 11, textDecoration: "none" },
+  project_divider: {
+    fontSize: 11,
+    marginLeft: 5,
+    marginRight: 5,
+  },
+  project_desc: { fontSize: 12, marginBottom: 8 },
+  project_tools: {
+    color: "#666666",
+    fontSize: 10.5,
+    textTransform: "uppercase",
+  },
+  // Experience ----------------------------------------------------------------------
+  exps: {
+    rowGap: 15,
+  },
+  exp_header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 5,
+  },
+  exp_company: {
+    fontSize: 13,
+    fontWeight: 600,
+    marginBottom: 2,
+  },
+  exp_position: {
+    fontSize: 12,
+    marginBottom: 2,
+  },
+  exp_date: {
+    fontSize: 11,
+    color: "#666666",
+  },
+  exp_desc_point: {
+    fontSize: 12,
+    marginBottom: 2,
+    paddingLeft: 10,
+  },
+  // Educations ----------------------------------------------------------------------
+  educations: {
+    rowGap: 15,
+  },
+  educations_institute: {
+    fontSize: 13,
+    fontWeight: 500,
+    marginBottom: 4,
+  },
+  educations_subject: {
+    fontSize: 12,
+  },
+  educations_date: {
+    fontSize: 11,
+    color: "#666666",
+  },
+  // Contacts ----------------------------------------------------------------------
+  contact_item: {
+    marginBottom: 8,
+  },
+  contact_label: {
+    fontSize: 11,
+    color: "#666666",
+    marginBottom: 3,
+  },
+  contact_text: {
+    fontSize: 12,
+    color: "#000",
+    textDecoration: "none",
+  },
+
+  // Socials ----------------------------------------------------------------------
+  socials: {
+    rowGap: 6,
+  },
+  socials_item: {
     fontSize: 12,
     color: "#333333",
-    marginBottom: 6,
     textDecoration: "none",
+  },
+
+  // Languages ----------------------------------------------------------------------
+  languages: {
+    rowGap: 8,
+  },
+  language_item: {
+    flexDirection: "row",
+    columnGap: 3,
+    alignItems: "center",
+  },
+  language_title: {
+    fontSize: 12,
+  },
+  language_experience: {
+    fontSize: 11,
+    textTransform: "uppercase",
+    color: "#666666",
+  },
+
+  // Skills ----------------------------------------------------------------------
+  skills: {
+    rowGap: 15,
+  },
+  skill_title: {
+    fontSize: 11,
+    marginBottom: 4,
+  },
+  skill_bar: {
+    backgroundColor: "#E0E0E0",
+    borderRadius: 2,
+    overflow: "hidden",
+  },
+  skill_progress: {
+    height: 3,
+    backgroundColor: "#333333",
   },
 });
 
-const Resume = () => (
-  <Document>
-    <Page size="A4" style={styles.page}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Image
-          src="/placeholder.svg?height=60&width=60"
-          style={styles.profileImage}
-        />
-        <View style={styles.headerText}>
-          <Text style={styles.name}>Rick Tang</Text>
-          <Text style={styles.title}>Product Designer</Text>
-        </View>
-      </View>
+type Props = { data: Resume };
 
-      <View style={styles.mainContent}>
-        {/* Left Column */}
-        <View style={styles.leftColumn}>
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Profile</Text>
-            <Text style={styles.paragraph}>
-              I&apos;m a product designer focused on ensuring great user
-              experience and meeting business needs of designed products.
-              I&apos;m also experienced in implementing marketing strategies and
-              developing both on and offline campaigns. My philosophy is to make
-              products understandable, useful and long-lasting at the same time
-              recognizing they&apos;re never finished and constantly changing.
-              I&apos;m always excited to face new challenges and problems.
+const Template = (props: Props) => {
+  const { data } = props;
+  const {
+    skills,
+    contact,
+    educations,
+    experiences,
+    languages,
+    profile,
+    projects,
+    socials,
+    title,
+  } = data;
+
+  const renderProjects = projects.length > 0 && (
+    <View style={styles.section}>
+      <Text style={styles.section_title}>Projects</Text>
+
+      <View style={styles.projects}>
+        {projects.map((item) => (
+          <View key={item._id}>
+            <View style={styles.project_header}>
+              <Text style={styles.project_title}>{item.name}</Text>
+              <View style={styles.project_links}>
+                {item.caseStudyUrl && (
+                  <>
+                    <Link style={styles.project_link} href={item.caseStudyUrl}>
+                      Learn More
+                    </Link>
+                    <Text style={styles.project_divider}>|</Text>
+                  </>
+                )}
+                {item.previewUrl && (
+                  <>
+                    <Link style={styles.project_link} href={item.previewUrl}>
+                      Preview
+                    </Link>
+                    <Text style={styles.project_divider}>|</Text>
+                  </>
+                )}
+                {item.sourceUrl && (
+                  <Link style={styles.project_link} href={item.sourceUrl}>
+                    Source
+                  </Link>
+                )}
+              </View>
+            </View>
+            <Text style={styles.project_desc}>{item.description}</Text>
+            <Text style={styles.project_tools}>
+              Tools: {item.tools.join(", ")}
             </Text>
           </View>
-
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Experience</Text>
-
-            <View style={styles.experienceItem}>
-              <Text style={styles.companyName}>Uber</Text>
-              <Text style={styles.jobTitle}>Product Designer</Text>
-              <Text style={styles.dateRange}>Mar 2015 - Present</Text>
-              <Text style={styles.bulletPoint}>
-                • Designed safety-focused experiences for Riders and Drivers
-              </Text>
-              <Text style={styles.bulletPoint}>
-                • Physical space problem solving and it&apos;s interaction with
-                the digital
-              </Text>
-              <Text style={styles.bulletPoint}>
-                • Navigated organization to achieve operational improvements
-              </Text>
-            </View>
-
-            <View style={styles.experienceItem}>
-              <Text style={styles.companyName}>IFTTT</Text>
-              <Text style={styles.jobTitle}>Product Designer</Text>
-              <Text style={styles.dateRange}>Dec 2013 - Mar 2015</Text>
-              <Text style={styles.bulletPoint}>
-                • Product and system design for a complex product
-              </Text>
-              <Text style={styles.bulletPoint}>
-                • Designed both consumer and developer products for IFTTT
-              </Text>
-              <Text style={styles.bulletPoint}>
-                • Responsible for maintaining design across iOS, Android, and
-                web
-              </Text>
-            </View>
-
-            <View style={styles.experienceItem}>
-              <Text style={styles.companyName}>Facebook</Text>
-              <Text style={styles.jobTitle}>Product Designer</Text>
-              <Text style={styles.dateRange}>June 2013 - Sep 2013</Text>
-              <Text style={styles.bulletPoint}>
-                • Designer and prototyped internal tools
-              </Text>
-              <Text style={styles.bulletPoint}>
-                • Worked with Privacy team to build assets and features
-              </Text>
-              <Text style={styles.bulletPoint}>
-                • Redesigned NewsFeed curation experience for mobile
-              </Text>
-            </View>
-
-            <View style={styles.experienceItem}>
-              <Text style={styles.companyName}>Google Maps</Text>
-              <Text style={styles.jobTitle}>UX/UI Design Intern</Text>
-              <Text style={styles.dateRange}>June 2012 - Sep 2013</Text>
-              <Text style={styles.bulletPoint}>
-                • Contributed to Maps on iOS wireframe and user experience
-              </Text>
-              <Text style={styles.bulletPoint}>
-                • Designed and prototyped onboarding experience
-              </Text>
-              <Text style={styles.bulletPoint}>
-                • Asset and feature design for Maps on Android
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Education</Text>
-            <View style={styles.experienceItem}>
-              <Text style={styles.companyName}>Brown University</Text>
-              <Text style={styles.dateRange}>
-                Interdisciplinary Studies, Sep 2010 - May 2013
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        {/* Right Column */}
-        <View style={styles.rightColumn}>
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Details</Text>
-            <View style={styles.detailItem}>
-              <Text style={styles.detailLabel}>Address</Text>
-              <Text style={styles.detailText}>San Francisco, California</Text>
-            </View>
-            <View style={styles.detailItem}>
-              <Text style={styles.detailLabel}>Phone</Text>
-              <Text style={styles.detailText}>(315) 802-8179</Text>
-            </View>
-            <View style={styles.detailItem}>
-              <Text style={styles.detailLabel}>Email</Text>
-              <Text style={styles.detailText}>ricktang@gmail.com</Text>
-            </View>
-          </View>
-
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Links</Text>
-            <Text style={styles.link}>LinkedIn</Text>
-            <Text style={styles.link}>Dribbble</Text>
-            <Text style={styles.link}>Behance</Text>
-          </View>
-
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Skills</Text>
-            <View style={styles.detailItem}>
-              <Text style={styles.detailText}>Figma</Text>
-              <View style={styles.skillBar}>
-                <View
-                  style={[
-                    styles.skillBar,
-                    { width: "90%", backgroundColor: "#333" },
-                  ]}
-                />
-              </View>
-            </View>
-            <View style={styles.detailItem}>
-              <Text style={styles.detailText}>Sketch</Text>
-              <View style={styles.skillBar}>
-                <View
-                  style={[
-                    styles.skillBar,
-                    { width: "85%", backgroundColor: "#333" },
-                  ]}
-                />
-              </View>
-            </View>
-            <View style={styles.detailItem}>
-              <Text style={styles.detailText}>Adobe Photoshop</Text>
-              <View style={styles.skillBar}>
-                <View
-                  style={[
-                    styles.skillBar,
-                    { width: "80%", backgroundColor: "#333" },
-                  ]}
-                />
-              </View>
-            </View>
-            <View style={styles.detailItem}>
-              <Text style={styles.detailText}>Adobe Illustrator</Text>
-              <View style={styles.skillBar}>
-                <View
-                  style={[
-                    styles.skillBar,
-                    { width: "75%", backgroundColor: "#333" },
-                  ]}
-                />
-              </View>
-            </View>
-            <View style={styles.detailItem}>
-              <Text style={styles.detailText}>Principle</Text>
-              <View style={styles.skillBar}>
-                <View
-                  style={[
-                    styles.skillBar,
-                    { width: "70%", backgroundColor: "#333" },
-                  ]}
-                />
-              </View>
-            </View>
-            <View style={styles.detailItem}>
-              <Text style={styles.detailText}>Adobe XD</Text>
-              <View style={styles.skillBar}>
-                <View
-                  style={[
-                    styles.skillBar,
-                    { width: "65%", backgroundColor: "#333" },
-                  ]}
-                />
-              </View>
-            </View>
-          </View>
-        </View>
+        ))}
       </View>
-    </Page>
-  </Document>
-);
+    </View>
+  );
 
-export default Resume;
+  const renderExperiences = experiences.length > 0 && (
+    <View style={styles.section}>
+      <Text style={styles.section_title}>Experience</Text>
+
+      <View style={styles.exps}>
+        {experiences.map((item) => (
+          <View key={item._id}>
+            <View style={styles.exp_header}>
+              <View>
+                <Text style={styles.exp_company}>{item.companyName}</Text>
+                <Text style={styles.exp_position}>{item.position}</Text>
+              </View>
+              <Text style={styles.exp_date}>
+                {getDateRange(item.startedAt, item.endedAt)}
+              </Text>
+            </View>
+            {splitByLineBreaks(item.description).map((line, index) => (
+              <Text style={styles.exp_desc_point} key={index}>
+                • {line}
+              </Text>
+            ))}
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+
+  const renderEducations = educations.length > 0 && (
+    <View style={styles.section}>
+      <Text style={styles.section_title}>Education</Text>
+      <View style={styles.educations}>
+        {educations.map((item) => (
+          <View key={item._id}>
+            <Text style={styles.educations_institute}>
+              {item.instituteName}
+            </Text>
+            <Text style={styles.educations_subject}>
+              {item.subject}
+              {", "}
+              <Text style={styles.educations_date}>
+                {getDateRange(item.startedAt, item.endedAt)}
+              </Text>
+            </Text>
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+
+  const renderContacts = contact && (
+    <View style={styles.section}>
+      <Text style={styles.section_title}>Contacts</Text>
+
+      {contact.address && (
+        <View style={styles.contact_item}>
+          <Text style={styles.contact_label}>Address</Text>
+          {contact.address_link ? (
+            <Link style={styles.contact_text} href={contact.address_link}>
+              {contact?.address}
+            </Link>
+          ) : (
+            <Text style={styles.contact_text}>{contact?.address}</Text>
+          )}
+        </View>
+      )}
+
+      {contact.phone && (
+        <View style={styles.contact_item}>
+          <Text style={styles.contact_label}>Phone</Text>
+          <Link style={styles.contact_text} href={`tel:${contact.phone}`}>
+            {contact.phone}
+          </Link>
+        </View>
+      )}
+
+      {contact.email && (
+        <View style={styles.contact_item}>
+          <Text style={styles.contact_label}>Email</Text>
+          <Link style={styles.contact_text} href={`mailto:${contact.email}`}>
+            {contact.email}
+          </Link>
+        </View>
+      )}
+
+      {contact.website && (
+        <View style={styles.contact_item}>
+          <Text style={styles.contact_label}>Website</Text>
+          <Link style={styles.contact_text} href={contact.website}>
+            {formatUrl(contact.website)}
+          </Link>
+        </View>
+      )}
+    </View>
+  );
+
+  const renderSocials = socials.length > 0 && (
+    <View style={styles.section}>
+      <Text style={styles.section_title}>Socials</Text>
+
+      <View style={styles.socials}>
+        {socials.map((item) => (
+          <Link key={item._id} href={item.url} style={styles.socials_item}>
+            {item.title}
+          </Link>
+        ))}
+      </View>
+    </View>
+  );
+
+  const renderLanguages = languages.length > 0 && (
+    <View style={styles.section}>
+      <Text style={styles.section_title}>Languages</Text>
+
+      <View style={styles.languages}>
+        {languages.map((item) => (
+          <View key={item._id} style={styles.language_item}>
+            <Text style={styles.language_title}>{item.title}</Text>
+            <Text style={styles.language_experience}>-</Text>
+            <Text style={styles.language_experience}>{item.experience}</Text>
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+
+  const renderSkills = skills.length > 0 && (
+    <View style={styles.section}>
+      <Text style={styles.section_title}>Skills</Text>
+
+      <View style={styles.skills}>
+        {skills.map((item) => (
+          <View key={item._id}>
+            <Text style={styles.skill_title}>{item.title}</Text>
+            <View style={styles.skill_bar}>
+              <View
+                style={[
+                  styles.skill_progress,
+                  {
+                    width: `${getSkillPercentage(item.experience)}%`,
+                  },
+                ]}
+              />
+            </View>
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+
+  return (
+    <Document>
+      <Page size="A4" style={styles.page}>
+        {/* Header */}
+        <View style={styles.header}>
+          {isValidImageUrl(profile.avatar) && (
+            <Image src={profile.avatar} style={styles.avatar} />
+          )}
+          <View style={styles.header_content}>
+            <Text style={styles.title}>{profile.name}</Text>
+            <Text style={styles.subtitle}>{profile.profession}</Text>
+          </View>
+        </View>
+
+        <View style={styles.main}>
+          {/* Left Column */}
+          <View style={styles.left_column}>
+            <View style={styles.section}>
+              <Text style={styles.section_title}>Profile</Text>
+              <Text style={styles.paragraph}>{profile.bio}</Text>
+            </View>
+
+            {renderProjects}
+            {renderExperiences}
+            {renderEducations}
+          </View>
+
+          {/* Right Column */}
+          <View style={styles.right_column}>
+            {renderContacts}
+            {renderSocials}
+            {renderLanguages}
+            {renderSkills}
+          </View>
+        </View>
+      </Page>
+    </Document>
+  );
+};
+
+export default Template;

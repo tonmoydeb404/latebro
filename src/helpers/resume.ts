@@ -2,6 +2,7 @@ import {
   ResumeLanguageExperience,
   ResumeSkillExperience,
 } from "@/types/resume";
+import moment from "moment";
 
 export const getSkillPercentage = (skill: ResumeSkillExperience) => {
   switch (skill) {
@@ -51,4 +52,22 @@ export const isValidImageUrl = (url: any): url is string => {
   const urlRegex = /^https?:\/\/[^\s/$.?#].[^\s]*$/i; // Matches valid URLs
 
   return urlRegex.test(url) && imageRegex.test(url);
+};
+
+export const getDateRange = (start: string, end?: string | null) => {
+  if (end === undefined) {
+    return moment(start).format("MMM YYYY");
+  }
+
+  if (end === null) {
+    return moment(start).format("MMM YYYY") + " - Present";
+  }
+
+  return `${moment(start).format("MMM YYYY")} - ${moment(end).format(
+    "MMM YYYY"
+  )}`;
+};
+
+export const formatUrl = (url: string): string => {
+  return url.replace(/^(https?:\/\/)/, "");
 };
