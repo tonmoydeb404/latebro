@@ -2,9 +2,15 @@
 
 import { hasApiError } from "@/helpers/api";
 import { toast } from "@/hooks/use-toast";
-import { setNav, setResume, setState } from "@/store/features/editor/slice";
+import {
+  setNav,
+  setResume,
+  setState,
+  setTemplate,
+} from "@/store/features/editor/slice";
 import { useLazyGetResumeQuery } from "@/store/features/resume/api";
 import { useAppDispatch } from "@/store/hooks";
+import { getTemplate } from "@/templates/resumes";
 import { useSearchParams } from "next/navigation";
 import { ReactNode, useEffect } from "react";
 
@@ -18,6 +24,7 @@ const Wrapper = (props: Props) => {
   const searchparams = useSearchParams();
   const queryResume = searchparams.get("resume");
   const queryNav = searchparams.get("nav");
+  const templateId = searchparams.get("template");
   const [query, response] = useLazyGetResumeQuery();
   const { data, isSuccess } = response;
 
@@ -74,6 +81,14 @@ const Wrapper = (props: Props) => {
     if (data?.results) dispatch(setResume(data.results));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
+
+  useEffect(() => {
+    if (templateId) {
+      const template = getTemplate(templateId);
+      dispatch(setTemplate(template ?? null));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [templateId]);
 
   return <>{children}</>;
 };

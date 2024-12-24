@@ -1,11 +1,9 @@
 import useTailwindBreakpoint from "@/hooks/use-tailwind-breakpoint";
 import { useEditor } from "@/store/hooks";
-import { getTemplate } from "@/templates/resumes";
 import { TemplateProps } from "@/types/template";
 import { pdf } from "@react-pdf/renderer";
-import { useSearchParams } from "next/navigation";
 import "pdfjs-dist/build/pdf.worker.mjs";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Document, Page } from "react-pdf";
 import { OnDocumentLoadSuccess } from "react-pdf/dist/esm/shared/types.js";
 import "react-pdf/dist/Page/AnnotationLayer.css";
@@ -18,16 +16,11 @@ import Pagination from "./pagination";
 type Props = {};
 
 const Preview = (props: Props) => {
-  const { resume, theme } = useEditor();
-  const searchParams = useSearchParams();
+  const { resume, colors: theme, template } = useEditor();
   const breakpoint = useTailwindBreakpoint();
-  const templateId = searchParams.get("template");
   const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
   const [templateStatus, setTemplateStatus] = useState(0);
   const templateRef = useRef<React.FC<TemplateProps> | null>(null);
-  const template = useMemo(() => {
-    return templateId ? getTemplate(templateId) : undefined;
-  }, [templateId]);
 
   const refreshPDF = useCallback(async () => {
     try {

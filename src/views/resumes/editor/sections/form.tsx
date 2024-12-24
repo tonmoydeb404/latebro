@@ -7,6 +7,7 @@ import { useAppDispatch, useEditor } from "@/store/hooks";
 import { LucideLoader, LucideTriangleAlert } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
+import ColorsForm from "./colors";
 import ContactForm from "./contact";
 import EducationsForm from "./educations";
 import ExperiencesForm from "./experiences";
@@ -15,7 +16,6 @@ import ProfileForm from "./profile";
 import ProjectsForm from "./projects";
 import SkillsForm from "./skills";
 import SocialsForm from "./socials";
-import ThemeForm from "./theme";
 
 type Props = {};
 
@@ -82,7 +82,7 @@ const Form = (props: Props) => {
           <SocialsForm />
         </div>
         <div data-scrollspy="8" className="pt-16 pb-16">
-          <ThemeForm />
+          <ColorsForm />
         </div>
       </div>
     </ScrollArea>

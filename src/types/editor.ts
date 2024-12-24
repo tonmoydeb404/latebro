@@ -1,6 +1,7 @@
 import { Resume } from "./resume";
+import { Template } from "./template";
 
-export type EditorTheme = {
+export type EditorColors = {
   background: string;
   foreground: string;
   secondary: string;
@@ -20,5 +21,6 @@ export interface EditorSlice {
   resume: Resume | null;
   tab: number;
   state: EditorState;
-  theme: EditorTheme | null;
+  colors: EditorColors | null;
+  template: Template | null;
 }

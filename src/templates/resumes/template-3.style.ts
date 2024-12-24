@@ -1,4 +1,4 @@
-import { EditorTheme } from "@/types/editor";
+import { EditorColors } from "@/types/editor";
 import { StyleSheet } from "@react-pdf/renderer";
 
 const FONT_SIZE = {
@@ -9,7 +9,7 @@ const FONT_SIZE = {
   xl: 24,
 };
 
-const COLORS: EditorTheme = {
+const COLORS: EditorColors = {
   foreground: "#333333",
   secondary: "#666666",
   background: "#FFFFFF",
@@ -17,7 +17,7 @@ const COLORS: EditorTheme = {
   primary: "#007BFF",
 };
 
-export const createStyles = (theme?: EditorTheme) => {
+export const createStyles = (theme?: EditorColors) => {
   const colors = { ...COLORS, ...theme };
 
   return StyleSheet.create({
@@ -206,4 +206,9 @@ export const createStyles = (theme?: EditorTheme) => {
       backgroundColor: colors.primary,
     },
   });
+};
+
+export const template3Styles = {
+  colors: COLORS,
+  fontSizes: FONT_SIZE,
 };

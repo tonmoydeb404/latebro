@@ -1,6 +1,6 @@
 import { RHFForm } from "@/components/common/rhf";
 import { Button } from "@/components/ui/button";
-import { setTheme } from "@/store/features/editor/slice";
+import { setColors } from "@/store/features/editor/slice";
 import { useAppDispatch, useEditor } from "@/store/hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LucideEdit } from "lucide-react";
@@ -12,27 +12,27 @@ import schema, { SchemaType } from "./schema";
 
 type Props = {};
 
-const ThemeForm = (props: Props) => {
-  const { theme } = useEditor();
+const ColorsForm = (props: Props) => {
+  const { template } = useEditor();
   const dispatch = useAppDispatch();
 
   // ----------------------------------------------------------------------
 
   const defaultValues = useMemo<SchemaType>(
     () => ({
-      background: theme?.background || "",
-      foreground: theme?.foreground || "",
-      muted: theme?.muted || "",
-      primary: theme?.primary || "",
-      secondary: theme?.secondary || "",
+      background: template?.theme?.colors?.background || "",
+      foreground: template?.theme?.colors?.foreground || "",
+      muted: template?.theme?.colors?.muted || "",
+      primary: template?.theme?.colors?.primary || "",
+      secondary: template?.theme?.colors?.secondary || "",
     }),
-    [theme]
+    [template?.theme?.colors]
   );
   const formOptions = useForm({ resolver: zodResolver(schema), defaultValues });
 
   const onValid: SubmitHandler<SchemaType> = useCallback(
     async (values) => {
-      dispatch(setTheme(values));
+      dispatch(setColors(values));
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -48,7 +48,7 @@ const ThemeForm = (props: Props) => {
   return (
     <RHFForm formOptions={formOptions} onValid={onValid}>
       <Header
-        title="Theme Configurations"
+        title="Customize Colors"
         description="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quos, similique."
         className="mb-10"
       />
@@ -66,4 +66,4 @@ const ThemeForm = (props: Props) => {
   );
 };
 
-export default ThemeForm;
+export default ColorsForm;

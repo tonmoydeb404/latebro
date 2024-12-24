@@ -1,9 +1,5 @@
-type Template = {
-  title: string;
-  text: string;
-  import: () => Promise<any>;
-  id: string;
-};
+import { Template } from "@/types/template";
+import { template3Styles } from "./template-3.style";
 
 const templates: Template[] = [
   {
@@ -11,18 +7,27 @@ const templates: Template[] = [
     title: "Template 1",
     text: "",
     import: () => import("@/templates/resumes/template-1"),
+    theme: {
+      colors: template3Styles.colors,
+    },
   },
   {
     id: "2",
     title: "Template 2",
     text: "",
     import: () => import("@/templates/resumes/template-2"),
+    theme: {
+      colors: template3Styles.colors,
+    },
   },
   {
     id: "3",
     title: "Template 3",
     text: "",
     import: () => import("@/templates/resumes/template-3"),
+    theme: {
+      colors: template3Styles.colors,
+    },
   },
   // {
   //   id: "4",

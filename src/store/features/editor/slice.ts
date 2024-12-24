@@ -9,7 +9,8 @@ const initialState: EditorSlice = {
   tab: 0,
   resume: null,
   state: "LOADING",
-  theme: null,
+  colors: null,
+  template: null,
 };
 
 const editorSlice = createSlice({
@@ -28,13 +29,16 @@ const editorSlice = createSlice({
     setResume: (state, action: PayloadAction<Resume | null>) => {
       state.resume = action.payload;
     },
-    setTheme: (state, action: PayloadAction<EditorSlice["theme"]>) => {
-      state.theme = action.payload;
+    setColors: (state, action: PayloadAction<EditorSlice["colors"]>) => {
+      state.colors = action.payload;
+    },
+    setTemplate: (state, action: PayloadAction<EditorSlice["template"]>) => {
+      state.template = action.payload;
     },
   },
 });
 
-export const { setNav, setResume, setTab, setState, setTheme } =
+export const { setNav, setResume, setTab, setState, setColors, setTemplate } =
   editorSlice.actions;
 export const selectEditor = (state: RootState) => state.editor;
 export default editorSlice;

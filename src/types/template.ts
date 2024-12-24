@@ -1,4 +1,14 @@
-import { EditorTheme } from "./editor";
+import { EditorColors } from "./editor";
 import { Resume } from "./resume";
 
-export type TemplateProps = { data: Resume; theme: EditorTheme | null };
+export type TemplateProps = { data: Resume; theme: EditorColors | null };
+
+export type Template = {
+  title: string;
+  text: string;
+  import: () => Promise<any>;
+  id: string;
+  theme: {
+    colors: EditorColors;
+  };
+};

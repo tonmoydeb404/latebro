@@ -29,7 +29,7 @@ export const navGroups: GroupItem[] = [
     ],
   },
   {
-    childs: [{ id: 8, label: "Themes", icon: LucidePalette }],
+    childs: [{ id: 8, label: "Colors", icon: LucidePalette }],
   },
 ];
 
