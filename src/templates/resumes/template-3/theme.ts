@@ -219,7 +219,7 @@ export const createStyles = (theme?: EditorColors) => {
   });
 };
 
-export const template3Styles = {
+export const theme = {
   colors: COLORS,
   fontSizes: FONT_SIZE,
 };

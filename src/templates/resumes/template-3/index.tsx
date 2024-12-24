@@ -9,13 +9,13 @@ import {
 import { registerInter } from "@/lib/react-pdf/fonts";
 import { TemplateProps } from "@/types/template";
 import { Document, Image, Link, Page, Text, View } from "@react-pdf/renderer";
-import { createStyles } from "./template-3.style";
+import { createStyles } from "./theme";
 
 // Register fonts
 registerInter();
 
 const Template = (props: TemplateProps) => {
-  const { data, theme } = props;
+  const { data, colors: theme } = props;
   const {
     skills,
     contact,

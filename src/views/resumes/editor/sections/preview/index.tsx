@@ -41,7 +41,7 @@ const Preview = (props: Props) => {
   const generatePDF = useCallback(async () => {
     if (!resume || !templateRef.current) return;
     const blob = await pdf(
-      <templateRef.current data={resume} theme={theme} />
+      <templateRef.current data={resume} colors={theme} />
     ).toBlob();
     setPdfBlob(blob);
   }, [resume, theme]);

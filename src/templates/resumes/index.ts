@@ -1,5 +1,7 @@
 import { Template } from "@/types/template";
-import { template3Styles } from "./template-3.style";
+import template1Config from "./template-1/config";
+import template2Config from "./template-2/config";
+import template3Config from "./template-3/config";
 
 const templatePaths = {
   "1": () => import("@/templates/resumes/template-1"),
@@ -8,30 +10,9 @@ const templatePaths = {
 };
 
 const templates: Template[] = [
-  {
-    id: "1",
-    title: "Template 1",
-    text: "",
-    theme: {
-      colors: template3Styles.colors,
-    },
-  },
-  {
-    id: "2",
-    title: "Template 2",
-    text: "",
-    theme: {
-      colors: template3Styles.colors,
-    },
-  },
-  {
-    id: "3",
-    title: "Template 3",
-    text: "",
-    theme: {
-      colors: template3Styles.colors,
-    },
-  },
+  template1Config,
+  template2Config,
+  template3Config,
   // {
   //   id: "4",
   //   title: "Template 4",
