@@ -6,7 +6,6 @@ export type TemplateProps = { data: Resume; theme: EditorColors | null };
 export type Template = {
   title: string;
   text: string;
-  import: () => Promise<any>;
   id: string;
   theme: {
     colors: EditorColors;

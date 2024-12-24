@@ -1,12 +1,17 @@
 import { Template } from "@/types/template";
 import { template3Styles } from "./template-3.style";
 
+const templatePaths = {
+  "1": () => import("@/templates/resumes/template-1"),
+  "2": () => import("@/templates/resumes/template-2"),
+  "3": () => import("@/templates/resumes/template-3"),
+};
+
 const templates: Template[] = [
   {
     id: "1",
     title: "Template 1",
     text: "",
-    import: () => import("@/templates/resumes/template-1"),
     theme: {
       colors: template3Styles.colors,
     },
@@ -15,7 +20,6 @@ const templates: Template[] = [
     id: "2",
     title: "Template 2",
     text: "",
-    import: () => import("@/templates/resumes/template-2"),
     theme: {
       colors: template3Styles.colors,
     },
@@ -24,7 +28,6 @@ const templates: Template[] = [
     id: "3",
     title: "Template 3",
     text: "",
-    import: () => import("@/templates/resumes/template-3"),
     theme: {
       colors: template3Styles.colors,
     },
@@ -68,5 +71,7 @@ const templates: Template[] = [
 ];
 
 export const getTemplate = (id: string) => templates.find((t) => t.id === id);
+export const getTemplatePath = (id: string) =>
+  templatePaths[id as keyof typeof templatePaths];
 
 export default templates;

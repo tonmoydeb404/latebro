@@ -9,7 +9,7 @@ const Fields = (props: Props) => {
       <RHFColorField label="Foreground" name="foreground" />
       <RHFColorField label="Secondary" name="secondary" />
       <RHFColorField label="Primary" name="primary" />
-      <RHFColorField label="muted" name="muted" />
+      <RHFColorField label="Muted" name="muted" />
     </>
   );
 };

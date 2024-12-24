@@ -4,7 +4,7 @@ import { setColors } from "@/store/features/editor/slice";
 import { useAppDispatch, useEditor } from "@/store/hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LucideEdit } from "lucide-react";
-import { useCallback, useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Header from "../../common/header";
 import Fields from "./fields";
@@ -30,13 +30,13 @@ const ColorsForm = (props: Props) => {
   );
   const formOptions = useForm({ resolver: zodResolver(schema), defaultValues });
 
-  const onValid: SubmitHandler<SchemaType> = useCallback(
-    async (values) => {
-      dispatch(setColors(values));
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
+  const onValid: SubmitHandler<SchemaType> = async (values) => {
+    dispatch(setColors(values));
+  };
+  const onReset = async () => {
+    formOptions.reset(defaultValues);
+    dispatch(setColors(defaultValues));
+  };
 
   // ----------------------------------------------------------------------
 
@@ -46,7 +46,7 @@ const ColorsForm = (props: Props) => {
   }, [defaultValues]);
 
   return (
-    <RHFForm formOptions={formOptions} onValid={onValid}>
+    <RHFForm formOptions={formOptions} onValid={onValid} onReset={onReset}>
       <Header
         title="Customize Colors"
         description="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quos, similique."
@@ -56,9 +56,12 @@ const ColorsForm = (props: Props) => {
       <div className="flex flex-col gap-4 mb-10">
         <Fields />
       </div>
-      <div className="flex items-center">
+      <div className="flex items-center gap-2">
         <Button Icon={LucideEdit} type="submit">
           Update
+        </Button>
+        <Button type="reset" variant={"outline"}>
+          Reset To Defaults
         </Button>
         {/* <AutoSave defaultValues={defaultValues} onSubmit={onValid} /> */}
       </div>

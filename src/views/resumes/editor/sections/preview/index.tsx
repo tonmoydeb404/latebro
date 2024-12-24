@@ -1,5 +1,6 @@
 import useTailwindBreakpoint from "@/hooks/use-tailwind-breakpoint";
 import { useEditor } from "@/store/hooks";
+import { getTemplatePath } from "@/templates/resumes";
 import { TemplateProps } from "@/types/template";
 import { pdf } from "@react-pdf/renderer";
 import "pdfjs-dist/build/pdf.worker.mjs";
@@ -24,9 +25,11 @@ const Preview = (props: Props) => {
 
   const refreshPDF = useCallback(async () => {
     try {
-      if (!template) throw new Error("Template not found!");
+      if (!template) return;
+      const importTemplate = getTemplatePath(template.id);
+      if (!importTemplate) return;
 
-      const { default: Resume } = await template.import();
+      const { default: Resume } = await importTemplate();
       templateRef.current = Resume;
       setTemplateStatus((prev) => prev + 1);
     } catch (error) {

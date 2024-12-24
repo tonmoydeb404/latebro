@@ -26,6 +26,7 @@ export const createStyles = (theme?: EditorColors) => {
       backgroundColor: colors.background,
       fontFamily: "Inter",
       fontWeight: "normal",
+      color: colors.foreground,
     },
     main: {
       flexDirection: "row",
@@ -90,11 +91,16 @@ export const createStyles = (theme?: EditorColors) => {
       fontSize: FONT_SIZE.lg,
     },
     project_links: { marginLeft: "auto", flexDirection: "row" },
-    project_link: { fontSize: FONT_SIZE.sm, textDecoration: "none" },
+    project_link: {
+      fontSize: FONT_SIZE.sm,
+      textDecoration: "none",
+      color: colors.primary,
+    },
     project_divider: {
       fontSize: FONT_SIZE.sm,
       marginLeft: 5,
       marginRight: 5,
+      color: colors.muted,
     },
     project_desc: { fontSize: FONT_SIZE.md, marginBottom: 8 },
     project_tools: {
@@ -138,11 +144,16 @@ export const createStyles = (theme?: EditorColors) => {
       fontWeight: 500,
       marginBottom: 4,
     },
+    educations_body: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "flex-start",
+    },
     educations_subject: {
       fontSize: FONT_SIZE.md,
     },
     educations_date: {
-      fontSize: FONT_SIZE.sm,
+      fontSize: FONT_SIZE.xs,
       color: colors.secondary,
     },
     // Contacts ----------------------------------------------------------------------
@@ -156,7 +167,7 @@ export const createStyles = (theme?: EditorColors) => {
     },
     contact_text: {
       fontSize: FONT_SIZE.md,
-      color: "#000",
+      color: colors.foreground,
       textDecoration: "none",
     },
 

@@ -25,7 +25,6 @@ const Template = (props: TemplateProps) => {
     profile,
     projects,
     socials,
-    title,
   } = data;
   const styles = createStyles(theme ?? undefined);
 
@@ -110,13 +109,13 @@ const Template = (props: TemplateProps) => {
             <Text style={styles.educations_institute}>
               {item.instituteName}
             </Text>
-            <Text style={styles.educations_subject}>
-              {item.subject}
-              {", "}
+            <View style={styles.educations_body}>
+              <Text style={styles.educations_subject}>{item.subject}</Text>
+
               <Text style={styles.educations_date}>
                 {getDateRange(item.startedAt, item.endedAt)}
               </Text>
-            </Text>
+            </View>
           </View>
         ))}
       </View>
