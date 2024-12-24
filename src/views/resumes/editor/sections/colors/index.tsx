@@ -2,6 +2,8 @@ import { RHFForm } from "@/components/common/rhf";
 import { Button } from "@/components/ui/button";
 import { setColors } from "@/store/features/editor/slice";
 import { useAppDispatch, useEditor } from "@/store/hooks";
+import { colorPresets } from "@/templates/resumes/presets";
+import { EditorColors } from "@/types/editor";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LucideEdit } from "lucide-react";
 import { useEffect, useMemo } from "react";
@@ -37,6 +39,10 @@ const ColorsForm = (props: Props) => {
     formOptions.reset(defaultValues);
     dispatch(setColors(defaultValues));
   };
+  const selectPreset = async (colors: EditorColors) => {
+    formOptions.reset(colors);
+    dispatch(setColors(colors));
+  };
 
   // ----------------------------------------------------------------------
 
@@ -52,6 +58,30 @@ const ColorsForm = (props: Props) => {
         description="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quos, similique."
         className="mb-10"
       />
+
+      <h3 className="text-sm mb-2">Presets</h3>
+      <div className="flex items-center gap-1 mb-5">
+        {colorPresets.map((item, index) => {
+          const color = Object.values(item).map((value, valueIndex, array) => {
+            const length = Math.round(100 / array.length);
+            const start = valueIndex * length;
+            const end = (valueIndex + 1) * length;
+
+            return `${value} ${start}% ${end}%`;
+          });
+
+          return (
+            <button
+              key={index}
+              className="border size-10 rounded-md"
+              style={{
+                background: `conic-gradient(${color.join(", ")})`,
+              }}
+              onClick={() => selectPreset(item)}
+            />
+          );
+        })}
+      </div>
 
       <div className="flex flex-col gap-4 mb-10">
         <Fields />
