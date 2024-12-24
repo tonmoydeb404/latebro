@@ -3,7 +3,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { paths } from "@/router/paths";
 import { LucideHome } from "lucide-react";
 import Link from "next/link";
-import { navs } from "../../config";
+
+import { Fragment } from "react";
+import { navGroups } from "../../config";
 import Item from "./item";
 import ResumeDropdown from "./resume-dropdown";
 
@@ -24,8 +26,13 @@ const Sidebar = (props: Props) => {
           </Link>
         </Button>
         <ResumeDropdown />
-        {navs.map((item) => (
-          <Item key={item.id} data={item} />
+        {navGroups.map((item, index) => (
+          <Fragment key={index}>
+            <div className="border-b my-2 mx-auto w-3/4" />
+            {item.childs.map((child) => (
+              <Item key={child.id} data={child} />
+            ))}
+          </Fragment>
         ))}
       </div>
     </ScrollArea>

@@ -32,9 +32,12 @@ const AutoSave = memo(({ defaultValues, onSubmit }: Props) => {
   }, [watchedData]);
 
   return (
-    <div>
+    <div className="flex items-center gap-2">
       {methods.formState.isSubmitting && (
-        <LucideLoader2 size={20} className="animate-spin" />
+        <>
+          <LucideLoader2 size={20} className="animate-spin" />
+          Auto Saving...
+        </>
       )}
     </div>
   );

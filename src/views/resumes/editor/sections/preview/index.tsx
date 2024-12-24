@@ -1,7 +1,7 @@
 import useTailwindBreakpoint from "@/hooks/use-tailwind-breakpoint";
 import { useEditor } from "@/store/hooks";
 import { getTemplate } from "@/templates/resumes";
-import { Resume } from "@/types/resume";
+import { TemplateProps } from "@/types/template";
 import { pdf } from "@react-pdf/renderer";
 import { useSearchParams } from "next/navigation";
 import "pdfjs-dist/build/pdf.worker.mjs";
@@ -18,13 +18,13 @@ import Pagination from "./pagination";
 type Props = {};
 
 const Preview = (props: Props) => {
-  const { resume } = useEditor();
+  const { resume, theme } = useEditor();
   const searchParams = useSearchParams();
   const breakpoint = useTailwindBreakpoint();
   const templateId = searchParams.get("template");
   const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
   const [templateStatus, setTemplateStatus] = useState(0);
-  const templateRef = useRef<React.FC<{ data: Resume }> | null>(null);
+  const templateRef = useRef<React.FC<TemplateProps> | null>(null);
   const template = useMemo(() => {
     return templateId ? getTemplate(templateId) : undefined;
   }, [templateId]);
@@ -44,9 +44,11 @@ const Preview = (props: Props) => {
 
   const generatePDF = useCallback(async () => {
     if (!resume || !templateRef.current) return;
-    const blob = await pdf(<templateRef.current data={resume} />).toBlob();
+    const blob = await pdf(
+      <templateRef.current data={resume} theme={theme} />
+    ).toBlob();
     setPdfBlob(blob);
-  }, [resume]);
+  }, [resume, theme]);
 
   const downloadPDF = useCallback(async () => {
     if (!pdfBlob) return;
