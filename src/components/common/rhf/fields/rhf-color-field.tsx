@@ -13,6 +13,7 @@ import { generateRandomColor } from "@/utils/color";
 import { Dices } from "lucide-react";
 import { ReactNode } from "react";
 import { useFormContext } from "react-hook-form";
+import { ColorPicker } from "../../react-colorful";
 
 export type RHFTextFieldProps = {
   name: string;
@@ -38,10 +39,12 @@ const RHFColorField = (props: RHFTextFieldProps) => {
           </div>
           <FormControl>
             <div className="flex items-center gap-2">
-              <div
-                className="size-10 shrink-0 border rounded-md"
-                style={{ backgroundColor: field.value }}
-              />
+              <ColorPicker value={field.value} onChange={field.onChange}>
+                <div
+                  className="size-10 shrink-0 border rounded-md cursor-crosshair"
+                  style={{ backgroundColor: field.value }}
+                />
+              </ColorPicker>
               <Input
                 {...field}
                 {...other}
