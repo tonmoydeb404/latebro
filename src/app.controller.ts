@@ -12,4 +12,11 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
+
+  @Version(VERSION_NEUTRAL)
+  @Public()
+  @Get('/health')
+  getHealth(): string {
+    return this.appService.getHealth();
+  }
 }

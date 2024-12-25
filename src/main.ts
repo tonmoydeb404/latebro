@@ -13,7 +13,7 @@ async function bootstrap() {
 
   // Cors
   app.enableCors({
-    origin: process.env.CORS_ORIGIN.split(','),
+    origin: process.env.CORS_ORIGIN?.split(','),
     credentials: true,
   });
 
@@ -21,7 +21,7 @@ async function bootstrap() {
   app.use(cookieParser());
 
   // Api Prefixing
-  app.setGlobalPrefix('api', { exclude: ['/'] });
+  app.setGlobalPrefix('api', { exclude: ['/', '/health'] });
 
   // Api Versioning
   app.enableVersioning({ type: VersioningType.URI, defaultVersion: '1' });
