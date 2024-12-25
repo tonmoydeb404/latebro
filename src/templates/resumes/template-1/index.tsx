@@ -1,16 +1,13 @@
 import { getDateRange } from "@/helpers/resume";
-import { registerOpenSans } from "@/lib/react-pdf/fonts";
 import type { Resume as Template } from "@/types/resume";
 import { TemplateProps } from "@/types/template";
 import { Document, Link, Page, Text, View } from "@react-pdf/renderer";
 import { createStyles } from "./theme";
 
-registerOpenSans();
-
 const Template = (props: TemplateProps) => {
-  const { data, colors } = props;
+  const { data, colors, fontFamily, fontSizes } = props;
   const { contact, profile } = data;
-  const styles = createStyles(colors ?? undefined);
+  const styles = createStyles(colors, fontSizes, fontFamily);
 
   const renderContacts = contact && (
     <View style={styles.section}>

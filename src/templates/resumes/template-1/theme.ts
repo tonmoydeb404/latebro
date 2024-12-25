@@ -1,7 +1,15 @@
-import { EditorColors } from "@/types/editor";
+import { fonts } from "@/lib/react-pdf/fonts";
+import {
+  EditorColors,
+  EditorFontFamily,
+  EditorFontSizes,
+} from "@/types/editor";
+import { Template } from "@/types/template";
 import { StyleSheet } from "@react-pdf/renderer";
 
-const FONT_SIZE = {
+const FONT_FAMILY: EditorFontFamily = "open_sans";
+
+const FONT_SIZES: EditorFontSizes = {
   xs: 10.5,
   sm: 11,
   md: 12,
@@ -17,17 +25,23 @@ const COLORS: EditorColors = {
   primary: "#007BFF",
 };
 
-export const createStyles = (themeColors?: EditorColors) => {
+export const createStyles = (
+  themeColors?: EditorColors,
+  themeFontSizes?: EditorFontSizes,
+  themeFontFamily?: EditorFontFamily
+) => {
   const colors = { ...COLORS, ...themeColors };
+  const fontSizes = { ...FONT_SIZES, ...themeFontSizes };
+  const fontFamily = fonts[themeFontFamily || FONT_FAMILY];
 
   return StyleSheet.create({
     page: {
       flexDirection: "row",
       padding: 30,
-      fontSize: FONT_SIZE.md,
+      fontSize: fontSizes.md,
       color: colors.foreground,
       backgroundColor: colors.background,
-      fontFamily: "Open Sans",
+      fontFamily: fontFamily,
     },
     left_col: {
       width: "35%",
@@ -37,13 +51,13 @@ export const createStyles = (themeColors?: EditorColors) => {
       width: "70%",
     },
     heading: {
-      fontSize: FONT_SIZE.xl,
+      fontSize: fontSizes.xl,
       fontWeight: 800,
       lineHeight: 1.4,
     },
     profession: {
       marginBottom: 20,
-      fontSize: FONT_SIZE.lg,
+      fontSize: fontSizes.lg,
       fontWeight: 500,
       color: colors.secondary,
     },
@@ -51,7 +65,7 @@ export const createStyles = (themeColors?: EditorColors) => {
       marginBottom: 15,
     },
     section_title: {
-      fontSize: FONT_SIZE.lg,
+      fontSize: fontSizes.lg,
       fontWeight: "bold",
       marginBottom: 10,
       textTransform: "uppercase",
@@ -63,7 +77,7 @@ export const createStyles = (themeColors?: EditorColors) => {
       textDecoration: "none",
     },
     contact_label: {
-      fontSize: FONT_SIZE.sm,
+      fontSize: fontSizes.sm,
       fontWeight: 600,
       color: colors.foreground,
     },
@@ -109,16 +123,16 @@ export const createStyles = (themeColors?: EditorColors) => {
 
     // Experiences ----------------------------------------------------------------------
     exps: { rowGap: 10 },
-    exp_label: { fontSize: FONT_SIZE.lg, fontWeight: 600 },
+    exp_label: { fontSize: fontSizes.lg, fontWeight: 600 },
     exp_header: { flexDirection: "row", columnGap: 5, marginBottom: 5 },
     exp_position: { fontWeight: 500 },
-    exp_divider: { fontSize: FONT_SIZE.sm, color: colors.secondary },
-    exp_period: { fontSize: FONT_SIZE.sm, color: colors.secondary },
+    exp_divider: { fontSize: fontSizes.sm, color: colors.secondary },
+    exp_period: { fontSize: fontSizes.sm, color: colors.secondary },
     exp_desc: {},
 
     // Projects ----------------------------------------------------------------------
     projects: { gap: 10 },
-    projects_label: { fontSize: FONT_SIZE.lg, fontWeight: 600 },
+    projects_label: { fontSize: fontSizes.lg, fontWeight: 600 },
     projects_header: { flexDirection: "row", columnGap: 5, marginBottom: 5 },
     projects_link: {
       textDecoration: "none",
@@ -131,24 +145,25 @@ export const createStyles = (themeColors?: EditorColors) => {
       marginBottom: 5,
     },
     projects_tools: {
-      fontSize: FONT_SIZE.sm,
+      fontSize: fontSizes.sm,
       color: colors.secondary,
     },
 
     // Educations ----------------------------------------------------------------------
 
     edus: { gap: 10 },
-    edus_label: { fontWeight: 600, fontSize: FONT_SIZE.lg },
+    edus_label: { fontWeight: 600, fontSize: fontSizes.lg },
     edus_header: { flexDirection: "row", columnGap: 5 },
     edus_subject: {},
-    edus_divider: { color: colors.secondary, fontSize: FONT_SIZE.sm },
-    edus_period: { color: colors.secondary, fontSize: FONT_SIZE.sm },
+    edus_divider: { color: colors.secondary, fontSize: fontSizes.sm },
+    edus_period: { color: colors.secondary, fontSize: fontSizes.sm },
   });
 };
 
-const theme = {
+const theme: Template["theme"] = {
   colors: COLORS,
-  fontSizes: FONT_SIZE,
+  fontSizes: FONT_SIZES,
+  fontFamily: FONT_FAMILY,
 };
 
 export default theme;

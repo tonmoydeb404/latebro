@@ -7,6 +7,8 @@ import {
   setResume,
   setState,
   setTemplate,
+  setTypographyFont,
+  setTypographySize,
 } from "@/store/features/editor/slice";
 import { useLazyGetResumeQuery } from "@/store/features/resume/api";
 import { useAppDispatch } from "@/store/hooks";
@@ -85,7 +87,11 @@ const Wrapper = (props: Props) => {
   useEffect(() => {
     if (templateId) {
       const template = getTemplate(templateId);
-      dispatch(setTemplate(template ?? null));
+      if (template) {
+        dispatch(setTemplate(template));
+        dispatch(setTypographyFont(template.theme.fontFamily));
+        dispatch(setTypographySize(template.theme.fontSizes));
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [templateId]);

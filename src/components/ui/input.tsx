@@ -5,35 +5,34 @@ import { cn } from "@/lib/utils";
 export interface InputProps extends React.ComponentProps<"input"> {
   startContent?: React.ReactNode;
   endContent?: React.ReactNode;
+  containerClassname?: string;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, startContent, endContent, ...props }, ref) => {
+  (
+    { className, type, startContent, endContent, containerClassname, ...props },
+    ref
+  ) => {
     return (
       <div
         className={cn(
           "flex items-center w-full rounded-md border border-input bg-background ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
-          className
+          containerClassname
         )}
       >
-        {startContent && (
-          <span className="pl-1 pr-2 text-muted-foreground">
-            {startContent}
-          </span>
-        )}
+        {startContent && startContent}
         <input
           type={type}
           className={cn(
-            "flex-1 h-10 bg-transparent px-3 py-2 text-base placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+            "flex-1 h-10 bg-transparent px-3 py-2 text-base placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm w-full",
             startContent ? "pl-2" : "",
-            endContent ? "pr-2" : ""
+            endContent ? "pr-2" : "",
+            className
           )}
           ref={ref}
           {...props}
         />
-        {endContent && (
-          <span className="pr-1 pl-2 text-muted-foreground">{endContent}</span>
-        )}
+        {endContent && endContent}
       </div>
     );
   }

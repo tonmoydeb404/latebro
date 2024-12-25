@@ -36,3 +36,9 @@ export const registerRoboto = () => {
     ],
   });
 };
+
+export const fonts = {
+  roboto: "Roboto",
+  inter: "Inter",
+  open_sans: "Open Sans",
+};

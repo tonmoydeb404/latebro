@@ -1,7 +1,15 @@
-import { EditorColors } from "@/types/editor";
+import { fonts } from "@/lib/react-pdf/fonts";
+import {
+  EditorColors,
+  EditorFontFamily,
+  EditorFontSizes,
+} from "@/types/editor";
+import { Template } from "@/types/template";
 import { StyleSheet } from "@react-pdf/renderer";
 
-const FONT_SIZE = {
+const FONT_FAMILY: EditorFontFamily = "inter";
+
+const FONT_SIZES: EditorFontSizes = {
   xs: 10.5,
   sm: 11,
   md: 12,
@@ -17,14 +25,20 @@ const COLORS: EditorColors = {
   primary: "#007BFF",
 };
 
-export const createStyles = (theme?: EditorColors) => {
-  const colors = { ...COLORS, ...theme };
+export const createStyles = (
+  themeColors?: EditorColors,
+  themeFontSizes?: EditorFontSizes,
+  themeFontFamily?: EditorFontFamily
+) => {
+  const colors = { ...COLORS, ...themeColors };
+  const fontSizes = { ...FONT_SIZES, ...themeFontSizes };
+  const fontFamily = fonts[themeFontFamily || FONT_FAMILY];
 
   return StyleSheet.create({
     page: {
       padding: 40,
       backgroundColor: colors.background,
-      fontFamily: "Inter",
+      fontFamily: fontFamily,
       fontWeight: "normal",
       color: colors.foreground,
     },
@@ -54,12 +68,12 @@ export const createStyles = (theme?: EditorColors) => {
       marginRight: 15,
     },
     title: {
-      fontSize: FONT_SIZE.xl,
+      fontSize: fontSizes.xl,
       fontWeight: 600,
       marginBottom: 4,
     },
     subtitle: {
-      fontSize: FONT_SIZE.lg,
+      fontSize: fontSizes.lg,
       color: colors.secondary,
     },
     // Section ----------------------------------------------------------------------
@@ -72,7 +86,7 @@ export const createStyles = (theme?: EditorColors) => {
       marginBottom: 12,
     },
     paragraph: {
-      fontSize: FONT_SIZE.md,
+      fontSize: fontSizes.md,
       lineHeight: 1.5,
       color: colors.foreground,
     },
@@ -88,24 +102,24 @@ export const createStyles = (theme?: EditorColors) => {
     },
     project_title: {
       fontWeight: "medium",
-      fontSize: FONT_SIZE.lg,
+      fontSize: fontSizes.lg,
     },
     project_links: { marginLeft: "auto", flexDirection: "row" },
     project_link: {
-      fontSize: FONT_SIZE.sm,
+      fontSize: fontSizes.sm,
       textDecoration: "none",
       color: colors.primary,
     },
     project_divider: {
-      fontSize: FONT_SIZE.sm,
+      fontSize: fontSizes.sm,
       marginLeft: 5,
       marginRight: 5,
       color: colors.muted,
     },
-    project_desc: { fontSize: FONT_SIZE.md, marginBottom: 8 },
+    project_desc: { fontSize: fontSizes.md, marginBottom: 8 },
     project_tools: {
       color: colors.secondary,
-      fontSize: FONT_SIZE.xs,
+      fontSize: fontSizes.xs,
       textTransform: "uppercase",
     },
     // Experience ----------------------------------------------------------------------
@@ -123,15 +137,15 @@ export const createStyles = (theme?: EditorColors) => {
       marginBottom: 2,
     },
     exp_position: {
-      fontSize: FONT_SIZE.md,
+      fontSize: fontSizes.md,
       marginBottom: 2,
     },
     exp_date: {
-      fontSize: FONT_SIZE.sm,
+      fontSize: fontSizes.sm,
       color: colors.secondary,
     },
     exp_desc_point: {
-      fontSize: FONT_SIZE.md,
+      fontSize: fontSizes.md,
       marginBottom: 2,
       paddingLeft: 10,
     },
@@ -150,10 +164,10 @@ export const createStyles = (theme?: EditorColors) => {
       alignItems: "flex-start",
     },
     educations_subject: {
-      fontSize: FONT_SIZE.md,
+      fontSize: fontSizes.md,
     },
     educations_date: {
-      fontSize: FONT_SIZE.xs,
+      fontSize: fontSizes.xs,
       color: colors.secondary,
     },
     // Contacts ----------------------------------------------------------------------
@@ -161,12 +175,12 @@ export const createStyles = (theme?: EditorColors) => {
       marginBottom: 8,
     },
     contact_label: {
-      fontSize: FONT_SIZE.sm,
+      fontSize: fontSizes.sm,
       color: colors.secondary,
       marginBottom: 3,
     },
     contact_text: {
-      fontSize: FONT_SIZE.md,
+      fontSize: fontSizes.md,
       color: colors.foreground,
       textDecoration: "none",
     },
@@ -176,7 +190,7 @@ export const createStyles = (theme?: EditorColors) => {
       rowGap: 6,
     },
     socials_item: {
-      fontSize: FONT_SIZE.md,
+      fontSize: fontSizes.md,
       color: colors.foreground,
       textDecoration: "none",
     },
@@ -191,10 +205,10 @@ export const createStyles = (theme?: EditorColors) => {
       alignItems: "center",
     },
     language_title: {
-      fontSize: FONT_SIZE.md,
+      fontSize: fontSizes.md,
     },
     language_experience: {
-      fontSize: FONT_SIZE.sm,
+      fontSize: fontSizes.sm,
       textTransform: "uppercase",
       color: colors.secondary,
     },
@@ -204,7 +218,7 @@ export const createStyles = (theme?: EditorColors) => {
       rowGap: 15,
     },
     skill_title: {
-      fontSize: FONT_SIZE.sm,
+      fontSize: fontSizes.sm,
       marginBottom: 4,
     },
     skill_bar: {
@@ -219,7 +233,8 @@ export const createStyles = (theme?: EditorColors) => {
   });
 };
 
-export const theme = {
+export const theme: Template["theme"] = {
   colors: COLORS,
-  fontSizes: FONT_SIZE,
+  fontSizes: FONT_SIZES,
+  fontFamily: FONT_FAMILY,
 };

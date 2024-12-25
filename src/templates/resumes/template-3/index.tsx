@@ -6,16 +6,12 @@ import {
   isValidImageUrl,
   splitByLineBreaks,
 } from "@/helpers/resume";
-import { registerInter } from "@/lib/react-pdf/fonts";
 import { TemplateProps } from "@/types/template";
 import { Document, Image, Link, Page, Text, View } from "@react-pdf/renderer";
 import { createStyles } from "./theme";
 
-// Register fonts
-registerInter();
-
 const Template = (props: TemplateProps) => {
-  const { data, colors: theme } = props;
+  const { data, colors, fontFamily, fontSizes } = props;
   const {
     skills,
     contact,
@@ -26,9 +22,7 @@ const Template = (props: TemplateProps) => {
     projects,
     socials,
   } = data;
-  const styles = createStyles(theme ?? undefined);
-
-  console.log(theme);
+  const styles = createStyles(colors, fontSizes, fontFamily);
 
   const renderProjects = projects.length > 0 && (
     <View style={styles.section}>

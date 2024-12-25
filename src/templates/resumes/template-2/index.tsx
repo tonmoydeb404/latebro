@@ -4,17 +4,13 @@ import {
   isValidImageUrl,
   splitByLineBreaks,
 } from "@/helpers/resume";
-import { registerOpenSans } from "@/lib/react-pdf/fonts";
 import { TemplateProps } from "@/types/template";
 import { Document, Image, Link, Page, Text, View } from "@react-pdf/renderer";
 import moment from "moment";
 import { createStyles } from "./theme";
 
-// Register fonts
-registerOpenSans();
-
 const Template2 = (props: TemplateProps) => {
-  const { data, colors } = props;
+  const { data, colors, fontFamily, fontSizes } = props;
   const {
     contact,
     educations,
@@ -25,7 +21,7 @@ const Template2 = (props: TemplateProps) => {
     skills,
     socials,
   } = data;
-  const styles = createStyles(colors ?? undefined);
+  const styles = createStyles(colors, fontSizes, fontFamily);
 
   return (
     <Document>

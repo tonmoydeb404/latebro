@@ -16,6 +16,7 @@ import ProfileForm from "./profile";
 import ProjectsForm from "./projects";
 import SkillsForm from "./skills";
 import SocialsForm from "./socials";
+import TypographyForm from "./typography";
 
 type Props = {};
 
@@ -81,8 +82,11 @@ const Form = (props: Props) => {
         <div data-scrollspy="7" className="pt-16">
           <SocialsForm />
         </div>
-        <div data-scrollspy="8" className="pt-16 pb-16">
+        <div data-scrollspy="8" className="pt-16">
           <ColorsForm />
+        </div>
+        <div data-scrollspy="9" className="pt-16 pb-16">
+          <TypographyForm />
         </div>
       </div>
     </ScrollArea>

@@ -1,7 +1,15 @@
-import { EditorColors } from "@/types/editor";
+import { fonts } from "@/lib/react-pdf/fonts";
+import {
+  EditorColors,
+  EditorFontFamily,
+  EditorFontSizes,
+} from "@/types/editor";
+import { Template } from "@/types/template";
 import { StyleSheet } from "@react-pdf/renderer";
 
-const FONT_SIZE = {
+const FONT_FAMILY: EditorFontFamily = "open_sans";
+
+const FONT_SIZES: EditorFontSizes = {
   xs: 10.5,
   sm: 11,
   md: 12,
@@ -17,14 +25,20 @@ const COLORS: EditorColors = {
   primary: "#007BFF",
 };
 
-export const createStyles = (themeColors?: EditorColors) => {
+export const createStyles = (
+  themeColors?: EditorColors,
+  themeFontSizes?: EditorFontSizes,
+  themeFontFamily?: EditorFontFamily
+) => {
   const colors = { ...COLORS, ...themeColors };
+  const fontSizes = { ...FONT_SIZES, ...themeFontSizes };
+  const fontFamily = fonts[themeFontFamily || FONT_FAMILY];
 
   return StyleSheet.create({
     page: {
       flexDirection: "row",
       backgroundColor: "#FFFFFF",
-      fontFamily: "Open Sans",
+      fontFamily: fontFamily,
     },
     sidebar: {
       width: "33%",
@@ -157,9 +171,10 @@ export const createStyles = (themeColors?: EditorColors) => {
   });
 };
 
-const theme = {
+const theme: Template["theme"] = {
   colors: COLORS,
-  fontSizes: FONT_SIZE,
+  fontSizes: FONT_SIZES,
+  fontFamily: FONT_FAMILY,
 };
 
 export default theme;

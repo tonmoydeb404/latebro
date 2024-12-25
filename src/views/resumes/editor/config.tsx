@@ -9,6 +9,7 @@ import {
   LucidePalette,
   LucidePencilRuler,
   LucideStar,
+  LucideType,
   LucideUser2,
 } from "lucide-react";
 
@@ -29,7 +30,10 @@ export const navGroups: GroupItem[] = [
     ],
   },
   {
-    childs: [{ id: 8, label: "Colors", icon: LucidePalette }],
+    childs: [
+      { id: 8, label: "Colors", icon: LucidePalette },
+      { id: 9, label: "Typography", icon: LucideType },
+    ],
   },
 ];
 

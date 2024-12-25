@@ -1,5 +1,5 @@
 import { RootState } from "@/store";
-import { EditorSlice } from "@/types/editor";
+import { EditorFontFamily, EditorFontSizes, EditorSlice } from "@/types/editor";
 import { Resume } from "@/types/resume";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
@@ -11,6 +11,7 @@ const initialState: EditorSlice = {
   state: "LOADING",
   colors: null,
   template: null,
+  typography: {} as any,
 };
 
 const editorSlice = createSlice({
@@ -35,10 +36,30 @@ const editorSlice = createSlice({
     setTemplate: (state, action: PayloadAction<EditorSlice["template"]>) => {
       state.template = action.payload;
     },
+    setTypographyFont: (state, action: PayloadAction<EditorFontFamily>) => {
+      state.typography.family = action.payload;
+    },
+    setTypographySize: (
+      state,
+      action: PayloadAction<Partial<EditorFontSizes>>
+    ) => {
+      state.typography.sizes = {
+        ...state.typography.sizes,
+        ...action.payload,
+      };
+    },
   },
 });
 
-export const { setNav, setResume, setTab, setState, setColors, setTemplate } =
-  editorSlice.actions;
+export const {
+  setNav,
+  setResume,
+  setTab,
+  setState,
+  setColors,
+  setTemplate,
+  setTypographyFont,
+  setTypographySize,
+} = editorSlice.actions;
 export const selectEditor = (state: RootState) => state.editor;
 export default editorSlice;

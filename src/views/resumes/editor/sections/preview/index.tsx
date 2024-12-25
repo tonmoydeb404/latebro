@@ -1,4 +1,9 @@
 import useTailwindBreakpoint from "@/hooks/use-tailwind-breakpoint";
+import {
+  registerInter,
+  registerOpenSans,
+  registerRoboto,
+} from "@/lib/react-pdf/fonts";
 import { useEditor } from "@/store/hooks";
 import { getTemplatePath } from "@/templates/resumes";
 import { TemplateProps } from "@/types/template";
@@ -14,10 +19,15 @@ import Actions from "./actions";
 import Controls from "./controls";
 import Pagination from "./pagination";
 
+// register fonts
+registerInter();
+registerOpenSans();
+registerRoboto();
+
 type Props = {};
 
 const Preview = (props: Props) => {
-  const { resume, colors: theme, template } = useEditor();
+  const { resume, colors, template, typography } = useEditor();
   const breakpoint = useTailwindBreakpoint();
   const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
   const [templateStatus, setTemplateStatus] = useState(0);
@@ -41,10 +51,15 @@ const Preview = (props: Props) => {
   const generatePDF = useCallback(async () => {
     if (!resume || !templateRef.current) return;
     const blob = await pdf(
-      <templateRef.current data={resume} colors={theme} />
+      <templateRef.current
+        data={resume}
+        colors={colors ?? undefined}
+        fontFamily={typography?.family}
+        fontSizes={typography?.sizes}
+      />
     ).toBlob();
     setPdfBlob(blob);
-  }, [resume, theme]);
+  }, [resume, colors, typography?.family, typography?.sizes]);
 
   const downloadPDF = useCallback(async () => {
     if (!pdfBlob) return;
