@@ -1,9 +1,5 @@
 import useTailwindBreakpoint from "@/hooks/use-tailwind-breakpoint";
-import {
-  registerInter,
-  registerOpenSans,
-  registerRoboto,
-} from "@/lib/react-pdf/fonts";
+import { registerFonts } from "@/lib/react-pdf/fonts";
 import { useEditor } from "@/store/hooks";
 import { getTemplatePath } from "@/templates/resumes";
 import { TemplateProps } from "@/types/template";
@@ -19,10 +15,8 @@ import Actions from "./actions";
 import Controls from "./controls";
 import Pagination from "./pagination";
 
-// register fonts
-registerInter();
-registerOpenSans();
-registerRoboto();
+// Register Fonts
+registerFonts();
 
 type Props = {};
 

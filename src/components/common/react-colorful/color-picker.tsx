@@ -17,7 +17,7 @@ const ColorPicker = (props: Props) => {
 
   return (
     <Popover>
-      <PopoverTrigger>{children}</PopoverTrigger>
+      <PopoverTrigger asChild>{children}</PopoverTrigger>
       <PopoverContent className="w-auto">
         <HexColorPicker
           color={value}
