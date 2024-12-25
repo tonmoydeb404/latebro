@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { LucidePlus, LucideX } from "lucide-react";
-import { ReactNode, useState } from "react";
+import { ReactNode, useCallback, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { EmptyState } from "../../state";
 
@@ -39,12 +39,12 @@ const RHFTagField = (props: Props) => {
 
   const [state, setState] = useState("");
 
-  const addNew = () => {
+  const addNew = useCallback(() => {
     if (!state || !state.trim()) return;
 
     append({ text: state });
     setState("");
-  };
+  }, [append, state]);
 
   return (
     <FormField
@@ -62,6 +62,12 @@ const RHFTagField = (props: Props) => {
               <Input
                 value={state}
                 onChange={(e) => setState(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key.toLowerCase() === "enter") {
+                    e.preventDefault();
+                    addNew();
+                  }
+                }}
                 {...other}
               />
               <Button size={"icon"} onClick={addNew} type="button">
