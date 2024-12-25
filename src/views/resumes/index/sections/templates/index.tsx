@@ -9,11 +9,10 @@ const Templates = (props: Props) => {
       {templates.map((template) => (
         <Item
           title={template.title}
-          description={
-            "Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis, suscipit"
-          }
+          description={template.text}
           id={template.id}
           key={template.id}
+          cover={template.cover}
         />
       ))}
     </div>

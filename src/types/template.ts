@@ -5,6 +5,7 @@ export type TemplateProps = { data: Resume; colors: EditorColors | null };
 
 export type Template = {
   title: string;
+  cover: string;
   text: string;
   id: string;
   theme: {

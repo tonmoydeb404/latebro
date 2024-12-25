@@ -3,8 +3,9 @@ import theme from "./theme";
 
 const template2Config: Template = {
   id: "2",
-  title: "Template 2",
-  text: "",
+  title: "Modern Edge",
+  cover: "/resumes/modern-edge.webp",
+  text: "A sleek, contemporary template with sharp lines and dynamic visuals for creative professionals.",
   theme,
 };
 

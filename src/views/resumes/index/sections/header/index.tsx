@@ -8,7 +8,7 @@ const Header = (props: Props) => {
       <div className="flex-1">
         <h1 className="font-bold text-3xl mb-2">Resume Templates</h1>
         <p className="text-lg">
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sit, ut?
+          Choose the Perfect Template to Showcase Your Professional Journey
         </p>
       </div>
 
