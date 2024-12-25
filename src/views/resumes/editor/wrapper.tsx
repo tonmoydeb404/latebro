@@ -3,6 +3,7 @@
 import { hasApiError } from "@/helpers/api";
 import { toast } from "@/hooks/use-toast";
 import {
+  setColors,
   setNav,
   setResume,
   setState,
@@ -89,6 +90,7 @@ const Wrapper = (props: Props) => {
       const template = getTemplate(templateId);
       if (template) {
         dispatch(setTemplate(template));
+        dispatch(setColors(template.theme.colors));
         dispatch(setTypographyFont(template.theme.fontFamily));
         dispatch(setTypographySize(template.theme.fontSizes));
       }

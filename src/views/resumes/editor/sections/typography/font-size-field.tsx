@@ -11,6 +11,7 @@ type Props = {
 
 const FontSizeField = (props: Props) => {
   const { label, onChange, value } = props;
+
   return (
     <div className="flex items-center w-full justify-between">
       <Label className="min-w-[100px] shrink-0">{label}</Label>

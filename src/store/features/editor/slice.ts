@@ -1,5 +1,10 @@
 import { RootState } from "@/store";
-import { EditorFontFamily, EditorFontSizes, EditorSlice } from "@/types/editor";
+import {
+  EditorColors,
+  EditorFontFamily,
+  EditorFontSizes,
+  EditorSlice,
+} from "@/types/editor";
 import { Resume } from "@/types/resume";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
@@ -9,8 +14,8 @@ const initialState: EditorSlice = {
   tab: 0,
   resume: null,
   state: "LOADING",
-  colors: null,
   template: null,
+  colors: {} as any,
   typography: {} as any,
 };
 
@@ -30,8 +35,8 @@ const editorSlice = createSlice({
     setResume: (state, action: PayloadAction<Resume | null>) => {
       state.resume = action.payload;
     },
-    setColors: (state, action: PayloadAction<EditorSlice["colors"]>) => {
-      state.colors = action.payload;
+    setColors: (state, action: PayloadAction<Partial<EditorColors>>) => {
+      state.colors = { ...state.colors, ...action.payload };
     },
     setTemplate: (state, action: PayloadAction<EditorSlice["template"]>) => {
       state.template = action.payload;

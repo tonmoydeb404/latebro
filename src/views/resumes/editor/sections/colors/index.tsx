@@ -1,101 +1,60 @@
-import { RHFForm } from "@/components/common/rhf";
-import { Button } from "@/components/ui/button";
 import { setColors } from "@/store/features/editor/slice";
 import { useAppDispatch, useEditor } from "@/store/hooks";
-import { colorPresets } from "@/templates/resumes/presets";
-import { EditorColors } from "@/types/editor";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { LucideEdit } from "lucide-react";
-import { useEffect, useMemo } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { EditorColorsKeys } from "@/types/editor";
 import Header from "../../common/header";
-import Fields from "./fields";
-import schema, { SchemaType } from "./schema";
+import ColorField from "./color-field";
+import Presets from "./presets";
 
 type Props = {};
 
 const ColorsForm = (props: Props) => {
-  const { template } = useEditor();
+  const { colors } = useEditor();
   const dispatch = useAppDispatch();
 
-  // ----------------------------------------------------------------------
-
-  const defaultValues = useMemo<SchemaType>(
-    () => ({
-      background: template?.theme?.colors?.background || "",
-      foreground: template?.theme?.colors?.foreground || "",
-      muted: template?.theme?.colors?.muted || "",
-      primary: template?.theme?.colors?.primary || "",
-      secondary: template?.theme?.colors?.secondary || "",
-    }),
-    [template?.theme?.colors]
-  );
-  const formOptions = useForm({ resolver: zodResolver(schema), defaultValues });
-
-  const onValid: SubmitHandler<SchemaType> = async (values) => {
-    dispatch(setColors(values));
-  };
-  const onReset = async () => {
-    formOptions.reset(defaultValues);
-    dispatch(setColors(defaultValues));
-  };
-  const selectPreset = async (colors: EditorColors) => {
-    formOptions.reset(colors);
-    dispatch(setColors(colors));
+  const updateValue = (key: EditorColorsKeys) => (value: string) => {
+    dispatch(setColors({ [key]: value }));
   };
 
-  // ----------------------------------------------------------------------
-
-  useEffect(() => {
-    formOptions.reset(defaultValues);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultValues]);
+  console.log({ colors });
 
   return (
-    <RHFForm formOptions={formOptions} onValid={onValid} onReset={onReset}>
+    <div>
       <Header
         title="Customize Colors"
         description="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quos, similique."
         className="mb-10"
       />
 
-      <h3 className="text-sm mb-2">Presets</h3>
-      <div className="flex items-center gap-1 mb-5">
-        {colorPresets.map((item, index) => {
-          const color = Object.values(item).map((value, valueIndex, array) => {
-            const length = Math.round(100 / array.length);
-            const start = valueIndex * length;
-            const end = (valueIndex + 1) * length;
-
-            return `${value} ${start}% ${end}%`;
-          });
-
-          return (
-            <button
-              key={index}
-              className="border size-10 rounded-md"
-              style={{
-                background: `conic-gradient(${color.join(", ")})`,
-              }}
-              onClick={() => selectPreset(item)}
-            />
-          );
-        })}
-      </div>
+      <Presets />
 
       <div className="flex flex-col gap-4 mb-10">
-        <Fields />
+        <ColorField
+          label="Background"
+          value={colors?.background || ""}
+          onChange={updateValue("background")}
+        />
+        <ColorField
+          label="Foreground"
+          value={colors?.foreground || ""}
+          onChange={updateValue("foreground")}
+        />
+        <ColorField
+          label="Secondary"
+          value={colors?.secondary || ""}
+          onChange={updateValue("secondary")}
+        />
+        <ColorField
+          label="Primary"
+          value={colors?.primary || ""}
+          onChange={updateValue("primary")}
+        />
+        <ColorField
+          label="Muted"
+          value={colors?.muted || ""}
+          onChange={updateValue("muted")}
+        />
       </div>
-      <div className="flex items-center gap-2">
-        <Button Icon={LucideEdit} type="submit">
-          Update
-        </Button>
-        <Button type="reset" variant={"outline"}>
-          Reset To Defaults
-        </Button>
-        {/* <AutoSave defaultValues={defaultValues} onSubmit={onValid} /> */}
-      </div>
-    </RHFForm>
+    </div>
   );
 };
 
