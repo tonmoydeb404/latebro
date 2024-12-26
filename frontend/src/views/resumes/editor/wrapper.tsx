@@ -2,6 +2,7 @@
 
 import { hasApiError } from "@/helpers/api";
 import { toast } from "@/hooks/use-toast";
+import { paths } from "@/router/paths";
 import {
   setColors,
   setNav,
@@ -14,7 +15,7 @@ import {
 import { useLazyGetResumeQuery } from "@/store/features/resume/api";
 import { useAppDispatch } from "@/store/hooks";
 import { getTemplate } from "@/templates/resumes";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ReactNode, useEffect } from "react";
 
 type Props = {
@@ -23,6 +24,7 @@ type Props = {
 
 const Wrapper = (props: Props) => {
   const { children } = props;
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const searchparams = useSearchParams();
   const queryResume = searchparams.get("resume");
@@ -56,6 +58,19 @@ const Wrapper = (props: Props) => {
   // ----------------------------------------------------------------------
 
   useEffect(() => {
+    const template = templateId ? getTemplate(templateId) : null;
+    if (template) {
+      dispatch(setTemplate(template));
+      dispatch(setColors(template.theme.colors));
+      dispatch(setTypographyFont(template.theme.fontFamily));
+      dispatch(setTypographySize(template.theme.fontSizes));
+    } else {
+      router.replace(paths.resumes.root);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [templateId]);
+
+  useEffect(() => {
     if (queryResume) updateResume(queryResume);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryResume]);
@@ -84,19 +99,6 @@ const Wrapper = (props: Props) => {
     if (data?.results) dispatch(setResume(data.results));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
-
-  useEffect(() => {
-    if (templateId) {
-      const template = getTemplate(templateId);
-      if (template) {
-        dispatch(setTemplate(template));
-        dispatch(setColors(template.theme.colors));
-        dispatch(setTypographyFont(template.theme.fontFamily));
-        dispatch(setTypographySize(template.theme.fontSizes));
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [templateId]);
 
   return <>{children}</>;
 };

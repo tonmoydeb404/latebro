@@ -7,7 +7,7 @@ import { guestRoutes, paths, protectedRoutes } from "./router/paths";
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get(authToken)?.value;
-  console.log("token:", token);
+  // console.log("token:", token);
 
   const isGuestPath = guestRoutes.some((route) =>
     request.nextUrl.pathname.startsWith(route)
@@ -23,7 +23,9 @@ export function middleware(request: NextRequest) {
 
   if (isProtectedRoute && !token) {
     const url = new URL("/auth/login", request.url);
-    url.searchParams.set("redirect", request.nextUrl.pathname);
+    const redirectUrl = `${request.nextUrl.pathname}${request.nextUrl.search}`;
+
+    url.searchParams.set("redirect", redirectUrl);
     return NextResponse.redirect(url);
   }
 

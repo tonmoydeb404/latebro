@@ -1,3 +1,5 @@
+import { matchRoute } from "./helper";
+
 export const paths = {
   home: "/",
   auth: {
@@ -11,7 +13,13 @@ export const paths = {
 };
 
 // routes that require authentication ----------------------------------------------------------------------
-export const protectedRoutes = ["/resumes/"];
+export const protectedRoutes = ["/resumes/editor"];
+export function isProtectedRoute(path: string) {
+  return protectedRoutes.some((route) => matchRoute(route, path));
+}
 
 // routes that only for unauthenticated ----------------------------------------------------------------------
 export const guestRoutes = ["/auth/login", "/auth/register"];
+export function isGuestRoute(path: string) {
+  return guestRoutes.some((route) => matchRoute(route, path));
+}
