@@ -17,6 +17,7 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "LateBro",
   description: "Generate Resume Template",
+  icons: "/brand/favicon.svg",
 };
 
 export default function RootLayout({
