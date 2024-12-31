@@ -13,16 +13,17 @@ const FONT_SIZES: EditorFontSizes = {
   xs: 10.5,
   sm: 11,
   md: 12,
-  lg: 14,
-  xl: 24,
+  lg: 16,
+  xl: 20,
 };
 
 const COLORS: EditorColors = {
   foreground: "#333333",
-  secondary: "#666666",
+  secondary: "#444444",
   background: "#FFFFFF",
   muted: "#E0E0E0",
-  primary: "#007BFF",
+  primary: "#1B4D3E",
+  primary_foreground: "#FFF",
 };
 
 export const createStyles = (
@@ -37,31 +38,31 @@ export const createStyles = (
   return StyleSheet.create({
     page: {
       flexDirection: "row",
-      backgroundColor: "#FFFFFF",
+      backgroundColor: colors.background,
       fontFamily: fontFamily,
     },
     sidebar: {
       width: "33%",
       flexShrink: 0,
-      backgroundColor: "#1B4D3E",
+      backgroundColor: colors.primary,
       padding: 20,
-      color: "white",
+      color: colors.primary_foreground,
     },
     main: {
       flex: 1,
       padding: 20,
-      color: "black",
+      color: colors.foreground,
     },
 
     // Section ----------------------------------------------------------------------
     section_title: {
-      fontSize: 16,
+      fontSize: fontSizes.lg,
       fontWeight: 600,
       marginBottom: 10,
       marginTop: 20,
     },
     section_text: {
-      fontSize: 12,
+      fontSize: fontSizes.md,
       marginBottom: 3,
     },
 
@@ -74,79 +75,74 @@ export const createStyles = (
     },
     name: {
       marginTop: 10,
-      fontSize: 20,
+      fontSize: fontSizes.xl,
       fontWeight: 700,
       marginBottom: 2,
-      color: "white",
       textAlign: "center",
     },
     profession: {
-      fontSize: 14,
-      color: "#E0E0E0",
+      fontSize: fontSizes.lg,
+      color: colors.muted,
       marginBottom: 20,
       textAlign: "center",
     },
     bio: {
-      color: "#444444",
+      color: colors.secondary,
     },
 
     // Contact ----------------------------------------------------------------------
     contact_label: {
-      fontSize: 12,
-      color: "#a0a0a0",
+      fontSize: fontSizes.md,
       marginBottom: 2,
       fontWeight: 500,
     },
     contact_text: {
-      fontSize: 12,
-      color: "white",
+      fontSize: fontSizes.md,
+      color: colors.primary_foreground,
       marginBottom: 10,
       textDecoration: "none",
     },
 
     // Social ----------------------------------------------------------------------
     social_link: {
-      fontSize: 12,
-      color: "white",
+      fontSize: fontSizes.md,
+      color: colors.primary_foreground,
       marginBottom: 10,
       textDecoration: "none",
     },
 
     // Skill ----------------------------------------------------------------------
     skill_label: {
-      fontSize: 12,
-      color: "white",
+      fontSize: fontSizes.md,
       marginBottom: 7,
     },
     skill_bar: {
       height: 4,
-      backgroundColor: "#a0a0a0",
+      backgroundColor: colors.muted,
       marginBottom: 10,
     },
     skill_fill: {
       height: "100%",
-      backgroundColor: "white",
+      backgroundColor: colors.primary_foreground,
     },
 
     // Item ----------------------------------------------------------------------
     item: {},
     item_title: {
-      fontSize: 14,
+      fontSize: fontSizes.lg,
       fontWeight: 500,
       marginBottom: 3,
     },
     item_subtitle: {
-      fontSize: 12,
+      fontSize: fontSizes.md,
       marginBottom: 2,
-      color: "#666666",
     },
     item_details: {
-      fontSize: 12,
+      fontSize: fontSizes.md,
       marginBottom: 5,
-      color: "#666666",
     },
     item_tags: {
-      fontSize: 10,
+      fontSize: fontSizes.xs,
       marginBottom: 10,
     },
     bullet_point: {
@@ -160,13 +156,13 @@ export const createStyles = (
       marginBottom: 6,
     },
     item_action: {
-      fontSize: 11,
-      color: "#1B4D3E",
+      fontSize: fontSizes.md,
+      color: colors.primary,
       textDecoration: "none",
       borderRadius: 2,
     },
     item_action_divider: {
-      fontSize: 11,
+      fontSize: fontSizes.sm,
     },
   });
 };

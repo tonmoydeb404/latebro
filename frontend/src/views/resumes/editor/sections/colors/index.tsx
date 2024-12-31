@@ -49,6 +49,11 @@ const ColorsForm = (props: Props) => {
           onChange={updateValue("primary")}
         />
         <ColorField
+          label="Primary Foreground"
+          value={colors?.primary || ""}
+          onChange={updateValue("primary_foreground")}
+        />
+        <ColorField
           label="Muted"
           value={colors?.muted || ""}
           onChange={updateValue("muted")}

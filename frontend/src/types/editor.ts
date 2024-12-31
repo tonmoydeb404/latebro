@@ -7,7 +7,8 @@ export type EditorColorsKeys =
   | "foreground"
   | "secondary"
   | "primary"
-  | "muted";
+  | "muted"
+  | "primary_foreground";
 export type EditorColors = Record<EditorColorsKeys, string>;
 
 export type EditorFontSizesKeys = "xs" | "sm" | "md" | "lg" | "xl";

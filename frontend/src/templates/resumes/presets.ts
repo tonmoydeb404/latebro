@@ -7,6 +7,7 @@ export const colorPresets: EditorColors[] = [
     background: "#FFFFFF",
     muted: "#E0E0E0",
     primary: "#007BFF",
+    primary_foreground: "#fff",
   },
   {
     foreground: "#fdfdfd",
@@ -14,5 +15,6 @@ export const colorPresets: EditorColors[] = [
     background: "#171717",
     muted: "#484848",
     primary: "#007BFF",
+    primary_foreground: "#fff",
   },
 ];
