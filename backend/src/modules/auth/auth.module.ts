@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
+import { ResumeModule } from '../resume/resume.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './guards/private.guard';
@@ -18,6 +19,7 @@ import { AuthGuard } from './guards/private.guard';
       }),
       inject: [ConfigService],
     }),
+    ResumeModule,
   ],
   providers: [
     AuthService,

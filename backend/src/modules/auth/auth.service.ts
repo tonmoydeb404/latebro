@@ -12,6 +12,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { ResumeService } from '../resume/services/resume.service';
 import { User } from '../user/entities/user.entity';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
@@ -23,6 +24,7 @@ export class AuthService {
     private readonly userModel: Model<User>,
     private readonly hashService: HashService,
     private readonly jwtService: JwtService,
+    private readonly resumeService: ResumeService,
   ) {}
 
   async generateAuthToken(user: User) {
@@ -76,6 +78,12 @@ export class AuthService {
 
     const user = entity.toObject();
     delete user.password;
+
+    await this.resumeService.create(String(entity._id), {
+      title: 'My Resume',
+    });
+
+    // console.log({ resume });
 
     return { payload, token, user };
   }

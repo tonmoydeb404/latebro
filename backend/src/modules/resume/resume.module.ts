@@ -41,5 +41,6 @@ import { ResumeService } from './services/resume.service';
     ResumeSocialService,
     ResumeProjectService,
   ],
+  exports: [ResumeService],
 })
 export class ResumeModule {}
