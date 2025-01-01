@@ -18,6 +18,17 @@ export const metadata: Metadata = {
   title: "LateBro",
   description: "Generate Resume Template",
   icons: "/brand/favicon.svg",
+  openGraph: {
+    images: [
+      {
+        url: "/brand/og.webp",
+        width: 1920,
+        height: 1080,
+        alt: "LateBro",
+        type: "image/webp",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
