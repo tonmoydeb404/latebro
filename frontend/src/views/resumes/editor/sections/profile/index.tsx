@@ -61,6 +61,36 @@ const ProfileForm = (props: Props) => {
     [resume?._id]
   );
 
+  const onUpload = useCallback(
+    async (url: string) => {
+      if (!resume?._id) return;
+
+      const response = await mutate({
+        avatar: url,
+        resume: resume._id,
+      });
+
+      if (response.error) {
+        console.error("Avatar update error: ", response);
+
+        let message = "Something wents to wrong!";
+        if (hasApiError(response.error)) {
+          message = response.error.data.message;
+        }
+        toast({
+          title: message,
+          variant: "destructive",
+        });
+
+        return;
+      }
+
+      toast({ title: "Avatar updated successfully!" });
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [resume?._id]
+  );
+
   // ----------------------------------------------------------------------
 
   useEffect(() => {
@@ -77,7 +107,7 @@ const ProfileForm = (props: Props) => {
       />
 
       <div className="flex flex-col gap-4 mb-10">
-        <Fields />
+        <Fields onUpload={onUpload} />
       </div>
       <div className="flex items-center">
         <Button loading={mutateResponse.isLoading} Icon={LucideEdit}>

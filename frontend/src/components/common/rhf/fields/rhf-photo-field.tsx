@@ -21,6 +21,7 @@ export type RHFPhotoFieldProps = {
   labelPrev?: ReactNode;
   labelEnd?: ReactNode;
   description?: string;
+  onUpload?: (url: string) => void;
 } & InputProps;
 
 const RHFPhotoField = (props: RHFPhotoFieldProps) => {
@@ -61,7 +62,10 @@ const RHFPhotoField = (props: RHFPhotoFieldProps) => {
           <PhotoUploadModal
             onClose={modal.closeModal}
             open={modal.isOpen}
-            onSuccess={(url) => field.onChange(url)}
+            onSuccess={(url) => {
+              field.onChange(url);
+              props.onUpload?.(url);
+            }}
           />
         </FormItem>
       )}
