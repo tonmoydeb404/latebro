@@ -50,7 +50,7 @@ const ColorsForm = (props: Props) => {
         />
         <ColorField
           label="Primary Foreground"
-          value={colors?.primary || ""}
+          value={colors?.primary_foreground || ""}
           onChange={updateValue("primary_foreground")}
         />
         <ColorField
