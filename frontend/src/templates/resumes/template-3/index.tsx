@@ -221,13 +221,14 @@ const Template = (props: TemplateProps) => {
       <Page size="A4" style={styles.page}>
         {/* Header */}
         <View style={styles.header}>
-          {isValidImageUrl(profile.avatar) && (
-            <Image src={profile.avatar} style={styles.avatar} />
-          )}
           <View style={styles.header_content}>
             <Text style={styles.title}>{profile.name}</Text>
             <Text style={styles.subtitle}>{profile.profession}</Text>
           </View>
+
+          {isValidImageUrl(profile.avatar) && (
+            <Image src={profile.avatar} style={styles.avatar} />
+          )}
         </View>
 
         <View style={styles.main}>
