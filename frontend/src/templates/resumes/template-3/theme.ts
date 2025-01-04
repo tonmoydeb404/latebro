@@ -58,7 +58,7 @@ export const createStyles = (
       flexDirection: "row",
       marginBottom: 20,
       alignItems: "center",
-      justifyContent: "space-between",
+      // justifyContent: "space-between",
     },
     header_content: {
       flex: 1,
