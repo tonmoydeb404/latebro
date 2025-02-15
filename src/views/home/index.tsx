@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { paths } from "@/router/paths";
+import { LucideArrowRight, LucideStar } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 type Props = {};
@@ -20,8 +22,17 @@ const HomeView = (_props: Props) => {
         {/* End Gradients */}
         <div className="relative z-10">
           <div className="container py-10 lg:py-16">
-            <div className="max-w-2xl text-center mx-auto">
-              <p className="">Elevate your resume</p>
+            <div className="max-w-2xl text-center mx-auto flex flex-col items-center justify-center">
+              <Image
+                src="/brand/logo.svg"
+                alt="LateBro Logo"
+                width={100}
+                height={100}
+                className="mb-10"
+              />
+              <p className="px-3 py-1 rounded-md bg-primary/20 text-primary font-semibold text-sm">
+                Elevate your resume
+              </p>
               {/* Title */}
               <div className="mt-5 max-w-2xl">
                 <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
@@ -38,10 +49,15 @@ const HomeView = (_props: Props) => {
               {/* Buttons */}
               <div className="mt-8 gap-3 flex justify-center">
                 <Button size={"lg"} asChild>
-                  <Link href={paths.resumes.root}>Get started</Link>
+                  <Link href={paths.resumes.root}>
+                    Get started <LucideArrowRight size={16} className="ml-2" />
+                  </Link>
                 </Button>
                 <Button size={"lg"} variant={"outline"} asChild>
-                  <Link href={paths.resumes.root}>Explore</Link>
+                  <Link href={paths.github} target="_blank">
+                    GitHub
+                    <LucideStar size={16} className="ml-2" />
+                  </Link>
                 </Button>
               </div>
               {/* End Buttons */}
