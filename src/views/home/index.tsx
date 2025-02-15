@@ -28,7 +28,7 @@ const HomeView = (_props: Props) => {
                 alt="LateBro Logo"
                 width={100}
                 height={100}
-                className="mb-10"
+                className="mb-10 drop-shadow"
               />
               <p className="px-3 py-1 rounded-md bg-primary/20 text-primary font-semibold text-sm">
                 Elevate your resume
