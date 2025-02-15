@@ -26,10 +26,10 @@ const ResumeSelectModal = (props: Props) => {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent hideCloseButton>
         <DialogHeader>
-          <DialogTitle>Select Resume</DialogTitle>
-          <DialogDescription>This action cannot be undone.</DialogDescription>
+          <DialogTitle>Select Resume Profile</DialogTitle>
+          <DialogDescription></DialogDescription>
         </DialogHeader>
 
         <StateWrapper
