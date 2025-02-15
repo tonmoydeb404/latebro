@@ -4,8 +4,8 @@ import {
   EditorFontFamily,
   EditorFontSizes,
   EditorSlice,
+  EditorSliceResume,
 } from "@/types/editor";
-import { Resume } from "@/types/resume";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -32,7 +32,7 @@ const editorSlice = createSlice({
     setState: (state, action: PayloadAction<EditorSlice["state"]>) => {
       state.state = action.payload;
     },
-    setResume: (state, action: PayloadAction<Resume | null>) => {
+    setResume: (state, action: PayloadAction<EditorSliceResume | null>) => {
       state.resume = action.payload;
     },
     setColors: (state, action: PayloadAction<Partial<EditorColors>>) => {

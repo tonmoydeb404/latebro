@@ -1,8 +1,12 @@
-import { EditorColors, EditorFontFamily, EditorFontSizes } from "./editor";
-import { Resume } from "./resume";
+import {
+  EditorColors,
+  EditorFontFamily,
+  EditorFontSizes,
+  EditorSliceResume,
+} from "./editor";
 
 export type TemplateProps = {
-  data: Resume;
+  data: EditorSliceResume;
   colors?: EditorColors;
   fontSizes?: EditorFontSizes;
   fontFamily?: EditorFontFamily;

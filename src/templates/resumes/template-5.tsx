@@ -5,7 +5,7 @@ import {
   splitByLineBreaks,
 } from "@/helpers/resume";
 import { registerInter } from "@/lib/react-pdf/fonts";
-import { Resume } from "@/types/resume";
+import { TemplateProps } from "@/types/template";
 import {
   Document,
   Image,
@@ -151,9 +151,7 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = { data: Resume };
-
-const Template = (props: Props) => {
+const Template = (props: TemplateProps) => {
   const { data } = props;
   const {
     skills,

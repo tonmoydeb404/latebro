@@ -27,8 +27,8 @@ class ResumeDB extends Dexie {
 
     this.version(1).stores({
       resumes: "_id, title",
-      profiles: "_id, resume, name, profession",
-      contacts: "_id, resume",
+      profiles: "resume, name, profession",
+      contacts: "resume",
       educations: "_id, resume",
       experiences: "_id, resume",
       projects: "_id, resume",

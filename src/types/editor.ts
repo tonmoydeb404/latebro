@@ -1,5 +1,15 @@
 import { fonts } from "@/lib/react-pdf/fonts";
-import { Resume } from "./resume";
+import {
+  Resume,
+  ResumeContact,
+  ResumeEducation,
+  ResumeExperience,
+  ResumeLanguage,
+  ResumeProfile,
+  ResumeProject,
+  ResumeSkill,
+  ResumeSocial,
+} from "./resume";
 import { Template } from "./template";
 
 export type EditorColorsKeys =
@@ -27,9 +37,20 @@ export type EditorState =
   | "NAVIGATING"
   | "ERROR";
 
+export type EditorSliceResume = Resume & {
+  contact: ResumeContact;
+  profile: ResumeProfile;
+  educations: ResumeEducation[];
+  experiences: ResumeExperience[];
+  projects: ResumeProject[];
+  skills: ResumeSkill[];
+  languages: ResumeLanguage[];
+  socials: ResumeSocial[];
+};
+
 export interface EditorSlice {
   nav: number;
-  resume: Resume | null;
+  resume: EditorSliceResume | null;
   tab: number;
   state: EditorState;
   template: Template | null;

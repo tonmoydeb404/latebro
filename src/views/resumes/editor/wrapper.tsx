@@ -13,10 +13,19 @@ import {
   setTypographySize,
 } from "@/store/features/editor/slice";
 import { useLazyGetResumeQuery } from "@/store/features/resume/api";
+import { useLazyGetContactQuery } from "@/store/features/resume/contact/api";
+import { useLazyListEducationQuery } from "@/store/features/resume/education/api";
+import { useLazyListExperienceQuery } from "@/store/features/resume/experience/api";
+import { useLazyListLanguageQuery } from "@/store/features/resume/language/api";
+import { useLazyGetProfileQuery } from "@/store/features/resume/profile/api";
+import { useLazyListProjectQuery } from "@/store/features/resume/project/api";
+import { useLazyListSkillQuery } from "@/store/features/resume/skill/api";
+import { useLazyListSocialQuery } from "@/store/features/resume/social/api";
 import { useAppDispatch } from "@/store/hooks";
 import { getTemplate } from "@/templates/resumes";
+import { EditorSlice } from "@/types/editor";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useMemo } from "react";
 
 type Props = {
   children: ReactNode;
@@ -31,12 +40,30 @@ const Wrapper = (props: Props) => {
   const queryNav = searchparams.get("nav");
   const templateId = searchparams.get("template");
   const [query, response] = useLazyGetResumeQuery();
-  const { data, isSuccess } = response;
+  const [contactQuery, contactResponse] = useLazyGetContactQuery();
+  const [profileQuery, profileResponse] = useLazyGetProfileQuery();
+  const [educationsQuery, educationsResponse] = useLazyListEducationQuery();
+  const [experiencesQuery, experiencesResponse] = useLazyListExperienceQuery();
+  const [languagesQuery, languagesResponse] = useLazyListLanguageQuery();
+  const [projectsQuery, projectsResponse] = useLazyListProjectQuery();
+  const [skillsQuery, skillsResponse] = useLazyListSkillQuery();
+  const [socialsQuery, socialsResponse] = useLazyListSocialQuery();
+
+  const isSuccess =
+    response.isSuccess ||
+    contactResponse.isSuccess ||
+    profileResponse.isSuccess ||
+    educationsResponse.isSuccess ||
+    experiencesResponse.isSuccess ||
+    languagesResponse.isSuccess ||
+    projectsResponse.isSuccess ||
+    skillsResponse.isSuccess ||
+    socialsResponse.isSuccess;
 
   const updateResume = async (id: string) => {
     const response = await query(id);
 
-    if (response.error || !response.data?.results) {
+    if (response.error || !response.data) {
       console.error("Resume Fetching Error: ", response);
 
       let message = "Something wents to wrong!";
@@ -52,8 +79,56 @@ const Wrapper = (props: Props) => {
       return;
     }
 
+    await contactQuery(id);
+    await profileQuery(id);
+    await educationsQuery(id);
+    await experiencesQuery(id);
+    await languagesQuery(id);
+    await projectsQuery(id);
+    await skillsQuery(id);
+    await socialsQuery(id);
+
     dispatch(setState("LOADED"));
   };
+
+  const resume = useMemo<EditorSlice["resume"]>(() => {
+    if (
+      !response?.data ||
+      !contactResponse?.data ||
+      !profileResponse?.data ||
+      !Array.isArray(educationsResponse?.data) ||
+      !Array.isArray(experiencesResponse?.data) ||
+      !Array.isArray(languagesResponse?.data) ||
+      !Array.isArray(projectsResponse?.data) ||
+      !Array.isArray(skillsResponse?.data) ||
+      !Array.isArray(socialsResponse?.data)
+    ) {
+      return null;
+    }
+
+    return {
+      _id: response.data._id,
+      title: response.data.title,
+      contact: contactResponse.data,
+      profile: profileResponse.data,
+      educations: educationsResponse.data,
+      experiences: experiencesResponse.data,
+      languages: languagesResponse.data,
+      projects: projectsResponse.data,
+      skills: skillsResponse.data,
+      socials: socialsResponse.data,
+    };
+  }, [
+    response?.data,
+    contactResponse?.data,
+    profileResponse?.data,
+    educationsResponse?.data,
+    experiencesResponse?.data,
+    languagesResponse?.data,
+    projectsResponse?.data,
+    skillsResponse?.data,
+    socialsResponse?.data,
+  ]);
 
   // ----------------------------------------------------------------------
 
@@ -96,9 +171,9 @@ const Wrapper = (props: Props) => {
   }, [queryNav, isSuccess]);
 
   useEffect(() => {
-    if (data?.results) dispatch(setResume(data.results));
+    if (resume) dispatch(setResume(resume));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  }, [resume]);
 
   return <>{children}</>;
 };

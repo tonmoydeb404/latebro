@@ -40,7 +40,7 @@ const CreateModal = (props: Props) => {
   const onValid: SubmitHandler<SchemaType> = async (values) => {
     const response = await mutate({ ...values });
 
-    if (response.error || !response.data?.results) {
+    if (response.error || !response.data) {
       console.error("Resume Create Error: ", response);
 
       let message = "Something wents to wrong!";
@@ -58,7 +58,7 @@ const CreateModal = (props: Props) => {
     toast({ title: "Resume created successfully!" });
     formOptions.reset();
     onClose();
-    onSuccess(response.data.results);
+    onSuccess(response.data);
   };
 
   const handleClose = () => {

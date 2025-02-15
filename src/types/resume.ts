@@ -4,22 +4,20 @@ export type Resume = {
 };
 
 export type ResumeProfile = {
-  _id: string;
   resume: string;
-  name: string;
-  profession: string;
-  bio: string;
-  avatar: string | null;
+  name?: string;
+  profession?: string;
+  bio?: string;
+  avatar?: string | null;
 };
 
 export type ResumeContact = {
-  _id: string;
   resume: string;
-  phone: string;
-  email: string;
-  address: string;
-  address_link: string | null;
-  website: string;
+  phone?: string;
+  email?: string;
+  address?: string;
+  address_link?: string | null;
+  website?: string;
 };
 
 export type ResumeEducation = {

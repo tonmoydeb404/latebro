@@ -36,11 +36,11 @@ const ResumeDropdown = (props: Props) => {
   // ----------------------------------------------------------------------
 
   useEffect(() => {
-    if (!resume && data?.results && data?.results.length > 0) {
-      updateResume(data.results[0]._id);
+    if (!resume && data && data.length > 0) {
+      updateResume(data[0]._id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data?.results, resume]);
+  }, [data, resume]);
 
   return (
     <>
@@ -72,7 +72,7 @@ const ResumeDropdown = (props: Props) => {
             value={resume || undefined}
             onValueChange={updateResume}
           >
-            {data?.results.map((item) => (
+            {data?.map((item) => (
               <DropdownMenuRadioItem key={item._id} value={item._id}>
                 {item.title}
               </DropdownMenuRadioItem>
