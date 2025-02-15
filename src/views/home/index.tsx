@@ -38,7 +38,7 @@ const HomeView = (_props: Props) => {
               {/* Buttons */}
               <div className="mt-8 gap-3 flex justify-center">
                 <Button size={"lg"} asChild>
-                  <Link href={paths.auth.login}>Get started</Link>
+                  <Link href={paths.resumes.root}>Get started</Link>
                 </Button>
                 <Button size={"lg"} variant={"outline"} asChild>
                   <Link href={paths.resumes.root}>Explore</Link>

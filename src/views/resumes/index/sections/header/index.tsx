@@ -1,5 +1,3 @@
-import UserDropdown from "./user-dropdown";
-
 type Props = {};
 
 const Header = (props: Props) => {
@@ -11,8 +9,6 @@ const Header = (props: Props) => {
           Choose the Perfect Template to Showcase Your Professional Journey
         </p>
       </div>
-
-      <UserDropdown />
     </header>
   );
 };
