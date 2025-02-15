@@ -1,12 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogOverlay,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
 import { hasApiError } from "@/helpers/api";
 import { toast } from "@/hooks/use-toast";
 import { paths } from "@/router/paths";
@@ -202,7 +197,7 @@ const Wrapper = (props: Props) => {
       {children}
 
       <Dialog open={isError}>
-        <DialogContent hideCloseButton overlay={<DialogOverlay />}>
+        <DialogContent hideCloseButton>
           <div>
             <LucideAlertOctagon className="text-destructive mb-3" />
             <h3 className="mb-5">
