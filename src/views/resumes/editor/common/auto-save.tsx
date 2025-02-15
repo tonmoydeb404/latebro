@@ -25,17 +25,17 @@ const AutoSave = memo(({ defaultValues, onSubmit }: Props) => {
   });
 
   useDeepCompareEffect(() => {
-    console.log("Triggered");
+    // console.log("Triggered");
     if (methods.formState.isDirty) {
       debouncedSave();
     }
   }, [watchedData]);
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1 text-sm">
       {methods.formState.isSubmitting && (
         <>
-          <LucideLoader2 size={20} className="animate-spin" />
+          <LucideLoader2 size={16} className="animate-spin" />
           Auto Saving...
         </>
       )}

@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LucideEdit } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import AutoSave from "../../common/auto-save";
 import Header from "../../common/header";
 import Fields from "./fields";
 import schema, { SchemaType } from "./schema";
@@ -55,7 +56,7 @@ const ContactForm = (props: Props) => {
       return;
     }
 
-    toast({ title: "Contact updated successfully!" });
+    // toast({ title: "Contact updated successfully!" });
   };
 
   // ----------------------------------------------------------------------
@@ -76,10 +77,11 @@ const ContactForm = (props: Props) => {
       <div className="flex flex-col gap-4 mb-10">
         <Fields />
       </div>
-      <div className="flex items-center">
+      <div className="flex items-center gap-3 flex-wrap">
         <Button loading={mutateResponse.isLoading} Icon={LucideEdit}>
           Update
         </Button>
+        <AutoSave defaultValues={defaultValues} onSubmit={onValid} />
       </div>
     </RHFForm>
   );

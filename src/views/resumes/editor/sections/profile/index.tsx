@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LucideEdit } from "lucide-react";
 import { useCallback, useEffect, useMemo } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import AutoSave from "../../common/auto-save";
 import Header from "../../common/header";
 import Fields from "./fields";
 import schema, { SchemaType } from "./schema";
@@ -55,7 +56,7 @@ const ProfileForm = (props: Props) => {
         return;
       }
 
-      toast({ title: "Profile updated successfully!" });
+      // toast({ title: "Profile updated successfully!" });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [resume?._id]
@@ -109,11 +110,11 @@ const ProfileForm = (props: Props) => {
       <div className="flex flex-col gap-4 mb-10">
         <Fields onUpload={onUpload} />
       </div>
-      <div className="flex items-center">
+      <div className="flex items-center gap-3 flex-wrap">
         <Button loading={mutateResponse.isLoading} Icon={LucideEdit}>
           Update
         </Button>
-        {/* <AutoSave defaultValues={defaultValues} onSubmit={onValid} /> */}
+        <AutoSave defaultValues={defaultValues} onSubmit={onValid} />
       </div>
     </RHFForm>
   );
