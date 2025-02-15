@@ -4,6 +4,7 @@ import { useEditor } from "@/store/hooks";
 import { getTemplatePath } from "@/templates/resumes";
 import { TemplateProps } from "@/types/template";
 import { pdf } from "@react-pdf/renderer";
+import { LucideLoader } from "lucide-react";
 import "pdfjs-dist/build/pdf.worker.mjs";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Document, Page } from "react-pdf";
@@ -107,7 +108,9 @@ const Preview = (props: Props) => {
           <Actions refreshPDF={refreshPDF} downloadPDF={downloadPDF} />
         </TransformWrapper>
       ) : (
-        <p>Loading PDF...</p>
+        <div className="flex flex-col items-center justify-center w-full h-full">
+          <LucideLoader className="animate-spin" />
+        </div>
       )}
     </>
   );

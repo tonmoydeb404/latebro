@@ -1,5 +1,12 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogOverlay,
+} from "@/components/ui/dialog";
 import { hasApiError } from "@/helpers/api";
 import { toast } from "@/hooks/use-toast";
 import { paths } from "@/router/paths";
@@ -24,6 +31,8 @@ import { useLazyListSocialQuery } from "@/store/features/resume/social/api";
 import { useAppDispatch } from "@/store/hooks";
 import { getTemplate } from "@/templates/resumes";
 import { EditorSlice } from "@/types/editor";
+import { LucideAlertOctagon } from "lucide-react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ReactNode, useEffect, useMemo } from "react";
 
@@ -61,6 +70,17 @@ const Wrapper = (props: Props) => {
     projectsResponse.isSuccess ||
     skillsResponse.isSuccess ||
     socialsResponse.isSuccess;
+
+  const isError =
+    response.isError ||
+    contactResponse.isError ||
+    profileResponse.isError ||
+    educationsResponse.isError ||
+    experiencesResponse.isError ||
+    languagesResponse.isError ||
+    projectsResponse.isError ||
+    skillsResponse.isError ||
+    socialsResponse.isError;
 
   const updateResume = async (id: string) => {
     const response = await query(id);
@@ -177,7 +197,31 @@ const Wrapper = (props: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [resume]);
 
-  return <>{children}</>;
+  return (
+    <>
+      {children}
+
+      <Dialog open={isError}>
+        <DialogContent hideCloseButton overlay={<DialogOverlay />}>
+          <div>
+            <LucideAlertOctagon className="text-destructive mb-3" />
+            <h3 className="mb-5">
+              While processing you&apos;re request, something went to wrong
+            </h3>
+          </div>
+          <DialogFooter>
+            <Button size={"sm"} variant={"outline"} asChild>
+              <Link href={paths.resumes.root}>Templates</Link>
+            </Button>
+
+            <Button size={"sm"} onClick={() => window.location.reload()}>
+              Try Again
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
 };
 
 export default Wrapper;

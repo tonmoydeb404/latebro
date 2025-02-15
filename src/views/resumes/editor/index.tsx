@@ -1,6 +1,7 @@
 "use client";
 
 import { useEditor } from "@/store/hooks";
+import { LucideLoader } from "lucide-react";
 import dynamic from "next/dynamic";
 import { tabs } from "./config";
 import Form from "./sections/form";
@@ -9,7 +10,11 @@ import Toolbar from "./sections/toolbar";
 import Wrapper from "./wrapper";
 const Preview = dynamic(() => import("./sections/preview/index"), {
   ssr: false,
-  loading: () => <p>Loading Preview...</p>,
+  loading: () => (
+    <div className="flex flex-col items-center justify-center w-full h-full">
+      <LucideLoader className="animate-spin" />
+    </div>
+  ),
 });
 
 type Props = {};
