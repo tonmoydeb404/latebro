@@ -15,8 +15,6 @@ const ColorsForm = (props: Props) => {
     dispatch(setColors({ [key]: value }));
   };
 
-  console.log({ colors });
-
   return (
     <div>
       <Header

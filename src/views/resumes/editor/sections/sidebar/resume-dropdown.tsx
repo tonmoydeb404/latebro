@@ -16,8 +16,8 @@ import { useListResumeQuery } from "@/store/features/resume/api";
 import { LucideHome, LucideMoreHorizontal, LucidePlus } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
 import CreateModal from "./create-modal";
+import ResumeSelectModal from "./resume-select-modal";
 
 type Props = {};
 
@@ -34,13 +34,6 @@ const ResumeDropdown = (props: Props) => {
   };
 
   // ----------------------------------------------------------------------
-
-  useEffect(() => {
-    if (!resume && data && data.length > 0) {
-      updateResume(data[0]._id);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, resume]);
 
   return (
     <>
@@ -84,6 +77,12 @@ const ResumeDropdown = (props: Props) => {
         onClose={createModal.closeModal}
         open={createModal.isOpen}
         onSuccess={(v) => updateResume(v._id)}
+      />
+      <ResumeSelectModal
+        open={!resume}
+        onClose={() => {}}
+        onCreateNew={createModal.openModal}
+        onSelect={(id) => updateResume(id)}
       />
     </>
   );

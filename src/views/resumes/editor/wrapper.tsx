@@ -36,9 +36,11 @@ const Wrapper = (props: Props) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const searchparams = useSearchParams();
+
   const queryResume = searchparams.get("resume");
   const queryNav = searchparams.get("nav");
-  const templateId = searchparams.get("template");
+  const queryTemplate = searchparams.get("template");
+
   const [query, response] = useLazyGetResumeQuery();
   const [contactQuery, contactResponse] = useLazyGetContactQuery();
   const [profileQuery, profileResponse] = useLazyGetProfileQuery();
@@ -133,7 +135,7 @@ const Wrapper = (props: Props) => {
   // ----------------------------------------------------------------------
 
   useEffect(() => {
-    const template = templateId ? getTemplate(templateId) : null;
+    const template = queryTemplate ? getTemplate(queryTemplate) : null;
     if (template) {
       dispatch(setTemplate(template));
       dispatch(setColors(template.theme.colors));
@@ -143,7 +145,7 @@ const Wrapper = (props: Props) => {
       router.replace(paths.resumes.root);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [templateId]);
+  }, [queryTemplate]);
 
   useEffect(() => {
     if (queryResume) updateResume(queryResume);
