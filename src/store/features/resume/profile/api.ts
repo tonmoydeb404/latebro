@@ -1,67 +1,41 @@
-import { backendBaseQuery } from "@/store/helpers/base-queries";
-import {
-  ProfileGetResponse,
-  ProfileUpdatePayload,
-  ProfileUpdateResponse,
-} from "@/types/api/resume/profile";
-import { createApi } from "@reduxjs/toolkit/query/react";
-import resumeApi from "../api";
+import resumeDB from "@/db/resume";
+import { ProfileUpdatePayload } from "@/types/api/resume/profile";
+import { ResumeProfile } from "@/types/resume";
+import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const resumeProfileApi = createApi({
   reducerPath: "resumeProfileApi",
-  baseQuery: backendBaseQuery("/resumes"),
-  tagTypes: ["Profile"], // Define tag type
+  baseQuery: fakeBaseQuery(),
+  tagTypes: ["Profile"],
   endpoints: (builder) => ({
-    getProfile: builder.query<ProfileGetResponse, string>({
-      query: (resumeId) => ({
-        url: `/${resumeId}/profile`,
-      }),
-      providesTags: (result, error, resumeId) => [
-        { type: "Profile", id: resumeId },
-      ],
-    }),
-    updateProfile: builder.mutation<
-      ProfileUpdateResponse,
-      ProfileUpdatePayload
-    >({
-      query: (payload) => ({
-        url: `/${payload.resume}/profile`,
-        body: payload,
-        method: "PATCH",
-      }),
-      onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
+    getProfile: builder.query<ResumeProfile, string>({
+      queryFn: async (resumeId) => {
         try {
-          const { data } = await queryFulfilled; // Await API response
-          const updates = data.results;
-
-          // Update the cache for listEducation
-          dispatch(
-            resumeProfileApi.util.updateQueryData(
-              "getProfile",
-              args.resume,
-              (draft) => {
-                draft.results = { ...draft.results, ...updates };
-              }
-            )
-          );
-
-          // Update the cache for getResume
-          dispatch(
-            resumeApi.util.updateQueryData(
-              "getResume",
-              args.resume,
-              (draft) => {
-                draft.results.profile = {
-                  ...draft.results.profile,
-                  ...updates,
-                };
-              }
-            )
-          );
+          const data = await resumeDB.profiles
+            .where("resume")
+            .equals(resumeId)
+            .first();
+          return data ? { data } : { error: "Profile not found" };
         } catch (error) {
-          console.error("Failed to update profile cache:", error);
+          return { error };
         }
       },
+      providesTags: (result, error, resumeId) => [
+        { type: "Profile", resume: resumeId },
+      ],
+    }),
+    updateProfile: builder.mutation<ResumeProfile, ProfileUpdatePayload>({
+      queryFn: async (payload) => {
+        try {
+          await resumeDB.profiles.put(payload);
+          return { data: payload };
+        } catch (error) {
+          return { error };
+        }
+      },
+      invalidatesTags: (result) => [
+        { type: "Profile", resume: result?.resume },
+      ],
     }),
   }),
 });

@@ -1,160 +1,84 @@
-import { backendBaseQuery } from "@/store/helpers/base-queries";
+import resumeDB from "@/db/resume";
 import {
   ProjectCreatePayload,
-  ProjectCreateResponse,
   ProjectDeletePayload,
-  ProjectDeleteResponse,
-  ProjectListResponse,
   ProjectUpdatePayload,
-  ProjectUpdateResponse,
 } from "@/types/api/resume/project";
-import { createApi } from "@reduxjs/toolkit/query/react";
-import resumeApi from "../api";
+import { ResumeProject } from "@/types/resume";
+import { nanoid } from "@reduxjs/toolkit";
+import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const resumeProjectApi = createApi({
   reducerPath: "resumeProjectApi",
-  baseQuery: backendBaseQuery("/resumes"),
-  tagTypes: ["Project"], // Define tag type
+  baseQuery: fakeBaseQuery(),
+  tagTypes: ["Project"],
   endpoints: (builder) => ({
-    listProject: builder.query<ProjectListResponse, string>({
-      query: (resumeId) => ({
-        url: `/${resumeId}/projects`,
-      }),
-      providesTags: (result, error, resumeId) => [
-        { type: "Project", id: resumeId },
+    listProject: builder.query<ResumeProject[], string>({
+      queryFn: async (resumeId) => {
+        try {
+          const data = await resumeDB.projects
+            .where("resume")
+            .equals(resumeId)
+            .toArray();
+          return { data };
+        } catch (error) {
+          return { error };
+        }
+      },
+      providesTags: (result, error, resumeId) =>
+        result
+          ? [
+              ...result.map(({ _id }) => ({
+                type: "Project" as const,
+                id: _id,
+              })),
+              { type: "Project", id: resumeId },
+              { type: "Project" },
+            ]
+          : [{ type: "Project", id: resumeId }, { type: "Project" }],
+    }),
+    createProject: builder.mutation<ResumeProject, ProjectCreatePayload>({
+      queryFn: async (payload) => {
+        try {
+          const newProject = { ...payload, _id: nanoid() };
+          await resumeDB.projects.add(newProject);
+          return { data: newProject };
+        } catch (error) {
+          return { error };
+        }
+      },
+      invalidatesTags: (result) =>
+        result
+          ? [{ type: "Project" }, { type: "Project", id: result.resume }]
+          : [{ type: "Project" }],
+    }),
+    updateProject: builder.mutation<ResumeProject, ProjectUpdatePayload>({
+      queryFn: async (payload) => {
+        try {
+          await resumeDB.projects.put(payload);
+          return { data: payload };
+        } catch (error) {
+          return { error };
+        }
+      },
+      invalidatesTags: (result) => [
+        { type: "Project", id: result?._id },
+        { type: "Project", id: result?.resume },
       ],
     }),
-    createProject: builder.mutation<
-      ProjectCreateResponse,
-      ProjectCreatePayload
-    >({
-      query: (payload) => ({
-        url: `/${payload.resume}/projects`,
-        body: payload,
-        method: "POST",
-      }),
-      onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
+    deleteProject: builder.mutation<string, ProjectDeletePayload>({
+      queryFn: async ({ resume, _id }) => {
         try {
-          const { data } = await queryFulfilled; // Await API response
-          const updates = data.results;
-
-          // Manually update the cache for listProject
-          dispatch(
-            resumeProjectApi.util.updateQueryData(
-              "listProject",
-              args.resume,
-              (draft) => {
-                draft.results.push(updates);
-              }
-            )
-          );
-
-          // Update the cache for getResume
-          dispatch(
-            resumeApi.util.updateQueryData(
-              "getResume",
-              args.resume,
-              (draft) => {
-                draft.results.projects.push(updates);
-              }
-            )
-          );
+          await resumeDB.projects.delete(_id);
+          return { data: _id };
         } catch (error) {
-          console.error("Failed to update project cache:", error);
+          return { error };
         }
       },
-    }),
-    updateProject: builder.mutation<
-      ProjectUpdateResponse,
-      ProjectUpdatePayload
-    >({
-      query: (payload) => ({
-        url: `/${payload.resume}/projects/${payload._id}`,
-        body: payload,
-        method: "PATCH",
-      }),
-      onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
-        try {
-          const { data } = await queryFulfilled; // Await API response
-          const updates = data.results;
-
-          // Update the cache for listProject
-          dispatch(
-            resumeProjectApi.util.updateQueryData(
-              "listProject",
-              args.resume,
-              (draft) => {
-                const index = draft.results.findIndex(
-                  (item) => item._id === updates._id
-                );
-                if (index !== -1) {
-                  draft.results[index] = updates;
-                }
-              }
-            )
-          );
-
-          // Update the cache for getResume
-          dispatch(
-            resumeApi.util.updateQueryData(
-              "getResume",
-              args.resume,
-              (draft) => {
-                const index = draft.results.projects.findIndex(
-                  (item) => item._id === updates._id
-                );
-                if (index !== -1) {
-                  draft.results.projects[index] = updates;
-                }
-              }
-            )
-          );
-        } catch (error) {
-          console.error("Failed to update project cache:", error);
-        }
-      },
-    }),
-    deleteProject: builder.mutation<
-      ProjectDeleteResponse,
-      ProjectDeletePayload
-    >({
-      query: (payload) => ({
-        url: `/${payload.resume}/projects/${payload._id}`,
-        method: "DELETE",
-      }),
-      onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
-        try {
-          await queryFulfilled; // Await API success
-
-          // Remove the project from the cache for listProject
-          dispatch(
-            resumeProjectApi.util.updateQueryData(
-              "listProject",
-              args.resume,
-              (draft) => {
-                draft.results = draft.results.filter(
-                  (item) => item._id !== args._id
-                );
-              }
-            )
-          );
-
-          // Update the cache for getResume
-          dispatch(
-            resumeApi.util.updateQueryData(
-              "getResume",
-              args.resume,
-              (draft) => {
-                draft.results.projects = draft.results.projects.filter(
-                  (item) => item._id !== args._id
-                );
-              }
-            )
-          );
-        } catch (error) {
-          console.error("Failed to update project cache:", error);
-        }
-      },
+      invalidatesTags: (result) => [
+        { type: "Project", id: result },
+        { type: "Project" },
+      ],
     }),
   }),
 });

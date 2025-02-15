@@ -7,12 +7,7 @@ export type ContactGetResponse = ApiResponse<ResumeContact>;
 
 // ----------------------------------------------------------------------
 
-export type ContactUpdatePayload = Partial<
-  Pick<
-    ResumeContact,
-    "address" | "address_link" | "email" | "phone" | "website"
-  >
-> & { resume: string };
+export type ContactUpdatePayload = ResumeContact;
 
 export type ContactUpdateResponse = ApiResponse<ResumeContact>;
 

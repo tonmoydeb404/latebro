@@ -20,12 +20,7 @@ export type ExperienceCreateResponse = ApiResponse<ResumeExperience>;
 
 // ----------------------------------------------------------------------
 
-export type ExperienceUpdatePayload = Partial<
-  Pick<
-    ResumeExperience,
-    "companyName" | "description" | "position" | "endedAt" | "startedAt"
-  >
-> &
+export type ExperienceUpdatePayload = ResumeExperience &
   ExperienceDeletePayload;
 
 export type ExperienceUpdateResponse = ApiResponse<ResumeExperience>;

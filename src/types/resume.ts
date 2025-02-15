@@ -1,18 +1,11 @@
 export type Resume = {
   _id: string;
   title: string;
-  profile: ResumeProfile;
-  contact: ResumeContact;
-  projects: ResumeProject[];
-  educations: ResumeEducation[];
-  experiences: ResumeExperience[];
-  skills: ResumeSkill[];
-  socials: ResumeSocial[];
-  languages: ResumeLanguage[];
 };
 
 export type ResumeProfile = {
   _id: string;
+  resume: string;
   name: string;
   profession: string;
   bio: string;
@@ -21,6 +14,7 @@ export type ResumeProfile = {
 
 export type ResumeContact = {
   _id: string;
+  resume: string;
   phone: string;
   email: string;
   address: string;

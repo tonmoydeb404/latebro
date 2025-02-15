@@ -15,10 +15,7 @@ export type LanguageCreateResponse = ApiResponse<ResumeLanguage>;
 
 // ----------------------------------------------------------------------
 
-export type LanguageUpdatePayload = Partial<
-  Pick<ResumeLanguage, "experience" | "title">
-> &
-  LanguageDeletePayload;
+export type LanguageUpdatePayload = ResumeLanguage;
 
 export type LanguageUpdateResponse = ApiResponse<ResumeLanguage>;
 

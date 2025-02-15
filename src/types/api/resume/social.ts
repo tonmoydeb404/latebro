@@ -15,9 +15,7 @@ export type SocialCreateResponse = ApiResponse<ResumeSocial>;
 
 // ----------------------------------------------------------------------
 
-export type SocialUpdatePayload = Partial<
-  Pick<ResumeSocial, "type" | "title" | "url">
-> &
+export type SocialUpdatePayload = Pick<ResumeSocial, "type" | "title" | "url"> &
   SocialDeletePayload;
 
 export type SocialUpdateResponse = ApiResponse<ResumeSocial>;

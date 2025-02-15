@@ -20,8 +20,7 @@ export type EducationCreateResponse = ApiResponse<ResumeEducation>;
 
 // ----------------------------------------------------------------------
 
-export type EducationUpdatePayload = Partial<ResumeEducation> &
-  EducationDeletePayload;
+export type EducationUpdatePayload = ResumeEducation;
 
 export type EducationUpdateResponse = ApiResponse<ResumeEducation>;
 

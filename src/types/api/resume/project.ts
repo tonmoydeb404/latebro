@@ -21,16 +21,9 @@ export type ProjectCreateResponse = ApiResponse<ResumeProject>;
 
 // ----------------------------------------------------------------------
 
-export type ProjectUpdatePayload = Partial<
-  Pick<
-    ResumeProject,
-    | "name"
-    | "description"
-    | "caseStudyUrl"
-    | "previewUrl"
-    | "sourceUrl"
-    | "tools"
-  >
+export type ProjectUpdatePayload = Pick<
+  ResumeProject,
+  "name" | "description" | "caseStudyUrl" | "previewUrl" | "sourceUrl" | "tools"
 > &
   ProjectDeletePayload;
 

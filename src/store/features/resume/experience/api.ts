@@ -1,160 +1,83 @@
-import { backendBaseQuery } from "@/store/helpers/base-queries";
+import resumeDB from "@/db/resume";
 import {
   ExperienceCreatePayload,
-  ExperienceCreateResponse,
   ExperienceDeletePayload,
-  ExperienceDeleteResponse,
-  ExperienceListResponse,
   ExperienceUpdatePayload,
-  ExperienceUpdateResponse,
 } from "@/types/api/resume/experience";
-import { createApi } from "@reduxjs/toolkit/query/react";
-import resumeApi from "../api";
+import { ResumeExperience } from "@/types/resume";
+import { nanoid } from "@reduxjs/toolkit";
+import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const resumeExperienceApi = createApi({
   reducerPath: "resumeExperienceApi",
-  baseQuery: backendBaseQuery("/resumes"),
-  tagTypes: ["Experience"], // Define tag type
+  baseQuery: fakeBaseQuery(),
+  tagTypes: ["Experience"],
   endpoints: (builder) => ({
-    listExperience: builder.query<ExperienceListResponse, string>({
-      query: (resumeId) => ({
-        url: `/${resumeId}/experiences`,
-      }),
-      providesTags: (result, error, resumeId) => [
-        { type: "Experience", id: resumeId },
-      ],
+    listExperience: builder.query<ResumeExperience[], string>({
+      queryFn: async (resumeId) => {
+        try {
+          const data = await resumeDB.experiences
+            .where("resume")
+            .equals(resumeId)
+            .toArray();
+          return { data };
+        } catch (error) {
+          return { error };
+        }
+      },
+      providesTags: (result, error, resumeId) =>
+        result
+          ? [
+              ...result.map(({ _id }) => ({
+                type: "Experience" as const,
+                id: _id,
+              })),
+              { type: "Experience", id: resumeId },
+            ]
+          : [{ type: "Experience", id: resumeId }],
     }),
     createExperience: builder.mutation<
-      ExperienceCreateResponse,
+      ResumeExperience,
       ExperienceCreatePayload
     >({
-      query: (payload) => ({
-        url: `/${payload.resume}/experiences`,
-        body: payload,
-        method: "POST",
-      }),
-      onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
+      queryFn: async (payload) => {
         try {
-          const { data } = await queryFulfilled; // Await API response
-          const updates = data.results;
-
-          // Manually update the cache for listExperience
-          dispatch(
-            resumeExperienceApi.util.updateQueryData(
-              "listExperience",
-              args.resume,
-              (draft) => {
-                draft.results.push(updates);
-              }
-            )
-          );
-
-          // Update the cache for getResume
-          dispatch(
-            resumeApi.util.updateQueryData(
-              "getResume",
-              args.resume,
-              (draft) => {
-                draft.results.experiences.push(updates);
-              }
-            )
-          );
+          const newExperience = { ...payload, _id: nanoid() };
+          await resumeDB.experiences.add(newExperience);
+          return { data: newExperience };
         } catch (error) {
-          console.error("Failed to update experience cache:", error);
+          return { error };
         }
       },
+      invalidatesTags: (result) =>
+        result
+          ? [{ type: "Experience", id: result.resume }]
+          : [{ type: "Experience" }],
     }),
     updateExperience: builder.mutation<
-      ExperienceUpdateResponse,
+      ResumeExperience,
       ExperienceUpdatePayload
     >({
-      query: (payload) => ({
-        url: `/${payload.resume}/experiences/${payload._id}`,
-        body: payload,
-        method: "PATCH",
-      }),
-      onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
+      queryFn: async (payload) => {
         try {
-          const { data } = await queryFulfilled; // Await API response
-          const updates = data.results;
-
-          // Update the cache for listExperience
-          dispatch(
-            resumeExperienceApi.util.updateQueryData(
-              "listExperience",
-              args.resume,
-              (draft) => {
-                const index = draft.results.findIndex(
-                  (item) => item._id === updates._id
-                );
-                if (index !== -1) {
-                  draft.results[index] = updates;
-                }
-              }
-            )
-          );
-
-          // Update the cache for getResume
-          dispatch(
-            resumeApi.util.updateQueryData(
-              "getResume",
-              args.resume,
-              (draft) => {
-                const index = draft.results.experiences.findIndex(
-                  (item) => item._id === updates._id
-                );
-                if (index !== -1) {
-                  draft.results.experiences[index] = updates;
-                }
-              }
-            )
-          );
+          await resumeDB.experiences.put(payload);
+          return { data: payload };
         } catch (error) {
-          console.error("Failed to update experience cache:", error);
+          return { error };
         }
       },
+      invalidatesTags: (result) => [{ type: "Experience", id: result?._id }],
     }),
-    deleteExperience: builder.mutation<
-      ExperienceDeleteResponse,
-      ExperienceDeletePayload
-    >({
-      query: (payload) => ({
-        url: `/${payload.resume}/experiences/${payload._id}`,
-        method: "DELETE",
-      }),
-      onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
+    deleteExperience: builder.mutation<string, ExperienceDeletePayload>({
+      queryFn: async ({ resume, _id }) => {
         try {
-          await queryFulfilled; // Await API success
-
-          // Remove the experience from the cache for listExperience
-          dispatch(
-            resumeExperienceApi.util.updateQueryData(
-              "listExperience",
-              args.resume,
-              (draft) => {
-                draft.results = draft.results.filter(
-                  (item) => item._id !== args._id
-                );
-              }
-            )
-          );
-
-          // Update the cache for getResume
-          dispatch(
-            resumeApi.util.updateQueryData(
-              "getResume",
-              args.resume,
-              (draft) => {
-                draft.results.experiences = draft.results.experiences.filter(
-                  (item) => item._id !== args._id
-                );
-              }
-            )
-          );
+          await resumeDB.experiences.delete(_id);
+          return { data: _id };
         } catch (error) {
-          console.error("Failed to update experience cache:", error);
+          return { error };
         }
       },
+      invalidatesTags: (result) => [{ type: "Experience", id: result }],
     }),
   }),
 });

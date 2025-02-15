@@ -1,160 +1,77 @@
-import { backendBaseQuery } from "@/store/helpers/base-queries";
+import resumeDB from "@/db/resume";
 import {
   LanguageCreatePayload,
-  LanguageCreateResponse,
   LanguageDeletePayload,
-  LanguageDeleteResponse,
-  LanguageListResponse,
   LanguageUpdatePayload,
-  LanguageUpdateResponse,
 } from "@/types/api/resume/language";
-import { createApi } from "@reduxjs/toolkit/query/react";
-import resumeApi from "../api";
+import { ResumeLanguage } from "@/types/resume";
+import { nanoid } from "@reduxjs/toolkit";
+import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const resumeLanguageApi = createApi({
   reducerPath: "resumeLanguageApi",
-  baseQuery: backendBaseQuery("/resumes"),
-  tagTypes: ["Language"], // Define tag type
+  baseQuery: fakeBaseQuery(),
+  tagTypes: ["Language"],
   endpoints: (builder) => ({
-    listLanguage: builder.query<LanguageListResponse, string>({
-      query: (resumeId) => ({
-        url: `/${resumeId}/languages`,
-      }),
-      providesTags: (result, error, resumeId) => [
-        { type: "Language", id: resumeId },
-      ],
-    }),
-    createLanguage: builder.mutation<
-      LanguageCreateResponse,
-      LanguageCreatePayload
-    >({
-      query: (payload) => ({
-        url: `/${payload.resume}/languages`,
-        body: payload,
-        method: "POST",
-      }),
-      onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
+    listLanguage: builder.query<ResumeLanguage[], string>({
+      queryFn: async (resumeId) => {
         try {
-          const { data } = await queryFulfilled; // Await API response
-          const updates = data.results;
-
-          // Manually update the cache for listLanguage
-          dispatch(
-            resumeLanguageApi.util.updateQueryData(
-              "listLanguage",
-              args.resume,
-              (draft) => {
-                draft.results.push(updates);
-              }
-            )
-          );
-
-          // Update the cache for getResume
-          dispatch(
-            resumeApi.util.updateQueryData(
-              "getResume",
-              args.resume,
-              (draft) => {
-                draft.results.languages.push(updates);
-              }
-            )
-          );
+          const data = await resumeDB.languages
+            .where("resume")
+            .equals(resumeId)
+            .toArray();
+          return { data };
         } catch (error) {
-          console.error("Failed to update language cache:", error);
+          return { error };
         }
       },
+      providesTags: (result, error, resumeId) =>
+        result
+          ? [
+              ...result.map(({ _id }) => ({
+                type: "Language" as const,
+                id: _id,
+              })),
+              { type: "Language", id: resumeId },
+            ]
+          : [{ type: "Language", id: resumeId }],
     }),
-    updateLanguage: builder.mutation<
-      LanguageUpdateResponse,
-      LanguageUpdatePayload
-    >({
-      query: (payload) => ({
-        url: `/${payload.resume}/languages/${payload._id}`,
-        body: payload,
-        method: "PATCH",
-      }),
-      onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
+    createLanguage: builder.mutation<ResumeLanguage, LanguageCreatePayload>({
+      queryFn: async (payload) => {
         try {
-          const { data } = await queryFulfilled; // Await API response
-          const updates = data.results;
-
-          // Update the cache for listLanguage
-          dispatch(
-            resumeLanguageApi.util.updateQueryData(
-              "listLanguage",
-              args.resume,
-              (draft) => {
-                const index = draft.results.findIndex(
-                  (item) => item._id === updates._id
-                );
-                if (index !== -1) {
-                  draft.results[index] = updates;
-                }
-              }
-            )
-          );
-
-          // Update the cache for getResume
-          dispatch(
-            resumeApi.util.updateQueryData(
-              "getResume",
-              args.resume,
-              (draft) => {
-                const index = draft.results.languages.findIndex(
-                  (item) => item._id === updates._id
-                );
-                if (index !== -1) {
-                  draft.results.languages[index] = updates;
-                }
-              }
-            )
-          );
+          const newLanguage = { ...payload, _id: nanoid() };
+          await resumeDB.languages.add(newLanguage);
+          return { data: newLanguage };
         } catch (error) {
-          console.error("Failed to update language cache:", error);
+          return { error };
         }
       },
+      invalidatesTags: (result) =>
+        result
+          ? [{ type: "Language", id: result.resume }]
+          : [{ type: "Language" }],
     }),
-    deleteLanguage: builder.mutation<
-      LanguageDeleteResponse,
-      LanguageDeletePayload
-    >({
-      query: (payload) => ({
-        url: `/${payload.resume}/languages/${payload._id}`,
-        method: "DELETE",
-      }),
-      onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
+    updateLanguage: builder.mutation<ResumeLanguage, LanguageUpdatePayload>({
+      queryFn: async (payload) => {
         try {
-          await queryFulfilled; // Await API success
-
-          // Remove the language from the cache for listLanguage
-          dispatch(
-            resumeLanguageApi.util.updateQueryData(
-              "listLanguage",
-              args.resume,
-              (draft) => {
-                draft.results = draft.results.filter(
-                  (item) => item._id !== args._id
-                );
-              }
-            )
-          );
-
-          // Update the cache for getResume
-          dispatch(
-            resumeApi.util.updateQueryData(
-              "getResume",
-              args.resume,
-              (draft) => {
-                draft.results.languages = draft.results.languages.filter(
-                  (item) => item._id !== args._id
-                );
-              }
-            )
-          );
+          await resumeDB.languages.put(payload);
+          return { data: payload };
         } catch (error) {
-          console.error("Failed to update language cache:", error);
+          return { error };
         }
       },
+      invalidatesTags: (result) => [{ type: "Language", id: result?._id }],
+    }),
+    deleteLanguage: builder.mutation<string, LanguageDeletePayload>({
+      queryFn: async ({ resume, _id }) => {
+        try {
+          await resumeDB.languages.delete(_id);
+          return { data: _id };
+        } catch (error) {
+          return { error };
+        }
+      },
+      invalidatesTags: (result) => [{ type: "Language", id: result }],
     }),
   }),
 });

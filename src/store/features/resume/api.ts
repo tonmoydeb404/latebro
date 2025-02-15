@@ -1,112 +1,90 @@
-import { backendBaseQuery } from "@/store/helpers/base-queries";
-import {
-  ResumeCreatePayload,
-  ResumeCreateResponse,
-  ResumeDeletePayload,
-  ResumeDeleteResponse,
-  ResumeGetResponse,
-  ResumeListResponse,
-  ResumeUpdatePayload,
-  ResumeUpdateResponse,
-} from "@/types/api/resume";
-import { createApi } from "@reduxjs/toolkit/query/react";
+import resumeDB from "@/db/resume";
+import { ResumeCreatePayload, ResumeUpdatePayload } from "@/types/api/resume";
+import { Resume } from "@/types/resume";
+import { nanoid } from "@reduxjs/toolkit";
+import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const resumeApi = createApi({
   reducerPath: "resumeApi",
-  baseQuery: backendBaseQuery("/resumes"),
-  tagTypes: ["Resume"], // Define tag type
+  tagTypes: ["Resume"],
+  baseQuery: fakeBaseQuery(),
   endpoints: (builder) => ({
-    listResume: builder.query<ResumeListResponse, void>({
-      query: () => ({
-        url: `/`,
-      }),
-      providesTags: (result, error) => [{ type: "Resume" }],
+    listResume: builder.query<Resume[], void>({
+      queryFn: async () => {
+        try {
+          const data = await resumeDB.resumes.toArray();
+          return { data };
+        } catch (error) {
+          return { error };
+        }
+      },
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ _id }) => ({
+                type: "Resume" as const,
+                id: _id,
+              })),
+              { type: "Resume" },
+            ]
+          : [{ type: "Resume" }],
     }),
-    getResume: builder.query<ResumeGetResponse, string>({
-      query: (id) => ({
-        url: `/${id}`,
-      }),
+
+    getResume: builder.query<Resume, string>({
+      queryFn: async (id) => {
+        try {
+          const data = await resumeDB.resumes.get(id);
+          if (!data) throw new Error("Not found");
+          return { data };
+        } catch (error) {
+          return { error };
+        }
+      },
       providesTags: (result, error, id) => [{ type: "Resume", id }],
     }),
-    createResume: builder.mutation<ResumeCreateResponse, ResumeCreatePayload>({
-      query: (payload) => ({
-        url: `/`,
-        body: payload,
-        method: "POST",
-      }),
-      onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
-        try {
-          const { data } = await queryFulfilled; // Await API response
-          const newResume = data.results;
 
-          // Manually update the cache for listResume
-          dispatch(
-            resumeApi.util.updateQueryData("listResume", undefined, (draft) => {
-              draft.results.push(newResume);
-            })
-          );
+    createResume: builder.mutation<Resume, ResumeCreatePayload>({
+      queryFn: async (payload) => {
+        try {
+          const response = await resumeDB.resumes.add({
+            ...payload,
+            _id: nanoid(),
+          });
+          const data = await resumeDB.resumes.get(response);
+          if (!data) throw new Error("Resume creation failed");
+          return { data };
         } catch (error) {
-          console.error("Failed to update resume cache:", error);
+          return { error };
         }
       },
+      invalidatesTags: (result) =>
+        result
+          ? [{ type: "Resume" }, { type: "Resume", id: result._id }]
+          : [{ type: "Resume" }],
     }),
-    updateResume: builder.mutation<ResumeUpdateResponse, ResumeUpdatePayload>({
-      query: (payload) => ({
-        url: `/${payload._id}`,
-        body: payload,
-        method: "PATCH",
-      }),
-      onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
+
+    updateResume: builder.mutation<Resume, ResumeUpdatePayload>({
+      queryFn: async (payload) => {
         try {
-          const { data } = await queryFulfilled; // Await API response
-          const updatedResume = data.results;
-
-          // Update the cache for listResume
-          dispatch(
-            resumeApi.util.updateQueryData("listResume", undefined, (draft) => {
-              const index = draft.results.findIndex(
-                (item) => item._id === updatedResume._id
-              );
-              if (index !== -1) {
-                draft.results[index] = updatedResume;
-              }
-            })
-          );
-
-          // Update the cache for getResume
-          dispatch(
-            resumeApi.util.updateQueryData("getResume", args._id, (draft) => {
-              if (draft.results) {
-                draft.results = { ...draft.results, ...updatedResume };
-              }
-            })
-          );
+          await resumeDB.resumes.put(payload);
+          return { data: payload };
         } catch (error) {
-          console.error("Failed to update resume cache:", error);
+          return { error };
         }
       },
+      invalidatesTags: (result) => [{ type: "Resume", id: result?._id }],
     }),
-    deleteResume: builder.mutation<ResumeDeleteResponse, ResumeDeletePayload>({
-      query: (payload) => ({
-        url: `/${payload._id}`,
-        method: "DELETE",
-      }),
-      onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
-        try {
-          await queryFulfilled; // Await API success
 
-          // Remove the resume from the cache for listResume
-          dispatch(
-            resumeApi.util.updateQueryData("listResume", undefined, (draft) => {
-              draft.results = draft.results.filter(
-                (item) => item._id !== args._id
-              );
-            })
-          );
+    deleteResume: builder.mutation<string, string>({
+      queryFn: async (id) => {
+        try {
+          await resumeDB.resumes.delete(id);
+          return { data: id };
         } catch (error) {
-          console.error("Failed to update resume cache:", error);
+          return { error };
         }
       },
+      invalidatesTags: (result) => [{ type: "Resume", id: result }],
     }),
   }),
 });

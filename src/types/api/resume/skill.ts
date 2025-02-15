@@ -15,9 +15,7 @@ export type SkillCreateResponse = ApiResponse<ResumeSkill>;
 
 // ----------------------------------------------------------------------
 
-export type SkillUpdatePayload = Partial<
-  Pick<ResumeSkill, "experience" | "title">
-> &
+export type SkillUpdatePayload = Pick<ResumeSkill, "experience" | "title"> &
   SkillDeletePayload;
 
 export type SkillUpdateResponse = ApiResponse<ResumeSkill>;

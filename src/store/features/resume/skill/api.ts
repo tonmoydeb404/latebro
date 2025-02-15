@@ -1,151 +1,84 @@
-import { backendBaseQuery } from "@/store/helpers/base-queries";
+import resumeDB from "@/db/resume";
 import {
   SkillCreatePayload,
-  SkillCreateResponse,
   SkillDeletePayload,
-  SkillDeleteResponse,
-  SkillListResponse,
   SkillUpdatePayload,
-  SkillUpdateResponse,
 } from "@/types/api/resume/skill";
-import { createApi } from "@reduxjs/toolkit/query/react";
-import resumeApi from "../api";
+import { ResumeSkill } from "@/types/resume";
+import { nanoid } from "@reduxjs/toolkit";
+import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const resumeSkillApi = createApi({
   reducerPath: "resumeSkillApi",
-  baseQuery: backendBaseQuery("/resumes"),
-  tagTypes: ["Skill"], // Define tag type
+  baseQuery: fakeBaseQuery(),
+  tagTypes: ["Skill"],
   endpoints: (builder) => ({
-    listSkill: builder.query<SkillListResponse, string>({
-      query: (resumeId) => ({
-        url: `/${resumeId}/skills`,
-      }),
-      providesTags: (result, error, resumeId) => [
-        { type: "Skill", id: resumeId },
+    listSkill: builder.query<ResumeSkill[], string>({
+      queryFn: async (resumeId) => {
+        try {
+          const data = await resumeDB.skills
+            .where("resume")
+            .equals(resumeId)
+            .toArray();
+          return { data };
+        } catch (error) {
+          return { error };
+        }
+      },
+      providesTags: (result, error, resumeId) =>
+        result
+          ? [
+              ...result.map(({ _id }) => ({
+                type: "Skill" as const,
+                id: _id,
+              })),
+              { type: "Skill", id: resumeId },
+              { type: "Skill" },
+            ]
+          : [{ type: "Skill", id: resumeId }, { type: "Skill" }],
+    }),
+    createSkill: builder.mutation<ResumeSkill, SkillCreatePayload>({
+      queryFn: async (payload) => {
+        try {
+          const newSkill = { ...payload, _id: nanoid() };
+          await resumeDB.skills.add(newSkill);
+          return { data: newSkill };
+        } catch (error) {
+          return { error };
+        }
+      },
+      invalidatesTags: (result) =>
+        result
+          ? [{ type: "Skill" }, { type: "Skill", id: result.resume }]
+          : [{ type: "Skill" }],
+    }),
+    updateSkill: builder.mutation<ResumeSkill, SkillUpdatePayload>({
+      queryFn: async (payload) => {
+        try {
+          await resumeDB.skills.put(payload);
+          return { data: payload };
+        } catch (error) {
+          return { error };
+        }
+      },
+      invalidatesTags: (result) => [
+        { type: "Skill", id: result?._id },
+        { type: "Skill", id: result?.resume },
       ],
     }),
-    createSkill: builder.mutation<SkillCreateResponse, SkillCreatePayload>({
-      query: (payload) => ({
-        url: `/${payload.resume}/skills`,
-        body: payload,
-        method: "POST",
-      }),
-      onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
+    deleteSkill: builder.mutation<string, SkillDeletePayload>({
+      queryFn: async ({ resume, _id }) => {
         try {
-          const { data } = await queryFulfilled; // Await API response
-          const updates = data.results;
-
-          // Manually update the cache for listSkill
-          dispatch(
-            resumeSkillApi.util.updateQueryData(
-              "listSkill",
-              args.resume,
-              (draft) => {
-                draft.results.push(updates);
-              }
-            )
-          );
-
-          // Update the cache for getResume
-          dispatch(
-            resumeApi.util.updateQueryData(
-              "getResume",
-              args.resume,
-              (draft) => {
-                draft.results.skills.push(updates);
-              }
-            )
-          );
+          await resumeDB.skills.delete(_id);
+          return { data: _id };
         } catch (error) {
-          console.error("Failed to update skill cache:", error);
+          return { error };
         }
       },
-    }),
-    updateSkill: builder.mutation<SkillUpdateResponse, SkillUpdatePayload>({
-      query: (payload) => ({
-        url: `/${payload.resume}/skills/${payload._id}`,
-        body: payload,
-        method: "PATCH",
-      }),
-      onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
-        try {
-          const { data } = await queryFulfilled; // Await API response
-          const updates = data.results;
-
-          // Update the cache for listSkill
-          dispatch(
-            resumeSkillApi.util.updateQueryData(
-              "listSkill",
-              args.resume,
-              (draft) => {
-                const index = draft.results.findIndex(
-                  (item) => item._id === updates._id
-                );
-                if (index !== -1) {
-                  draft.results[index] = updates;
-                }
-              }
-            )
-          );
-
-          // Update the cache for getResume
-          dispatch(
-            resumeApi.util.updateQueryData(
-              "getResume",
-              args.resume,
-              (draft) => {
-                const index = draft.results.skills.findIndex(
-                  (item) => item._id === updates._id
-                );
-                if (index !== -1) {
-                  draft.results.skills[index] = updates;
-                }
-              }
-            )
-          );
-        } catch (error) {
-          console.error("Failed to update skill cache:", error);
-        }
-      },
-    }),
-    deleteSkill: builder.mutation<SkillDeleteResponse, SkillDeletePayload>({
-      query: (payload) => ({
-        url: `/${payload.resume}/skills/${payload._id}`,
-        method: "DELETE",
-      }),
-      onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
-        try {
-          await queryFulfilled; // Await API success
-
-          // Remove the skill from the cache for listSkill
-          dispatch(
-            resumeSkillApi.util.updateQueryData(
-              "listSkill",
-              args.resume,
-              (draft) => {
-                draft.results = draft.results.filter(
-                  (item) => item._id !== args._id
-                );
-              }
-            )
-          );
-
-          // Update the cache for getResume
-          dispatch(
-            resumeApi.util.updateQueryData(
-              "getResume",
-              args.resume,
-              (draft) => {
-                draft.results.skills = draft.results.skills.filter(
-                  (item) => item._id !== args._id
-                );
-              }
-            )
-          );
-        } catch (error) {
-          console.error("Failed to update skill cache:", error);
-        }
-      },
+      invalidatesTags: (result) => [
+        { type: "Skill", id: result },
+        { type: "Skill" },
+      ],
     }),
   }),
 });

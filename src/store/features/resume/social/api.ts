@@ -1,151 +1,84 @@
-import { backendBaseQuery } from "@/store/helpers/base-queries";
+import resumeDB from "@/db/resume";
 import {
   SocialCreatePayload,
-  SocialCreateResponse,
   SocialDeletePayload,
-  SocialDeleteResponse,
-  SocialListResponse,
   SocialUpdatePayload,
-  SocialUpdateResponse,
 } from "@/types/api/resume/social";
-import { createApi } from "@reduxjs/toolkit/query/react";
-import resumeApi from "../api";
+import { ResumeSocial } from "@/types/resume";
+import { nanoid } from "@reduxjs/toolkit";
+import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const resumeSocialApi = createApi({
   reducerPath: "resumeSocialApi",
-  baseQuery: backendBaseQuery("/resumes"),
-  tagTypes: ["Social"], // Define tag type
+  baseQuery: fakeBaseQuery(),
+  tagTypes: ["Social"],
   endpoints: (builder) => ({
-    listSocial: builder.query<SocialListResponse, string>({
-      query: (resumeId) => ({
-        url: `/${resumeId}/socials`,
-      }),
-      providesTags: (result, error, resumeId) => [
-        { type: "Social", id: resumeId },
+    listSocial: builder.query<ResumeSocial[], string>({
+      queryFn: async (resumeId) => {
+        try {
+          const data = await resumeDB.socials
+            .where("resume")
+            .equals(resumeId)
+            .toArray();
+          return { data };
+        } catch (error) {
+          return { error };
+        }
+      },
+      providesTags: (result, error, resumeId) =>
+        result
+          ? [
+              ...result.map(({ _id }) => ({
+                type: "Social" as const,
+                id: _id,
+              })),
+              { type: "Social", id: resumeId },
+              { type: "Social" },
+            ]
+          : [{ type: "Social", id: resumeId }, { type: "Social" }],
+    }),
+    createSocial: builder.mutation<ResumeSocial, SocialCreatePayload>({
+      queryFn: async (payload) => {
+        try {
+          const newSocial = { ...payload, _id: nanoid() };
+          await resumeDB.socials.add(newSocial);
+          return { data: newSocial };
+        } catch (error) {
+          return { error };
+        }
+      },
+      invalidatesTags: (result) =>
+        result
+          ? [{ type: "Social" }, { type: "Social", id: result.resume }]
+          : [{ type: "Social" }],
+    }),
+    updateSocial: builder.mutation<ResumeSocial, SocialUpdatePayload>({
+      queryFn: async (payload) => {
+        try {
+          await resumeDB.socials.put(payload);
+          return { data: payload };
+        } catch (error) {
+          return { error };
+        }
+      },
+      invalidatesTags: (result) => [
+        { type: "Social", id: result?._id },
+        { type: "Social", id: result?.resume },
       ],
     }),
-    createSocial: builder.mutation<SocialCreateResponse, SocialCreatePayload>({
-      query: (payload) => ({
-        url: `/${payload.resume}/socials`,
-        body: payload,
-        method: "POST",
-      }),
-      onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
+    deleteSocial: builder.mutation<string, SocialDeletePayload>({
+      queryFn: async ({ resume, _id }) => {
         try {
-          const { data } = await queryFulfilled; // Await API response
-          const updates = data.results;
-
-          // Manually update the cache for listSocial
-          dispatch(
-            resumeSocialApi.util.updateQueryData(
-              "listSocial",
-              args.resume,
-              (draft) => {
-                draft.results.push(updates);
-              }
-            )
-          );
-
-          // Update the cache for getResume
-          dispatch(
-            resumeApi.util.updateQueryData(
-              "getResume",
-              args.resume,
-              (draft) => {
-                draft.results.socials.push(updates);
-              }
-            )
-          );
+          await resumeDB.socials.delete(_id);
+          return { data: _id };
         } catch (error) {
-          console.error("Failed to update social cache:", error);
+          return { error };
         }
       },
-    }),
-    updateSocial: builder.mutation<SocialUpdateResponse, SocialUpdatePayload>({
-      query: (payload) => ({
-        url: `/${payload.resume}/socials/${payload._id}`,
-        body: payload,
-        method: "PATCH",
-      }),
-      onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
-        try {
-          const { data } = await queryFulfilled; // Await API response
-          const updates = data.results;
-
-          // Update the cache for listSocial
-          dispatch(
-            resumeSocialApi.util.updateQueryData(
-              "listSocial",
-              args.resume,
-              (draft) => {
-                const index = draft.results.findIndex(
-                  (item) => item._id === updates._id
-                );
-                if (index !== -1) {
-                  draft.results[index] = updates;
-                }
-              }
-            )
-          );
-
-          // Update the cache for getResume
-          dispatch(
-            resumeApi.util.updateQueryData(
-              "getResume",
-              args.resume,
-              (draft) => {
-                const index = draft.results.socials.findIndex(
-                  (item) => item._id === updates._id
-                );
-                if (index !== -1) {
-                  draft.results.socials[index] = updates;
-                }
-              }
-            )
-          );
-        } catch (error) {
-          console.error("Failed to update social cache:", error);
-        }
-      },
-    }),
-    deleteSocial: builder.mutation<SocialDeleteResponse, SocialDeletePayload>({
-      query: (payload) => ({
-        url: `/${payload.resume}/socials/${payload._id}`,
-        method: "DELETE",
-      }),
-      onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
-        try {
-          await queryFulfilled; // Await API success
-
-          // Remove the social from the cache for listSocial
-          dispatch(
-            resumeSocialApi.util.updateQueryData(
-              "listSocial",
-              args.resume,
-              (draft) => {
-                draft.results = draft.results.filter(
-                  (item) => item._id !== args._id
-                );
-              }
-            )
-          );
-
-          // Update the cache for getResume
-          dispatch(
-            resumeApi.util.updateQueryData(
-              "getResume",
-              args.resume,
-              (draft) => {
-                draft.results.socials = draft.results.socials.filter(
-                  (item) => item._id !== args._id
-                );
-              }
-            )
-          );
-        } catch (error) {
-          console.error("Failed to update social cache:", error);
-        }
-      },
+      invalidatesTags: (result) => [
+        { type: "Social", id: result },
+        { type: "Social" },
+      ],
     }),
   }),
 });

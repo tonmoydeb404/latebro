@@ -1,160 +1,77 @@
-import { backendBaseQuery } from "@/store/helpers/base-queries";
+import resumeDB from "@/db/resume";
 import {
   EducationCreatePayload,
-  EducationCreateResponse,
   EducationDeletePayload,
-  EducationDeleteResponse,
-  EducationListResponse,
   EducationUpdatePayload,
-  EducationUpdateResponse,
 } from "@/types/api/resume/education";
-import { createApi } from "@reduxjs/toolkit/query/react";
-import resumeApi from "../api";
+import { ResumeEducation } from "@/types/resume";
+import { nanoid } from "@reduxjs/toolkit";
+import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const resumeEducationApi = createApi({
   reducerPath: "resumeEducationApi",
-  baseQuery: backendBaseQuery("/resumes"),
-  tagTypes: ["Education"], // Define tag type
+  baseQuery: fakeBaseQuery(),
+  tagTypes: ["Education"],
   endpoints: (builder) => ({
-    listEducation: builder.query<EducationListResponse, string>({
-      query: (resumeId) => ({
-        url: `/${resumeId}/educations`,
-      }),
-      providesTags: (result, error, resumeId) => [
-        { type: "Education", id: resumeId },
-      ],
-    }),
-    createEducation: builder.mutation<
-      EducationCreateResponse,
-      EducationCreatePayload
-    >({
-      query: (payload) => ({
-        url: `/${payload.resume}/educations`,
-        body: payload,
-        method: "POST",
-      }),
-      onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
+    listEducation: builder.query<ResumeEducation[], string>({
+      queryFn: async (resumeId) => {
         try {
-          const { data } = await queryFulfilled; // Await API response
-          const updates = data.results;
-
-          // Manually update the cache for listEducation
-          dispatch(
-            resumeEducationApi.util.updateQueryData(
-              "listEducation",
-              args.resume,
-              (draft) => {
-                draft.results.push(updates);
-              }
-            )
-          );
-
-          // Update the cache for getResume
-          dispatch(
-            resumeApi.util.updateQueryData(
-              "getResume",
-              args.resume,
-              (draft) => {
-                draft.results.educations.push(updates);
-              }
-            )
-          );
+          const data = await resumeDB.educations
+            .where("resume")
+            .equals(resumeId)
+            .toArray();
+          return { data };
         } catch (error) {
-          console.error("Failed to update education cache:", error);
+          return { error };
         }
       },
+      providesTags: (result, error, resumeId) =>
+        result
+          ? [
+              ...result.map(({ _id }) => ({
+                type: "Education" as const,
+                id: _id,
+              })),
+              { type: "Education", id: resumeId },
+            ]
+          : [{ type: "Education", id: resumeId }],
     }),
-    updateEducation: builder.mutation<
-      EducationUpdateResponse,
-      EducationUpdatePayload
-    >({
-      query: (payload) => ({
-        url: `/${payload.resume}/educations/${payload._id}`,
-        body: payload,
-        method: "PATCH",
-      }),
-      onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
+    createEducation: builder.mutation<ResumeEducation, EducationCreatePayload>({
+      queryFn: async (payload) => {
         try {
-          const { data } = await queryFulfilled; // Await API response
-          const updates = data.results;
-
-          // Update the cache for listEducation
-          dispatch(
-            resumeEducationApi.util.updateQueryData(
-              "listEducation",
-              args.resume,
-              (draft) => {
-                const index = draft.results.findIndex(
-                  (item) => item._id === updates._id
-                );
-                if (index !== -1) {
-                  draft.results[index] = updates;
-                }
-              }
-            )
-          );
-
-          // Update the cache for getResume
-          dispatch(
-            resumeApi.util.updateQueryData(
-              "getResume",
-              args.resume,
-              (draft) => {
-                const index = draft.results.educations.findIndex(
-                  (item) => item._id === updates._id
-                );
-                if (index !== -1) {
-                  draft.results.educations[index] = updates;
-                }
-              }
-            )
-          );
+          const newEducation = { ...payload, _id: nanoid() };
+          await resumeDB.educations.add(newEducation);
+          return { data: newEducation };
         } catch (error) {
-          console.error("Failed to update education cache:", error);
+          return { error };
         }
       },
+      invalidatesTags: (result) =>
+        result
+          ? [{ type: "Education", id: result.resume }]
+          : [{ type: "Education" }],
     }),
-    deleteEducation: builder.mutation<
-      EducationDeleteResponse,
-      EducationDeletePayload
-    >({
-      query: (payload) => ({
-        url: `/${payload.resume}/educations/${payload._id}`,
-        method: "DELETE",
-      }),
-      onQueryStarted: async (args, { queryFulfilled, dispatch }) => {
+    updateEducation: builder.mutation<ResumeEducation, EducationUpdatePayload>({
+      queryFn: async (payload) => {
         try {
-          await queryFulfilled; // Await API success
-
-          // Remove the education from the cache for listEducation
-          dispatch(
-            resumeEducationApi.util.updateQueryData(
-              "listEducation",
-              args.resume,
-              (draft) => {
-                draft.results = draft.results.filter(
-                  (item) => item._id !== args._id
-                );
-              }
-            )
-          );
-
-          // Update the cache for getResume
-          dispatch(
-            resumeApi.util.updateQueryData(
-              "getResume",
-              args.resume,
-              (draft) => {
-                draft.results.educations = draft.results.educations.filter(
-                  (item) => item._id !== args._id
-                );
-              }
-            )
-          );
+          await resumeDB.educations.put(payload);
+          return { data: payload };
         } catch (error) {
-          console.error("Failed to update education cache:", error);
+          return { error };
         }
       },
+      invalidatesTags: (result) => [{ type: "Education", id: result?._id }],
+    }),
+    deleteEducation: builder.mutation<string, EducationDeletePayload>({
+      queryFn: async ({ resume, _id }) => {
+        try {
+          await resumeDB.educations.delete(_id);
+          return { data: _id };
+        } catch (error) {
+          return { error };
+        }
+      },
+      invalidatesTags: (result) => [{ type: "Education", id: result }],
     }),
   }),
 });
