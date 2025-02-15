@@ -46,12 +46,29 @@ const resumeApi = createApi({
     createResume: builder.mutation<Resume, ResumeCreatePayload>({
       queryFn: async (payload) => {
         try {
-          const response = await resumeDB.resumes.add({
-            ...payload,
-            _id: nanoid(),
-          });
-          const data = await resumeDB.resumes.get(response);
+          const _id = nanoid(); // Generate unique ID
+
+          // Use Dexie transaction with all related stores
+          await resumeDB.transaction(
+            "rw",
+            resumeDB.resumes,
+            resumeDB.profiles,
+            resumeDB.contacts,
+            async () => {
+              await resumeDB.resumes.add({ ...payload, _id });
+              await resumeDB.profiles.add({
+                resume: _id,
+              });
+              await resumeDB.contacts.add({
+                resume: _id,
+              });
+            }
+          );
+
+          // Fetch the created resume
+          const data = await resumeDB.resumes.get(_id);
           if (!data) throw new Error("Resume creation failed");
+
           return { data };
         } catch (error) {
           return { error };
