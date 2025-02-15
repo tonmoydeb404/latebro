@@ -55,7 +55,7 @@ const resumeSkillApi = createApi({
     updateSkill: builder.mutation<ResumeSkill, SkillUpdatePayload>({
       queryFn: async (payload) => {
         try {
-          await resumeDB.skills.put(payload);
+          await resumeDB.skills.update(payload._id, payload);
           return { data: payload };
         } catch (error) {
           return { error };

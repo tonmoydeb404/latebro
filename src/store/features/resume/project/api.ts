@@ -55,7 +55,7 @@ const resumeProjectApi = createApi({
     updateProject: builder.mutation<ResumeProject, ProjectUpdatePayload>({
       queryFn: async (payload) => {
         try {
-          await resumeDB.projects.put(payload);
+          await resumeDB.projects.update(payload._id, payload);
           return { data: payload };
         } catch (error) {
           return { error };

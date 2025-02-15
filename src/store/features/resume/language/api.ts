@@ -54,7 +54,7 @@ const resumeLanguageApi = createApi({
     updateLanguage: builder.mutation<ResumeLanguage, LanguageUpdatePayload>({
       queryFn: async (payload) => {
         try {
-          await resumeDB.languages.put(payload);
+          await resumeDB.languages.update(payload._id, payload);
           return { data: payload };
         } catch (error) {
           return { error };

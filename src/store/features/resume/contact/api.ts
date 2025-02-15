@@ -27,7 +27,7 @@ const resumeContactApi = createApi({
     updateContact: builder.mutation<ResumeContact, ContactUpdatePayload>({
       queryFn: async (payload) => {
         try {
-          await resumeDB.contacts.put(payload);
+          await resumeDB.contacts.update(payload.resume, payload);
           return { data: payload };
         } catch (error) {
           return { error };

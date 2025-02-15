@@ -54,7 +54,7 @@ const resumeEducationApi = createApi({
     updateEducation: builder.mutation<ResumeEducation, EducationUpdatePayload>({
       queryFn: async (payload) => {
         try {
-          await resumeDB.educations.put(payload);
+          await resumeDB.educations.update(payload._id, payload);
           return { data: payload };
         } catch (error) {
           return { error };

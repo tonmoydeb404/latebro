@@ -27,7 +27,7 @@ const resumeProfileApi = createApi({
     updateProfile: builder.mutation<ResumeProfile, ProfileUpdatePayload>({
       queryFn: async (payload) => {
         try {
-          await resumeDB.profiles.put(payload);
+          await resumeDB.profiles.update(payload.resume, payload);
           return { data: payload };
         } catch (error) {
           return { error };

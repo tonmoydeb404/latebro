@@ -55,7 +55,7 @@ const resumeSocialApi = createApi({
     updateSocial: builder.mutation<ResumeSocial, SocialUpdatePayload>({
       queryFn: async (payload) => {
         try {
-          await resumeDB.socials.put(payload);
+          await resumeDB.socials.update(payload._id, payload);
           return { data: payload };
         } catch (error) {
           return { error };

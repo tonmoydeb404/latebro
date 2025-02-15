@@ -60,7 +60,7 @@ const resumeExperienceApi = createApi({
     >({
       queryFn: async (payload) => {
         try {
-          await resumeDB.experiences.put(payload);
+          await resumeDB.experiences.update(payload._id, payload);
           return { data: payload };
         } catch (error) {
           return { error };
